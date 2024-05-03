@@ -38,6 +38,10 @@ set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 
 project (TJE_Framework CXX)
 
+if(MSVC)
+    add_definitions(/MP)
+endif()
+
 find_package(OpenGL REQUIRED)
 
 if(NOT TARGET OpenGL::GLU)

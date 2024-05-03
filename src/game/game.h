@@ -7,11 +7,16 @@
 #include "framework/includes.h"
 #include "framework/camera.h"
 #include "framework/utils.h"
+#include "framework/stage.h"
 
 class Game
 {
 public:
 	static Game* instance;
+
+	World* world = nullptr;
+
+	Stage* stages[STAGES_SIZE];
 
 	//window
 	SDL_Window* window;
@@ -44,4 +49,6 @@ public:
 	void onGamepadButtonDown(SDL_JoyButtonEvent event);
 	void onGamepadButtonUp(SDL_JoyButtonEvent event);
 	void onResize(int width, int height);
+
+	void goToStage(eStages stage);
 };
