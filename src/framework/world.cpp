@@ -1,10 +1,7 @@
 #include "world.h"
-#include "utils.h"
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "entities/entitymesh.h"
-#include <graphics/mesh.h>
 #include <game/game.h>
 
 World* World::instance;
@@ -22,12 +19,13 @@ World::World()
 	//camera->lookAt(Vector3(0.f, 100.f, 100.f), Vector3(0.f, 0.f, 0.f), Vector3(0.f, 1.f, 0.f));
 	//camera->setPerspective(70.f, window_width / (float)window_height, 0.1f, 10000.f);
 
-	/*
+	
 	Material player_material;
-	player_material.shader = Shader::Get("");
+	player_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	player_material.diffuse = Texture::Get("data/textures/polygon.tga");
+	player_material.color = Vector4(1, 1, 1, 1);
 
-	player = new EntityPlayer(Mesh::Get(""), player_material);
-	*/
+	player = new EntityPlayer(Mesh::Get("data/meshes/polygon.obj"), player_material);
 
 	parseScene("data/myscene.scene", root);
 }
@@ -35,11 +33,13 @@ World::World()
 void World::render()
 {
 	root->render(Game::instance->camera);
+	player->render(Game::instance->camera);
 }
 
 void World::update(float delta_time)
 {
 	root->update(delta_time);
+	player->update(delta_time, Game::instance->camera);
 
 	//player->update(delta_time);
 }

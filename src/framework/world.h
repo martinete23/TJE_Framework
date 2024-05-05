@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include "graphics/material.h"
+#include "entities/entitymesh.h"
 
 class Entity;
 class Camera;
@@ -12,9 +13,9 @@ public:
 	World();
 
 	Entity* root = nullptr;
-	// EntityPlayer* player = nullptr;
-
+	Texture* extrue;
 	//Camera* camera = nullptr;
+	EntityPlayer* player;
 
 	std::map<std::string, sRenderData> meshes_to_load;
 

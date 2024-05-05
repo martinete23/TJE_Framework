@@ -4,6 +4,7 @@
 #include "graphics/mesh.h"
 #include "framework/camera.h"
 
+
 EntityMesh::EntityMesh(Mesh* m, Material mat)
 {
 	mesh = m;
@@ -69,3 +70,27 @@ void EntityMesh::addInstance(const Matrix44& model)
 	models.push_back(model);
 }
 
+EntityPlayer::EntityPlayer(Mesh* m, Material mat)
+{
+	playerMesh = m;
+	playerMaterial = mat;
+}
+
+void EntityPlayer::render(Camera* camera)
+{
+	playerMaterial.shader->enable();
+
+	playerMaterial.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
+	playerMaterial.shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
+	playerMaterial.shader->setUniform("u_texture", playerMaterial.diffuse, 0);
+	playerMaterial.shader->setUniform("u_model", playerMatrix);
+	playerMaterial.shader->setUniform("u_time", time);
+	playerMesh->render(GL_TRIANGLES);
+
+	playerMaterial.shader->disable();
+}
+
+void EntityPlayer::update(float elsapsed_time, Camera* camera)
+{
+
+}
