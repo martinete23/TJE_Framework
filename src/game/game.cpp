@@ -19,6 +19,9 @@ Game* Game::instance = NULL;
 
 //for jump
 bool is_jumping = false;
+bool is_falling = false;
+float jump_velocity = 20.f;
+
 float jump_duration = 1.0f; // Duration of the jump animation in seconds
 float jump_height = 250.0f; // Height of the jump
 float initial_y_position = 0.0f; // Initial Y position before jumping
@@ -201,46 +204,31 @@ void Game::update(double seconds_elapsed)
 		World::instance->player->playerMatrix.setTranslation(player_pos);
 		World::instance->player->playerMatrix.rotate(camera_yaw, Vector3(0, 1, 0));
 
-
 		if (Input::wasKeyPressed(SDL_SCANCODE_TAB)) free_camera = true;
 
-		if (Input::wasKeyPressed(SDL_SCANCODE_Z) && !is_jumping)
-		{
-			// Start the jump animation
+		if (Input::wasKeyPressed(SDL_SCANCODE_Z) && !is_jumping && !is_falling) {
+			printf("jump!");
 			is_jumping = true;
-			initial_y_position = World::instance->player->playerMatrix.m[13]; // Record the initial Y position
-			jump_timer = 0.0f; // Reset the jump timer
+
+			initial_y_position = World::instance->player->playerMatrix.getTranslation().y; // Store initial y position
+
 		}
-		if (is_jumping)
-		{
-			// Increment the jump timer
-			jump_timer += (float)seconds_elapsed;
-
-			// Calculate the progress of the jump animation (0 to 1)
-			float jump_progress = jump_timer / jump_duration;
-
-			// Calculate the new Y position using a sinusoidal function for smooth motion
-			float new_y_position = initial_y_position + jump_height * sin(jump_progress * PI);
-
-			// Update the Y position of the shape
-			World::instance->player->playerMatrix.m[13] = new_y_position;
-
-			// Check if the jump animation is complete
-			if (jump_timer >= jump_duration)
-			{
-				// Reset the jump animation
+		if (is_jumping) {
+			World::instance->player->playerMatrix.setTranslation(player_pos + Vector3(0, jump_velocity * seconds_elapsed,0));
+			initial_y_position += jump_velocity * seconds_elapsed;
+			if (initial_y_position >= 6.f) {
 				is_jumping = false;
-				jump_timer = 0.0f;
-
-				// Reset the Y position to its initial state
-				World::instance->player->playerMatrix.m[13] = initial_y_position;
+				is_falling = true;
 			}
 		}
-		//update the camera and movement
-
-		//update movement
-
-
+		if (is_falling) {
+			World::instance->player->playerMatrix.setTranslation(player_pos - Vector3(0, jump_velocity * seconds_elapsed, 0));
+			initial_y_position -= jump_velocity * seconds_elapsed;
+			if (initial_y_position <= 0.f) {
+				is_falling = false;
+				initial_y_position = 0.0f;
+			}
+		}
 
 	}
 

@@ -36,10 +36,12 @@ public:
 	Matrix44 playerMatrix;
 	Mesh* playerMesh;
 	Material playerMaterial;
+	bool hasJumped = false;
 
 	EntityPlayer() {};
 	EntityPlayer(Mesh* m, Material mat);
 
 	void render(Camera* camera);
 	void update(float elsapsed_time, Camera* camera);
+	void jump();
 };
