@@ -1,5 +1,8 @@
 #include "entity.h"
 #include "graphics/material.h"
+#include "graphics/mesh.h"
+#include "graphics/texture.h"
+#include "graphics/shader.h"
 
 class Mesh;
 class Texture;
@@ -24,4 +27,19 @@ public:
 	void update(float elapsed_time);
 
 	void addInstance(const Matrix44& model);
+};
+
+class EntityPlayer : public EntityMesh {
+
+public:
+
+	Matrix44 playerMatrix;
+	Mesh* playerMesh;
+	Material playerMaterial;
+
+	EntityPlayer() {};
+	EntityPlayer(Mesh* m, Material mat);
+
+	void render(Camera* camera);
+	void update(float elsapsed_time, Camera* camera);
 };

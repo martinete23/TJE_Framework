@@ -16,6 +16,12 @@ enum eStages {
 
 class Stage {
 public:
+
+	Mesh* mesh_cube = NULL;
+	Texture* texture_cube = NULL;
+	Shader* shader_cube = NULL;
+	Matrix44 m_cube;
+
 	virtual void onEnter() {};
 	virtual void onExit() {};
 
