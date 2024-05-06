@@ -17,10 +17,10 @@ void EntityMesh::render(Camera* camera)
 	Vector3 center_world = model * mesh->box.center;
 	float aabb_radius = mesh->box.halfsize.length();
 
-	//if (camera->testSphereInFrustum(center_world, aabb_radius) == false)
-	//{
-	//	return;
-	//}
+	if (camera->testSphereInFrustum(center_world, aabb_radius) == false)
+	{
+		return;
+	}
 
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);

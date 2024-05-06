@@ -103,7 +103,7 @@ void Game::render(void)
 	//	shader->disable();
 	//}
 
-	//// Draw the floor grid
+	// Draw the floor grid
 	drawGrid();
 
 	current_stage->render();
@@ -117,6 +117,7 @@ void Game::render(void)
 
 void Game::update(double seconds_elapsed)
 {
+	//current_stage->update(seconds_elapsed);
 	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
 
 	// Example
