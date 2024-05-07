@@ -29,9 +29,10 @@ void EntityMesh::render(Camera* camera)
 	if (!material.shader)
 	{
 		material.shader = Shader::Get(
-			isInstanced ? "data/shaders/instanced.vs" : "data/shaders/basic.vs", 
-			material.diffuse ? "data/shaders/texture.fs" : "data/shaders/flat.fs");
+			isInstanced ? "data/shaders/instanced.vs" : "data/shaders/basic.vs", "data/shaders/texture.fs");
 	}
+
+
 
 	// Get the last camera that was activated 
 	// Camera* camera = Camera::current;
