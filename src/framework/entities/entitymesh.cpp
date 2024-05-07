@@ -94,3 +94,7 @@ void EntityPlayer::update(float elsapsed_time, Camera* camera)
 {
 
 }
+
+void EntityPlayer::jump()
+{
+}
