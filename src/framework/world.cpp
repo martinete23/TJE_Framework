@@ -1,4 +1,5 @@
 #include "world.h"
+#include "entities/entitymesh.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -15,9 +16,9 @@ World::World()
 
 	root = new Entity();
 
-	//camera = new Camera();
-	//camera->lookAt(Vector3(0.f, 100.f, 100.f), Vector3(0.f, 0.f, 0.f), Vector3(0.f, 1.f, 0.f));
-	//camera->setPerspective(70.f, window_width / (float)window_height, 0.1f, 10000.f);
+	camera = new Camera();
+	camera->lookAt(Vector3(0.f, 100.f, 100.f), Vector3(0.f, 0.f, 0.f), Vector3(0.f, 1.f, 0.f)); //position the camera and point to 0,0,0
+	camera->setPerspective(70.f, window_width / (float)window_height, 0.1f, 10000.f); //set the projection, we want to be perspective
 
 	
 	Material player_material;
@@ -32,16 +33,39 @@ World::World()
 
 void World::render()
 {
-	root->render(Game::instance->camera);
-	player->render(Game::instance->camera);
+	camera->enable();
+
+	root->render(camera);
+	player->render(camera);
 }
 
 void World::update(float delta_time)
 {
 	root->update(delta_time);
-	player->update(delta_time, Game::instance->camera);
+	player->update(delta_time);
 
-	//player->update(delta_time);
+	camera_yaw -= Input::mouse_delta.x * delta_time * 2.5f;
+	camera_pitch -= Input::mouse_delta.y * delta_time * 2.5f;
+
+	//pitch angle
+	camera_pitch = clamp(camera_pitch, -M_PI * 0.4f, M_PI * 0.4f);
+
+	//mYaw and mPitch
+	Matrix44 mYaw;
+	mYaw.setRotation(camera_yaw, Vector3(0, 1, 0));
+	Matrix44 mPitch;
+	mPitch.setRotation(camera_pitch, Vector3(-1, 0, 0));
+
+	//front
+	Vector3 front = (mPitch * mYaw).frontVector().normalize();
+	Vector3 eye;
+	Vector3 center;
+
+	float orbit_dist = 1.0f;
+	eye = World::instance->player->playerMatrix.getTranslation() - front * orbit_dist + Vector3(0.f, 0.5f, 0.f);
+	center = World::instance->player->playerMatrix.getTranslation() + Vector3(0.f, 0.5f, 0.f);
+
+	camera->lookAt(eye, center, Vector3(0, 1, 0));
 }
 
 bool World::parseScene(const char* filename, Entity* root)

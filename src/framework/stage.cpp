@@ -1,6 +1,5 @@
 #include "stage.h"
 #include "game/game.h"
-#include "world.h"
 #include "framework/input.h"
 
 void IntroStage::onEnter()
@@ -27,7 +26,7 @@ void IntroStage::render()
 
 		// Upload uniforms
 		shader_cube->setUniform("u_color", Vector4(1, 1, 1, 1));
-		shader_cube->setUniform("u_viewprojection", Game::instance->camera->viewprojection_matrix);
+		shader_cube->setUniform("u_viewprojection", World::instance->camera->viewprojection_matrix);
 		shader_cube->setUniform("u_texture", texture_cube, 0);
 		shader_cube->setUniform("u_model", m_cube);
 		shader_cube->setUniform("u_time", time);

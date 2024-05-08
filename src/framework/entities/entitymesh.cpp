@@ -3,6 +3,8 @@
 #include "graphics/texture.h"
 #include "graphics/mesh.h"
 #include "framework/camera.h"
+#include "framework/world.h"
+#include "framework/input.h"
 
 
 EntityMesh::EntityMesh(Mesh* m, Material mat)
@@ -91,9 +93,36 @@ void EntityPlayer::render(Camera* camera)
 	playerMaterial.shader->disable();
 }
 
-void EntityPlayer::update(float elsapsed_time, Camera* camera)
+void EntityPlayer::update(float elapsed_time)
 {
+	float camera_yaw = World::instance->camera_yaw;
 
+	Vector3 player_pos = playerMatrix.getTranslation();
+
+	Matrix44 mYaw;
+	mYaw.setRotation(camera_yaw, Vector3(0,1,0));
+
+	Vector3 move_dir;
+	Vector3 character_front = mYaw.frontVector();
+	Vector3 character_right = mYaw.rightVector();
+
+	if (Input::isKeyPressed(SDL_SCANCODE_UP)) move_dir += character_front;
+	if (Input::isKeyPressed(SDL_SCANCODE_DOWN)) move_dir -= character_front;
+	if (Input::isKeyPressed(SDL_SCANCODE_LEFT)) move_dir += character_right;
+	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT)) move_dir -= character_right;
+
+	move_dir.normalize();
+	move_dir *= 3.0f;
+	velocity += move_dir;
+	player_pos += velocity * elapsed_time;
+
+	velocity.x *= 0.5f;
+	velocity.z *= 0.5f;
+
+	playerMatrix.setTranslation(player_pos);
+	playerMatrix.rotate(camera_yaw, Vector3(0, 1, 0));
+
+	EntityMesh::update(elapsed_time);
 }
 
 void EntityPlayer::jump()

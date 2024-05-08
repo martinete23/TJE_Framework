@@ -1,10 +1,10 @@
 #pragma once
 #include <map>
 #include "graphics/material.h"
-#include "entities/entitymesh.h"
+#include "framework/camera.h"
 
 class Entity;
-class Camera;
+class EntityPlayer;
 
 class World
 {
@@ -12,10 +12,14 @@ public:
 	static World* instance;
 	World();
 
-	Entity* root = nullptr;
+	Entity* root;
 	Texture* extrue;
-	//Camera* camera = nullptr;
+	Camera* camera;
 	EntityPlayer* player;
+	
+	float camera_yaw = 0.f;
+	float camera_pitch = 0.f;
+	float camera_speed = 2.0f;
 
 	std::map<std::string, sRenderData> meshes_to_load;
 

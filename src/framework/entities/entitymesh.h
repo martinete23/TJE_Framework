@@ -4,10 +4,6 @@
 #include "graphics/texture.h"
 #include "graphics/shader.h"
 
-class Mesh;
-class Texture;
-class Shader;
-
 class EntityMesh : public Entity {
 
 public:
@@ -33,6 +29,8 @@ class EntityPlayer : public EntityMesh {
 
 public:
 
+	Vector3 velocity = Vector3(0.0f);
+
 	Matrix44 playerMatrix;
 	Mesh* playerMesh;
 	Material playerMaterial;
@@ -42,6 +40,6 @@ public:
 	EntityPlayer(Mesh* m, Material mat);
 
 	void render(Camera* camera);
-	void update(float elsapsed_time, Camera* camera);
+	void update(float elapsed_time);
 	void jump();
 };

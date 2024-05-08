@@ -1,10 +1,10 @@
 #pragma once
 
 #include "input.h"
-#include "world.h"
 #include "graphics/shader.h"
-
-class World;
+#include "world.h"
+#include "graphics/texture.h"
+#include "graphics/mesh.h"
 
 enum eStages {
 	INTRO,
