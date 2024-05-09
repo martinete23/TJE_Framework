@@ -132,7 +132,6 @@ void Game::render(void)
 void Game::update(double seconds_elapsed)
 {
 	current_stage->update(seconds_elapsed);
-
 }
 
 //Keyboard event handler (sync input)

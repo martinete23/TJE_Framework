@@ -81,6 +81,25 @@ EntityPlayer::EntityPlayer(Mesh* m, Material mat)
 
 void EntityPlayer::render(Camera* camera)
 {
+	EntityMesh::render(camera);
+
+	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/flat.fs");
+	Mesh* mesh = Mesh::Get("data/meshes/sphere.obj");
+	Matrix44 m = model;
+
+	shader->enable();
+
+	m.translate(playerMatrix.getTranslation().x, playerMatrix.getTranslation().y + 0.5f, playerMatrix.getTranslation().z);
+	m.scale(0.07, 0.07, 0.07);
+
+	shader->setUniform("u_color", Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+	shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
+	shader->setUniform("u_model", m);
+
+	mesh->render(GL_LINES);
+
+	shader->disable();
+
 	playerMaterial.shader->enable();
 
 	playerMaterial.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
