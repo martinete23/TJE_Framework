@@ -4,6 +4,8 @@
 #include "graphics/texture.h"
 #include "graphics/shader.h"
 
+
+
 class EntityMesh : public Entity {
 
 public:
@@ -42,4 +44,23 @@ public:
 	void render(Camera* camera);
 	void update(float elapsed_time);
 	void jump();
+};
+
+class EntityCollider : public EntityMesh
+{
+public:
+
+	void getCollisionWithModel(const Matrix44& m, const Vector3& target_position, const std::vector<sCollisionData>& collisions, const std::vector<sCollisionData>& ground_collisions);
+
+	int layer = eCollisionFilter::SCENARIO;
+
+	bool isStatic = true;
+	EntityCollider() {};
+	
+	EntityCollider(Mesh* mesh, const Material& material) {};
+
+	void getCollisions(const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions, eCollisionFilter filter);
+
+	int getLayer() { return layer; };
+	void setLayer(int new_layer) { layer = new_layer; };
 };
