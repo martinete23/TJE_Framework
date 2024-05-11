@@ -1,4 +1,7 @@
 #include "entitymesh.h"
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "framework/camera.h"
 #include "framework/world.h"
 #include "framework/input.h"

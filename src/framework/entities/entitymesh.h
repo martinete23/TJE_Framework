@@ -1,4 +1,5 @@
 #include "entity.h"
+#include <map>
 #include "graphics/material.h"
 #include "graphics/mesh.h"
 #include "graphics/texture.h"
