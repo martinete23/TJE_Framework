@@ -213,7 +213,7 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 {
 	Vector3 collision_point;
 	Vector3 collision_normal;
-	Vector3 center = target_position + Vector3(0.f, 1.25f, 0.f);
+	Vector3 center = target_position;
 
 	
 	float sphere_radius = World::instance->sphere_radius;
@@ -228,7 +228,7 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 	}
 	Vector3 character_center = center + Vector3(0.0f, player_height, 0.0f);
 	if (mesh->testSphereCollision(m, character_center, sphere_radius, collision_point, collision_normal)) {
-		collisions.push_back({ collision_point, collision_normal.normalize(), floor_sphere_center.distance(collision_point) });
+		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
 		ground_collisions.push_back({collision_point, collision_normal.normalize(), character_center.distance(collision_point)});

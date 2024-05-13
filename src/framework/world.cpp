@@ -115,7 +115,7 @@ bool World::parseScene(const char* filename, Entity* root)
 
 
 		Material mat = render_data.material;
-		EntityMesh* new_entity = nullptr;
+		EntityCollider* new_entity = nullptr;
 
 		size_t tag = data.first.find("@tag");
 
@@ -126,7 +126,7 @@ bool World::parseScene(const char* filename, Entity* root)
 		}
 		else {
 			Mesh* mesh = Mesh::Get(mesh_name.c_str());
-			new_entity = new EntityMesh(mesh, mat);
+			new_entity = new EntityCollider(mesh, mat);
 		}
 
 		if (!new_entity) {

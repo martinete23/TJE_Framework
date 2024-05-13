@@ -58,7 +58,8 @@ public:
 	bool isStatic = true;
 	EntityCollider() {};
 	
-	EntityCollider(Mesh* mesh, const Material& material) {};
+	EntityCollider(Mesh* mesh, const Material& material):
+		EntityMesh(mesh, material) {};
 
 	void getCollisions(const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions, eCollisionFilter filter);
 
