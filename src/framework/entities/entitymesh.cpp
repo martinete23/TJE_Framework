@@ -179,6 +179,8 @@ void EntityPlayer::update(float elapsed_time)
 		float up_factor = fabsf(collision.col_normal.dot(Vector3::UP));
 		if (up_factor > 0.8) {
 			is_grounded = true;
+			hasJumped = false;
+			hasDoubleJumped = false;
 		}
 
 		if (collision.col_point.y > (player_pos.y + velocity.y * elapsed_time)) {
@@ -188,11 +190,17 @@ void EntityPlayer::update(float elapsed_time)
 
 	if (!is_grounded) {
 		velocity.y -= 9.8f * elapsed_time;
+		if (!hasDoubleJumped && hasJumped && Input::wasKeyPressed(SDL_SCANCODE_Z))
+		{
+			hasDoubleJumped = true;
+			velocity.y = 3.0f;
+		}
 	}
-	else if (Input::wasKeyPressed(SDL_SCANCODE_Z)){
-		velocity.y = 2.0f;
+	else if (Input::wasKeyPressed(SDL_SCANCODE_Z)) {
+		hasJumped = true;
+		hasDoubleJumped = false;
+		velocity.y = 3.0f;
 	}
-
 
 	player_pos += velocity * elapsed_time;
 

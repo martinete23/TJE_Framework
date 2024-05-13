@@ -38,6 +38,7 @@ public:
 	Mesh* playerMesh;
 	Material playerMaterial;
 	bool hasJumped = false;
+	bool hasDoubleJumped = false;
 
 	EntityPlayer() {};
 	EntityPlayer(Mesh* m, Material mat);
