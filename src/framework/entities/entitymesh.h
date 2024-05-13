@@ -38,7 +38,8 @@ public:
 	Mesh* playerMesh;
 	Material playerMaterial;
 	bool hasJumped = false;
-	bool hasDoubleJumped = false;
+	float timerJump = 0.0;
+	float timerDetect = 0.0;
 
 	EntityPlayer() {};
 	EntityPlayer(Mesh* m, Material mat);
