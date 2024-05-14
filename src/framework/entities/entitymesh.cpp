@@ -146,7 +146,10 @@ void EntityPlayer::update(float elapsed_time)
 	Vector3 move_dir;
 	Vector3 character_front = mYaw.frontVector();
 	Vector3 character_right = mYaw.rightVector();
-	if (Input::isKeyPressed(SDL_SCANCODE_UP)) move_dir += character_front;
+	if (Input::isKeyPressed(SDL_SCANCODE_UP)) {
+		move_dir += character_front;
+		
+	}
 	if (Input::isKeyPressed(SDL_SCANCODE_DOWN)) move_dir -= character_front;
 	if (Input::isKeyPressed(SDL_SCANCODE_LEFT)) move_dir += character_right;
 	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT)) move_dir -= character_right;
@@ -179,9 +182,10 @@ void EntityPlayer::update(float elapsed_time)
 		float up_factor = fabsf(collision.col_normal.dot(Vector3::UP));
 		if (up_factor > 0.8) {
 			is_grounded = true;
+			World::instance->wallDetected = false;
 			hasDashed = false;
-			if (hasJumped && timerDetect > 10.0f) {
-				printf("ground");
+			if (hasJumped && timerDetect > 1.0f) {
+				//printf("ground");
 				hasJumped = false;
 				timerJump = 0.0f;
 			}
@@ -195,12 +199,13 @@ void EntityPlayer::update(float elapsed_time)
 	if (!is_grounded) {
 		velocity.y -= 9.8f * elapsed_time;
 		if (Input::wasKeyPressed(SDL_SCANCODE_X) && hasDashed == false) {
+			dashDirection = character_front;
 			hasDashed = true;
 			printf("dash\n");
 		}
 	}
-	else if (Input::isKeyPressed(SDL_SCANCODE_Z)) {
-		if (timerJump < 200.f) {
+	else if (Input::wasKeyPressed(SDL_SCANCODE_Z)) {
+		if (timerJump < 1.0f) {
 			velocity.y = 6.0f;
 		}
 		else {
@@ -210,17 +215,24 @@ void EntityPlayer::update(float elapsed_time)
 		timerDetect = 0.0f;
 	}
 
-	if (hasDashed) {
-		float dash_speed = 2.0f;
-		velocity += character_front * dash_speed;
+	if (World::instance->wallDetected) {
+		printf("wall\n");
+		if (Input::wasKeyPressed(SDL_SCANCODE_Z)) {
+			velocity.y = 10.0f;
+		}
 	}
 
-	if (timerJump < 300.0f) {
-		timerJump += 1.0f;
+	if (hasDashed) {
+		float dash_speed = 2.0f;
+		velocity += dashDirection * dash_speed;
+	}
+
+	if (timerJump < 3.0f) {
+		timerJump += 1.0f * elapsed_time;
 		printf("%f\n", timerJump);
 	}
-	if (timerDetect < 50.0f) {
-		timerDetect += 1.0f;
+	if (timerDetect < 5.0f) {
+		timerDetect += 1.0f * elapsed_time;
 	}
 
 
@@ -254,7 +266,6 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 	Vector3 collision_normal;
 	Vector3 center = target_position;
 
-	
 	float sphere_radius = World::instance->sphere_radius;
 	float sphere_ground_radius = World::instance->spehre_ground_radius;
 	float player_height = World::instance->player_height;
@@ -267,6 +278,7 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 	}
 	Vector3 character_center = center + Vector3(0.0f, player_height, 0.0f);
 	if (mesh->testSphereCollision(m, character_center, sphere_radius, collision_point, collision_normal)) {
+		World::instance->wallDetected = true;
 		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {

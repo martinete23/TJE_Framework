@@ -41,6 +41,8 @@ public:
 	float timerJump = 0.0;
 	float timerDetect = 0.0;
 	bool hasDashed = false;
+	Vector3 dashDirection;
+	float angle = 0;
 
 	EntityPlayer() {};
 	EntityPlayer(Mesh* m, Material mat);

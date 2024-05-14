@@ -25,6 +25,8 @@ public:
 	float camera_pitch = 0.f;
 	float camera_speed = 2.0f;
 
+	bool wallDetected = false;
+
 	std::map<std::string, sRenderData> meshes_to_load;
 
 	void render();
