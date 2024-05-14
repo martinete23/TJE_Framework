@@ -195,10 +195,8 @@ void EntityPlayer::update(float elapsed_time)
 	if (!is_grounded) {
 		velocity.y -= 9.8f * elapsed_time;
 		if (Input::wasKeyPressed(SDL_SCANCODE_X) && hasDashed == false) {
-			// Player presses X to dash
 			hasDashed = true;
-			float dash_speed = 1000.0f;
-			velocity += character_front * dash_speed;
+			printf("dash\n");
 		}
 	}
 	else if (Input::isKeyPressed(SDL_SCANCODE_Z)) {
@@ -211,6 +209,10 @@ void EntityPlayer::update(float elapsed_time)
 		hasJumped = true;
 		timerDetect = 0.0f;
 	}
+
+	else if (hasDashed) {
+	}
+
 	if (timerJump < 300.0f) {
 		timerJump += 1.0f;
 		printf("%f\n", timerJump);
