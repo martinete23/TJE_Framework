@@ -153,7 +153,7 @@ void EntityPlayer::update(float elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT)) move_dir -= character_right;
 
 	move_dir.normalize();
-	move_dir *= 3.0f;
+	move_dir *= 2.0f;
 	velocity += move_dir;
 
 	std::vector<sCollisionData> collisions;
@@ -179,6 +179,7 @@ void EntityPlayer::update(float elapsed_time)
 		float up_factor = fabsf(collision.col_normal.dot(Vector3::UP));
 		if (up_factor > 0.8) {
 			is_grounded = true;
+			hasDashed = false;
 			if (hasJumped && timerDetect > 10.0f) {
 				printf("ground");
 				hasJumped = false;
@@ -193,6 +194,12 @@ void EntityPlayer::update(float elapsed_time)
 
 	if (!is_grounded) {
 		velocity.y -= 9.8f * elapsed_time;
+		if (Input::wasKeyPressed(SDL_SCANCODE_X) && hasDashed == false) {
+			// Player presses X to dash
+			hasDashed = true;
+			float dash_speed = 1000.0f;
+			velocity += character_front * dash_speed;
+		}
 	}
 	else if (Input::isKeyPressed(SDL_SCANCODE_Z)) {
 		if (timerJump < 200.f) {
@@ -226,6 +233,15 @@ void EntityPlayer::update(float elapsed_time)
 
 void EntityPlayer::jump()
 {
+}
+
+void EntityPlayer::dash(float elapsed_time)
+{
+	float camera_yaw = World::instance->camera_yaw;
+	Matrix44 mYaw;
+	mYaw.setRotation(camera_yaw, Vector3(0, 1, 0));
+	Vector3 dash_direction = mYaw.frontVector(); 
+
 }
 
 void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions)

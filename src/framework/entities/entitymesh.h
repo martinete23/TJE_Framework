@@ -40,6 +40,7 @@ public:
 	bool hasJumped = false;
 	float timerJump = 0.0;
 	float timerDetect = 0.0;
+	bool hasDashed = false;
 
 	EntityPlayer() {};
 	EntityPlayer(Mesh* m, Material mat);
@@ -47,6 +48,7 @@ public:
 	void render(Camera* camera);
 	void update(float elapsed_time);
 	void jump();
+	void dash(float elapsed_time);
 };
 
 class EntityCollider : public EntityMesh
