@@ -146,11 +146,11 @@ void EntityPlayer::update(float elapsed_time)
 	Vector3 move_dir;
 	Vector3 character_front = mYaw.frontVector();
 	Vector3 character_right = mYaw.rightVector();
-
 	if (Input::isKeyPressed(SDL_SCANCODE_UP)) move_dir += character_front;
 	if (Input::isKeyPressed(SDL_SCANCODE_DOWN)) move_dir -= character_front;
 	if (Input::isKeyPressed(SDL_SCANCODE_LEFT)) move_dir += character_right;
 	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT)) move_dir -= character_right;
+
 
 	move_dir.normalize();
 	move_dir *= 2.0f;
@@ -201,16 +201,18 @@ void EntityPlayer::update(float elapsed_time)
 	}
 	else if (Input::isKeyPressed(SDL_SCANCODE_Z)) {
 		if (timerJump < 200.f) {
-			velocity.y = 8.0f;
+			velocity.y = 6.0f;
 		}
 		else {
-			velocity.y = 5.0f;
+			velocity.y = 4.0f;
 		}
 		hasJumped = true;
 		timerDetect = 0.0f;
 	}
 
-	else if (hasDashed) {
+	if (hasDashed) {
+		float dash_speed = 2.0f;
+		velocity += character_front * dash_speed;
 	}
 
 	if (timerJump < 300.0f) {
