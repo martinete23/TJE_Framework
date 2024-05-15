@@ -38,7 +38,6 @@ void IntroStage::render()
 		// Disable shader
 		shader_cube->disable();
 	}
-
 }
 
 void IntroStage::update(double seconds_elapsed)

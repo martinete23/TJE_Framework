@@ -18,7 +18,7 @@ public:
 	EntityPlayer* player;
 	
 	float sphere_radius = 0.07f;
-	float spehre_ground_radius = 0.07f;
+	float sphere_ground_radius = 0.07f;
 	float player_height = 0.5f;
 
 	float camera_yaw = 0.f;

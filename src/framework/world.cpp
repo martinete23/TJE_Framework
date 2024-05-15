@@ -34,6 +34,7 @@ World::World()
 void World::render()
 {
 	camera->enable();
+
 	root->render(camera);
 	player->render(camera);
 }
@@ -60,8 +61,8 @@ void World::update(float delta_time)
 	Vector3 eye;
 	Vector3 center;
 
-	float orbit_dist = 1.0f;
-	eye = World::instance->player->playerMatrix.getTranslation() - front * orbit_dist + Vector3(0.f, 0.5f, 0.f);
+	float orbit_dist = 1.5f;
+	eye = World::instance->player->playerMatrix.getTranslation() - front * orbit_dist;
 	center = World::instance->player->playerMatrix.getTranslation() + Vector3(0.f, 0.5f, 0.f);
 
 	camera->lookAt(eye, center, Vector3(0, 1, 0));

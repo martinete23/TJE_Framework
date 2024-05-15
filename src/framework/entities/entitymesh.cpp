@@ -87,7 +87,7 @@ void EntityPlayer::render(Camera* camera)
 	EntityMesh::render(camera);
 
 	float sphere_radius = World::instance->sphere_radius;
-	float sphere_ground_radius = World::instance->spehre_ground_radius;
+	float sphere_ground_radius = World::instance->sphere_ground_radius;
 	float player_height = World::instance->player_height;
 
 	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/flat.fs");
@@ -100,9 +100,9 @@ void EntityPlayer::render(Camera* camera)
 	//first
 	{
 		m.translate(0.0f, sphere_ground_radius, 0.0f);
-		m.scale(sphere_ground_radius, sphere_ground_radius, sphere_radius);
+		m.scale(sphere_ground_radius, sphere_ground_radius, sphere_ground_radius);
 
-		shader->setUniform("u_color", Vector4(1, 0, 0, 1));
+		shader->setUniform("u_color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 		shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 		shader->setUniform("u_model", m);
 
@@ -113,7 +113,7 @@ void EntityPlayer::render(Camera* camera)
 		m = playerMatrix;
 		m.translate(0.0f, player_height, 0.0f);
 
-		shader->setUniform("u_color", Vector4(0, 1, 0, 1));
+		shader->setUniform("u_color", Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 		m.scale(sphere_radius, sphere_radius, sphere_radius);
 		shader->setUniform("u_model", m);
 
@@ -146,14 +146,22 @@ void EntityPlayer::update(float elapsed_time)
 	Vector3 move_dir;
 	Vector3 character_front = mYaw.frontVector();
 	Vector3 character_right = mYaw.rightVector();
-	if (Input::isKeyPressed(SDL_SCANCODE_UP)) {
+	if (Input::isKeyPressed(SDL_SCANCODE_W)) {
 		move_dir += character_front;
 		
 	}
-	if (Input::isKeyPressed(SDL_SCANCODE_DOWN)) move_dir -= character_front;
-	if (Input::isKeyPressed(SDL_SCANCODE_LEFT)) move_dir += character_right;
-	if (Input::isKeyPressed(SDL_SCANCODE_RIGHT)) move_dir -= character_right;
+	if (Input::isKeyPressed(SDL_SCANCODE_S)) move_dir -= character_front;
+	if (Input::isKeyPressed(SDL_SCANCODE_A)) move_dir += character_right;
+	if (Input::isKeyPressed(SDL_SCANCODE_D)) move_dir -= character_right;
 
+	if (!dashUse) {
+		velocity += dashDirection * 3.0f;
+	}
+
+	if (isWallJumping && wallJumpTimer < 0.5f) {
+		velocity -= moveDirection * 2.0f;
+		wallJumpTimer += 1.0f * elapsed_time;
+	}
 
 	move_dir.normalize();
 	move_dir *= 2.0f;
@@ -161,6 +169,8 @@ void EntityPlayer::update(float elapsed_time)
 
 	std::vector<sCollisionData> collisions;
 	std::vector<sCollisionData> ground_collisions;
+
+	World::instance->wallDetected = false;
 
 	for (auto e : World::instance->root->children) {
 		EntityCollider* ec = dynamic_cast<EntityCollider*>(e);
@@ -179,15 +189,13 @@ void EntityPlayer::update(float elapsed_time)
 	bool is_grounded = false;
 
 	for (const sCollisionData& collision : ground_collisions) {
+
 		float up_factor = fabsf(collision.col_normal.dot(Vector3::UP));
 		if (up_factor > 0.8) {
 			is_grounded = true;
-			World::instance->wallDetected = false;
-			hasDashed = false;
-			if (hasJumped && timerDetect > 1.0f) {
-				//printf("ground");
-				hasJumped = false;
-				timerJump = 0.0f;
+			dashUse = true;
+			if (jumpTimer < 1.0f) {
+				jumpTimer += 1.0f * elapsed_time;
 			}
 		}
 
@@ -198,43 +206,32 @@ void EntityPlayer::update(float elapsed_time)
 
 	if (!is_grounded) {
 		velocity.y -= 9.8f * elapsed_time;
-		if (Input::wasKeyPressed(SDL_SCANCODE_X) && hasDashed == false) {
+		jumpTimer = 0.0f;
+		if (Input::wasKeyPressed(SDL_SCANCODE_LSHIFT) && dashUse == true) {
+			dashUse = false;
 			dashDirection = character_front;
-			hasDashed = true;
-			printf("dash\n");
+		}
+		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
+			printf("wallJUMP\n");
+			velocity.y = 6.0f;
+			isWallJumping = true;
+			moveDirection = move_dir;
+			wallJumpTimer = 0.0f;
 		}
 	}
-	else if (Input::wasKeyPressed(SDL_SCANCODE_Z)) {
-		if (timerJump < 1.0f) {
-			velocity.y = 6.0f;
+	else if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
+		if (jumpTimer < 0.2f) {
+			velocity.y = 8.0f;
 		}
 		else {
-			velocity.y = 4.0f;
-		}
-		hasJumped = true;
-		timerDetect = 0.0f;
-	}
-
-	if (World::instance->wallDetected) {
-		printf("wall\n");
-		if (Input::wasKeyPressed(SDL_SCANCODE_Z)) {
-			velocity.y = 10.0f;
+			velocity.y = 5.0f;
 		}
 	}
 
-	if (hasDashed) {
-		float dash_speed = 2.0f;
-		velocity += dashDirection * dash_speed;
+	//printf("%f\n", jumpTimer);
+	if (World::instance->wallDetected == true) {
+		//printf("Wall Detected\n");
 	}
-
-	if (timerJump < 3.0f) {
-		timerJump += 1.0f * elapsed_time;
-		printf("%f\n", timerJump);
-	}
-	if (timerDetect < 5.0f) {
-		timerDetect += 1.0f * elapsed_time;
-	}
-
 
 	player_pos += velocity * elapsed_time;
 
@@ -267,7 +264,7 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 	Vector3 center = target_position;
 
 	float sphere_radius = World::instance->sphere_radius;
-	float sphere_ground_radius = World::instance->spehre_ground_radius;
+	float sphere_ground_radius = World::instance->sphere_ground_radius;
 	float player_height = World::instance->player_height;
 
 	//floor collisions 
