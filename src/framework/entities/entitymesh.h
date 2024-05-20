@@ -38,6 +38,8 @@ public:
 	Mesh* playerMesh;
 	Material playerMaterial;
 
+	bool boolJump = false;
+
 	bool dashUse = true;
 	Vector3 dashDirection;
 	float angle = 0;

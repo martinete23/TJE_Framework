@@ -195,6 +195,12 @@ void EntityPlayer::update(float elapsed_time)
 		if (up_factor > 0.8) {
 			is_grounded = true;
 			dashUse = true;
+
+			if (boolJump == true) {
+				World::instance->sphere_radius /= 2;
+				boolJump = false;
+			}
+
 			if (jumpTimer < 1.0f) {
 				jumpTimer += 1.0f * elapsed_time;
 			}
@@ -208,6 +214,12 @@ void EntityPlayer::update(float elapsed_time)
 	if (!is_grounded) {
 		velocity.y -= 9.8f * elapsed_time;
 		jumpTimer = 0.0f;
+
+		if (boolJump == false) {
+			World::instance->sphere_radius *= 2;
+			boolJump = true;
+		}
+
 		if (Input::wasKeyPressed(SDL_SCANCODE_LSHIFT) && dashUse == true) {
 			dashUse = false;
 			dashDirection = character_front;
@@ -239,7 +251,13 @@ void EntityPlayer::update(float elapsed_time)
 	velocity.x *= 0.5f;
 	velocity.z *= 0.5f;
 
-	playerMatrix.setTranslation(player_pos);
+	if (playerMatrix.getTranslation().y < 0) {
+		playerMatrix.setTranslation(Vector3(0, 10, 0));
+	}
+	else {
+		playerMatrix.setTranslation(player_pos);
+	}
+
 	playerMatrix.rotate(camera_yaw, Vector3(0, 1, 0));
 
 	EntityMesh::update(elapsed_time);
