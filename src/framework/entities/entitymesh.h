@@ -11,7 +11,7 @@ class EntityMesh : public Entity {
 
 public:
 	EntityMesh() {};
-	EntityMesh(Mesh* m, Material mat);
+	EntityMesh(Mesh* m, Material mat, std::string name);
 
 	// Attributes of the derived class  
 	Mesh* mesh = nullptr;
@@ -68,8 +68,8 @@ public:
 	bool isStatic = true;
 
 	EntityCollider() {};
-	EntityCollider(Mesh* mesh, const Material& material):
-		EntityMesh(mesh, material) {};
+	EntityCollider(Mesh* mesh, const Material& material, std::string name):
+		EntityMesh(mesh, material, name) {};
 	~EntityCollider() {};
 
 	void getCollisions(const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions, eCollisionFilter filter);

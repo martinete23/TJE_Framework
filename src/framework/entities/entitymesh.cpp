@@ -8,10 +8,11 @@
 
 class EntityCollider;
 
-EntityMesh::EntityMesh(Mesh* m, Material mat)
+EntityMesh::EntityMesh(Mesh* m, Material mat, std::string name)
 {
 	mesh = m;
 	material = mat;
+	this->name = name;
 }
 
 void EntityMesh::render(Camera* camera)
@@ -34,9 +35,6 @@ void EntityMesh::render(Camera* camera)
 		material.shader = Shader::Get(
 			isInstanced ? "data/shaders/instanced.vs" : "data/shaders/basic.vs", "data/shaders/texture.fs");
 	}
-
-
-
 	// Get the last camera that was activated 
 	// Camera* camera = Camera::current;
 
@@ -49,6 +47,9 @@ void EntityMesh::render(Camera* camera)
 	if (material.diffuse) {
 		material.shader->setTexture("u_texture", material.diffuse, 0);
 	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// Render the mesh using the shader
 	mesh->render(GL_TRIANGLES);

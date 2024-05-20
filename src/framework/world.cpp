@@ -36,6 +36,7 @@ void World::render()
 	camera->enable();
 
 	root->render(camera);
+
 	player->render(camera);
 }
 
@@ -44,8 +45,8 @@ void World::update(float delta_time)
 	root->update(delta_time);
 	player->update(delta_time);
 
-	camera_yaw -= Input::mouse_delta.x * delta_time * 2.5f;
-	camera_pitch -= Input::mouse_delta.y * delta_time * 2.5f;
+	camera_yaw -= Input::mouse_delta.x * delta_time * 1.5f;
+	camera_pitch -= Input::mouse_delta.y * delta_time * 1.5f;
 
 	//pitch angle
 	camera_pitch = clamp(camera_pitch, -M_PI * 0.4f, M_PI * 0.4f);
@@ -127,7 +128,7 @@ bool World::parseScene(const char* filename, Entity* root)
 		}
 		else {
 			Mesh* mesh = Mesh::Get(mesh_name.c_str());
-			new_entity = new EntityCollider(mesh, mat);
+			new_entity = new EntityCollider(mesh, mat, mesh_name);
 		}
 
 		if (!new_entity) {
