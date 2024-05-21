@@ -4,8 +4,11 @@
 #include "graphics/mesh.h"
 #include "graphics/texture.h"
 #include "graphics/shader.h"
+#include "framework/animation.h"
 
-
+enum {
+	IDLE, RUN, JUMP
+};
 
 class EntityMesh : public Entity {
 
@@ -49,13 +52,17 @@ public:
 	Vector3 moveDirection;
 	float wallJumpTimer = 0.0f;
 
+	Animation* idle;
+	Animation* run;
+	Animation* jump;
+
+	int state = IDLE;
 
 	EntityPlayer() {};
 	EntityPlayer(Mesh* m, Material mat);
 
 	void render(Camera* camera);
 	void update(float elapsed_time);
-	void jump();
 	void dash(float elapsed_time);
 };
 

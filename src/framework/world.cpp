@@ -22,11 +22,13 @@ World::World()
 
 	
 	Material player_material;
-	player_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	//player_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	player_material.shader = Shader::Get("data/shaders/skinning.vs", "data/shaders/texture.fs");
 	player_material.diffuse = Texture::Get("data/textures/polygon.tga");
 	player_material.color = Vector4(1, 1, 1, 1);
 
-	player = new EntityPlayer(Mesh::Get("data/meshes/polygon.obj"), player_material);
+	//player = new EntityPlayer(Mesh::Get("data/meshes/polygon.obj"), player_material);
+	player = new EntityPlayer(Mesh::Get("data/animations/idle.MESH"), player_material);
 
 	parseScene("data/myscene.scene", root);
 }
