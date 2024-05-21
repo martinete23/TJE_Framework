@@ -81,7 +81,7 @@ EntityPlayer::EntityPlayer(Mesh* m, Material mat)
 	playerMesh = m;
 	playerMaterial = mat;
 
-	playerMatrix.setTranslation(Vector3(0,10,0));
+	//playerMatrix.setTranslation(Vector3(0,10,0));
 
 	idle = Animation::Get("data/animations/idle.skanim");
 	run = Animation::Get("data/animations/run.skanim");
@@ -316,7 +316,8 @@ void EntityPlayer::update(float elapsed_time)
 	velocity.z *= 0.5f;
 
 	if (playerMatrix.getTranslation().y < 0) {
-		playerMatrix.setTranslation(Vector3(0, 10, 0));
+
+		playerMatrix.setTranslation(World::instance->SpawnPoint);
 	}
 	else {
 		playerMatrix.setTranslation(player_pos);

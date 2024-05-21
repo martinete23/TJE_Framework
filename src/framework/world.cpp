@@ -122,12 +122,18 @@ bool World::parseScene(const char* filename, Entity* root)
 		EntityCollider* new_entity = nullptr;
 
 		size_t tag = data.first.find("@tag");
+		size_t playerTag = data.first.find("@player");
 
 		if (tag != std::string::npos) {
 			Mesh* mesh = Mesh::Get("...");
-			// Create a different type of entity
-			// new_entity = new ...
 		}
+		if (playerTag != std::string::npos) {
+
+			SpawnPoint = render_data.models[0].getTranslation();
+			player->playerMatrix.setTranslation(SpawnPoint);
+			continue;
+		}
+
 		else {
 			Mesh* mesh = Mesh::Get(mesh_name.c_str());
 			new_entity = new EntityCollider(mesh, mat, mesh_name);
