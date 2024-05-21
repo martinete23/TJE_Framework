@@ -28,7 +28,7 @@ World::World()
 	player_material.color = Vector4(1, 1, 1, 1);
 
 	//player = new EntityPlayer(Mesh::Get("data/meshes/polygon.obj"), player_material);
-	player = new EntityPlayer(Mesh::Get("data/animations/idle.MESH"), player_material);
+	player = new EntityPlayer(Mesh::Get("data/meshes/polygon.MESH"), player_material);
 
 	parseScene("data/myscene.scene", root);
 }

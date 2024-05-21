@@ -85,6 +85,9 @@ EntityPlayer::EntityPlayer(Mesh* m, Material mat)
 
 	idle = Animation::Get("data/animations/idle.skanim");
 	run = Animation::Get("data/animations/run.skanim");
+	run_right = Animation::Get("data/animations/run_right.skanim");
+	run_left = Animation::Get("data/animations/run_left.skanim");
+	run_back = Animation::Get("data/animations/run_back.skanim");
 	jump = Animation::Get("data/animations/jump.skanim");
 }
 
@@ -141,10 +144,25 @@ void EntityPlayer::render(Camera* camera)
 		idle->assignTime(Game::instance->time);
 		playerMesh->renderAnimated(GL_TRIANGLES, &idle->skeleton);
 	}
-	else if (state == RUN)
+	else if (state == RUN_FRONT)
 	{
 		run->assignTime(Game::instance->time);
 		playerMesh->renderAnimated(GL_TRIANGLES, &run->skeleton);
+	}
+	else if (state == RUN_RIGHT)
+	{
+		run_right->assignTime(Game::instance->time);
+		playerMesh->renderAnimated(GL_TRIANGLES, &run_right->skeleton);
+	}
+	else if (state == RUN_LEFT)
+	{
+		run_left->assignTime(Game::instance->time);
+		playerMesh->renderAnimated(GL_TRIANGLES, &run_left->skeleton);
+	}
+	else if (state == RUN_BACK)
+	{
+		run_back->assignTime(Game::instance->time);
+		playerMesh->renderAnimated(GL_TRIANGLES, &run_back->skeleton);
 	}
 	else if (state == JUMP)
 	{
@@ -176,22 +194,22 @@ void EntityPlayer::update(float elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_W))
 	{
 		move_dir += character_front;
-		state = RUN;
+		state = RUN_FRONT;
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_S))
 	{
 		move_dir -= character_front;
-		state = RUN;
+		state = RUN_BACK;
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_A))
 	{
 		move_dir += character_right;
-		state = RUN;
+		state = RUN_LEFT;
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_D))
 	{
 		move_dir -= character_right;
-		state = RUN;
+		state = RUN_RIGHT;
 	}
 
 	if (!dashUse) {

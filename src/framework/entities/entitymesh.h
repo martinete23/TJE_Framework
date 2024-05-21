@@ -7,7 +7,7 @@
 #include "framework/animation.h"
 
 enum {
-	IDLE, RUN, JUMP
+	IDLE, RUN_FRONT, RUN_RIGHT, RUN_LEFT, RUN_BACK, JUMP
 };
 
 class EntityMesh : public Entity {
@@ -18,6 +18,8 @@ public:
 
 	// Attributes of the derived class  
 	Mesh* mesh = nullptr;
+
+	//Animator animator;
 
 	Material material;
 
@@ -54,6 +56,9 @@ public:
 
 	Animation* idle;
 	Animation* run;
+	Animation* run_right;
+	Animation* run_left;
+	Animation* run_back;
 	Animation* jump;
 
 	int state = IDLE;
