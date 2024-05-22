@@ -8,7 +8,7 @@ void IntroStage::onEnter()
 
 	mesh_cube = Mesh::Get("data/meshes/cubemap.obj");
 
-	shader_cube = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	shader_cube = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
 }
 
 void IntroStage::onExit()
