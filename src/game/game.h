@@ -9,12 +9,19 @@
 #include "framework/utils.h"
 #include "framework/stage.h"
 
+enum eSageLevel {
+	TUTORIAL = 0,
+	LEVEL1 = 1
+};
+
 class Game
 {
 public:
 	static Game* instance;
 
 	World* world = nullptr;
+
+	eSageLevel course = TUTORIAL;
 
 	Stage* stages[STAGES_SIZE];
 

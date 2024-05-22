@@ -44,6 +44,7 @@ void EntityMesh::render(Camera* camera)
 	material.shader->setUniform("u_model", getGlobalMatrix());
 	material.shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 	material.shader->setUniform("u_color", Vector4(1,1,1,1));
+	material.shader->setUniform("u_scale", 15.0f);
 
 	if (material.diffuse) {
 		material.shader->setTexture("u_texture", material.diffuse, 0);
@@ -57,7 +58,6 @@ void EntityMesh::render(Camera* camera)
 
 	// Disable shader after finishing rendering
 	material.shader->disable();
-
 	for (int i = 0; i < children.size(); ++i)
 	{
 		children[i]->render(camera);
@@ -123,6 +123,7 @@ void EntityPlayer::render(Camera* camera)
 	playerMaterial.shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 	playerMaterial.shader->setUniform("u_texture", playerMaterial.diffuse, 0);
 	playerMaterial.shader->setUniform("u_model", playerMatrix);
+	playerMaterial.shader->setUniform("u_scale", 1.0f);
 	playerMaterial.shader->setUniform("u_time", time);
 
 	playerMesh->renderAnimated(GL_TRIANGLES, &animator.getCurrentSkeleton());
@@ -324,6 +325,10 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 	}
 	Vector3 character_center = center + Vector3(0.0f, player_height, 0.0f);
 	if (mesh->testSphereCollision(m, character_center, sphere_radius, collision_point, collision_normal)) {
+		if (this->name == "scene/Sphere/Sphere.obj") {
+			Game::instance->course = LEVEL1;
+			World::instance = new World();
+		}
 		World::instance->wallDetected = true;
 		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 	}

@@ -31,7 +31,12 @@ World::World()
 	player = new EntityPlayer(Mesh::Get("data/meshes/polygon.MESH"), player_material);
 	player->isAnimated = true;
 
-	parseScene("data/myscene.scene", root);
+	if (Game::instance->course == TUTORIAL) {
+		parseScene("data/myscene.scene", root);
+	}
+	if (Game::instance->course == LEVEL1) {
+		parseScene("data/myscene2.scene", root);
+	}
 }
 
 void World::render()
@@ -112,6 +117,7 @@ bool World::parseScene(const char* filename, Entity* root)
 	for (auto data : meshes_to_load) {
 
 		mesh_name = "data/" + data.first;
+
 		sRenderData& render_data = data.second;
 
 		// No transforms, nothing to do here
@@ -137,6 +143,7 @@ bool World::parseScene(const char* filename, Entity* root)
 
 		else {
 			Mesh* mesh = Mesh::Get(mesh_name.c_str());
+
 			new_entity = new EntityCollider(mesh, mat, mesh_name);
 		}
 
