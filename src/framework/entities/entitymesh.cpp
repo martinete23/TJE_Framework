@@ -81,14 +81,7 @@ EntityPlayer::EntityPlayer(Mesh* m, Material mat)
 	playerMesh = m;
 	playerMaterial = mat;
 
-	//playerMatrix.setTranslation(Vector3(0,10,0));
-
-	idle = Animation::Get("data/animations/idle.skanim");
-	run = Animation::Get("data/animations/run.skanim");
-	run_right = Animation::Get("data/animations/run_right.skanim");
-	run_left = Animation::Get("data/animations/run_left.skanim");
-	run_back = Animation::Get("data/animations/run_back.skanim");
-	jump = Animation::Get("data/animations/jump.skanim");
+	animator.playAnimation("data/animations/idle.skanim");
 }
 
 void EntityPlayer::render(Camera* camera)
@@ -105,8 +98,6 @@ void EntityPlayer::render(Camera* camera)
 
 	shader->enable();
 
-	//draw the spheres
-	//first
 	{
 		m.translate(0.0f, sphere_ground_radius, 0.0f);
 		m.scale(sphere_ground_radius, sphere_ground_radius, sphere_ground_radius);
@@ -114,10 +105,7 @@ void EntityPlayer::render(Camera* camera)
 		shader->setUniform("u_color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 		shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 		shader->setUniform("u_model", m);
-
-		//mesh->render(GL_LINES);
 	}
-	//second
 	{
 		m = playerMatrix;
 		m.translate(0.0f, player_height, 0.0f);
@@ -125,8 +113,6 @@ void EntityPlayer::render(Camera* camera)
 		shader->setUniform("u_color", Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 		m.scale(sphere_radius, sphere_radius, sphere_radius);
 		shader->setUniform("u_model", m);
-
-		//mesh->render(GL_LINES);
 	}
 
 	shader->disable();
@@ -139,48 +125,17 @@ void EntityPlayer::render(Camera* camera)
 	playerMaterial.shader->setUniform("u_model", playerMatrix);
 	playerMaterial.shader->setUniform("u_time", time);
 
-	if (state == IDLE)
-	{
-		idle->assignTime(Game::instance->time);
-		playerMesh->renderAnimated(GL_TRIANGLES, &idle->skeleton);
-	}
-	else if (state == RUN_FRONT)
-	{
-		run->assignTime(Game::instance->time);
-		playerMesh->renderAnimated(GL_TRIANGLES, &run->skeleton);
-	}
-	else if (state == RUN_RIGHT)
-	{
-		run_right->assignTime(Game::instance->time);
-		playerMesh->renderAnimated(GL_TRIANGLES, &run_right->skeleton);
-	}
-	else if (state == RUN_LEFT)
-	{
-		run_left->assignTime(Game::instance->time);
-		playerMesh->renderAnimated(GL_TRIANGLES, &run_left->skeleton);
-	}
-	else if (state == RUN_BACK)
-	{
-		run_back->assignTime(Game::instance->time);
-		playerMesh->renderAnimated(GL_TRIANGLES, &run_back->skeleton);
-	}
-	else if (state == JUMP)
-	{
-		jump->assignTime(Game::instance->time);
-		playerMesh->renderAnimated(GL_TRIANGLES, &jump->skeleton);
-	}
-
-	//playerMesh->render(GL_TRIANGLES);
+	playerMesh->renderAnimated(GL_TRIANGLES, &animator.getCurrentSkeleton());
 
 	playerMaterial.shader->disable();
 }
 
 void EntityPlayer::update(float elapsed_time)
 {
-	/*if (isAnimated) {
+	if (isAnimated) {
 		animator.update(elapsed_time);
-	}*/
-
+	}
+	
 	float camera_yaw = World::instance->camera_yaw;
 
 	Vector3 player_pos = playerMatrix.getTranslation();
@@ -194,22 +149,38 @@ void EntityPlayer::update(float elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_W))
 	{
 		move_dir += character_front;
-		state = RUN_FRONT;
+		if (state != RUN_FRONT)
+		{
+			animator.playAnimation("data/animations/run.skanim");
+			state = RUN_FRONT;
+		}
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_S))
 	{
 		move_dir -= character_front;
-		state = RUN_BACK;
+		if (state != RUN_BACK)
+		{
+			animator.playAnimation("data/animations/run_back.skanim");
+			state = RUN_BACK;
+		}
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_A))
 	{
 		move_dir += character_right;
-		state = RUN_LEFT;
+		if (state != RUN_LEFT)
+		{
+			animator.playAnimation("data/animations/run_left.skanim");
+			state = RUN_LEFT;
+		}
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_D))
 	{
 		move_dir -= character_right;
-		state = RUN_RIGHT;
+		if (state != RUN_RIGHT)
+		{
+			animator.playAnimation("data/animations/run_right.skanim");
+			state = RUN_RIGHT;
+		}
 	}
 
 	if (!dashUse) {
@@ -226,7 +197,11 @@ void EntityPlayer::update(float elapsed_time)
 	velocity += move_dir;
 
 	if (move_dir.x == 0.0f && move_dir.y == 0.0f && move_dir.z == 0.0f) {
-		state = IDLE;
+		if (state != IDLE)
+		{
+			animator.playAnimation("data/animations/idle.skanim");
+			state = IDLE;
+		}
 	}
 
 	std::vector<sCollisionData> collisions;
@@ -288,7 +263,6 @@ void EntityPlayer::update(float elapsed_time)
 			dashDirection = character_front;
 		}
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
-			printf("wallJUMP\n");
 			velocity.y = 6.0f;
 			isWallJumping = true;
 			moveDirection = move_dir;
@@ -303,11 +277,6 @@ void EntityPlayer::update(float elapsed_time)
 		else {
 			velocity.y = 5.0f;
 		}
-	}
-
-	//printf("%f\n", jumpTimer);
-	if (World::instance->wallDetected == true) {
-		//printf("Wall Detected\n");
 	}
 
 	player_pos += velocity * elapsed_time;

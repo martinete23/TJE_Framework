@@ -6,8 +6,13 @@
 #include "graphics/shader.h"
 #include "framework/animation.h"
 
-enum {
-	IDLE, RUN_FRONT, RUN_RIGHT, RUN_LEFT, RUN_BACK, JUMP
+enum eAnimationState {
+	IDLE,
+	RUN_FRONT,
+	RUN_RIGHT,
+	RUN_LEFT,
+	RUN_BACK,
+	JUMP
 };
 
 class EntityMesh : public Entity {
@@ -19,7 +24,7 @@ public:
 	// Attributes of the derived class  
 	Mesh* mesh = nullptr;
 
-	//Animator animator;
+	Animator animator;
 
 	Material material;
 
@@ -54,14 +59,9 @@ public:
 	Vector3 moveDirection;
 	float wallJumpTimer = 0.0f;
 
-	Animation* idle;
-	Animation* run;
-	Animation* run_right;
-	Animation* run_left;
-	Animation* run_back;
-	Animation* jump;
-
 	int state = IDLE;
+
+	bool isAnimated;
 
 	EntityPlayer() {};
 	EntityPlayer(Mesh* m, Material mat);

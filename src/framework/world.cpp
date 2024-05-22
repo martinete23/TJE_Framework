@@ -29,6 +29,7 @@ World::World()
 
 	//player = new EntityPlayer(Mesh::Get("data/meshes/polygon.obj"), player_material);
 	player = new EntityPlayer(Mesh::Get("data/meshes/polygon.MESH"), player_material);
+	player->isAnimated = true;
 
 	parseScene("data/myscene.scene", root);
 }
