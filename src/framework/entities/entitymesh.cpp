@@ -149,7 +149,7 @@ void EntityPlayer::update(float elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_W))
 	{
 		move_dir += character_front;
-		if (state != RUN_FRONT)
+		if (state != RUN_FRONT && state != RUN_LEFT && state != RUN_RIGHT)
 		{
 			animator.playAnimation("data/animations/run.skanim");
 			state = RUN_FRONT;
@@ -158,7 +158,7 @@ void EntityPlayer::update(float elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_S))
 	{
 		move_dir -= character_front;
-		if (state != RUN_BACK)
+		if (state != RUN_BACK && state != RUN_LEFT && state != RUN_RIGHT)
 		{
 			animator.playAnimation("data/animations/run_back.skanim");
 			state = RUN_BACK;
