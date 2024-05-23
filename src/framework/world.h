@@ -13,7 +13,7 @@ public:
 	World();
 
 	Entity* root;
-	Texture* extrue;
+	Texture* texture;
 	Camera* camera;
 	EntityPlayer* player;
 	

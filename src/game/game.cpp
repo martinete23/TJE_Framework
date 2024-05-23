@@ -191,7 +191,18 @@ void Game::onResize(int width, int height)
 
 void Game::goToStage(eStages stage)
 {
+	if (current_stage) {
+		current_stage->onExit();
+	}
+
 	current_stage = stages[stage];
-	current_stage->onEnter();
+
+	if (current_stage) {
+		std::cout << "Entering stage: " << stage << std::endl;
+		current_stage->onEnter();
+	}
+	else {
+		std::cerr << "Error: Stage not found" << std::endl;
+	}
 }
 

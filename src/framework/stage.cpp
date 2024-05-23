@@ -22,7 +22,7 @@ void IntroStage::onEnter()
 	material_play_button.diffuse = Texture::Get("data/textures/play_button.tga");
 	material_play_button.color = Vector4(1, 1, 1, 1);
 
-	playButton = new EntityUI(Vector2(400, 300), Vector2(40, 20), material_play_button, BUTTONPLAY, "play_button");
+	playButton = new EntityUI(Vector2(400, 300), Vector2(80, 40), material_play_button, BUTTONPLAY, "play_button");
 
 	background->addChild(playButton);
 }
@@ -33,8 +33,14 @@ void IntroStage::onExit()
 
 void IntroStage::render()
 {
-	camera2D->enable();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	camera2D->enable();
 
 	background->render(camera2D);
 }
@@ -42,11 +48,13 @@ void IntroStage::render()
 void IntroStage::update(double seconds_elapsed)
 {
 
+	background->update(seconds_elapsed);
 	
 }
 
 void PlayStage::onEnter()
 {
+
 	texture_cube = Texture::Get("data/textures/StandardCubeMap.tga");
 
 	mesh_cube = Mesh::Get("data/meshes/cubemap.obj");
@@ -60,6 +68,12 @@ void PlayStage::onExit()
 
 void PlayStage::render(Shader* shader)
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Ensure we clear the buffers
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	World::instance->render();
 
 	if (shader_cube)

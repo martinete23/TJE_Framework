@@ -41,6 +41,7 @@ World::World()
 
 void World::render()
 {
+
 	camera->enable();
 
 	root->render(camera);

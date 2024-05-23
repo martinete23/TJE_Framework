@@ -393,6 +393,7 @@ EntityUI::EntityUI(Vector2 pos, Vector2 size, const Material& material, eButtonI
 {
 	position = pos;
 	this->size = size;
+
 	mesh = new Mesh();
 	mesh->createQuad(pos.x, pos.y, size.x, size.y, true);
 	this->material = material;
@@ -419,7 +420,7 @@ void EntityUI::render(Camera* camera2D)
 
 		material.shader->setUniform("u_model", getGlobalMatrix());
 		material.shader->setUniform("u_viewprojection", camera2D->viewprojection_matrix);
-		material.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
+		material.shader->setUniform("u_color", material.color);
 		material.shader->setUniform("u_scale", mask);
 
 
@@ -434,7 +435,7 @@ void EntityUI::render(Camera* camera2D)
 		material.shader->disable();
 	}
 
-	glClear(GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_DEPTH_BUFFER_BIT);
 
 	Entity::render(camera2D);
 
@@ -442,4 +443,19 @@ void EntityUI::render(Camera* camera2D)
 
 void EntityUI::update(float elapsed_time)
 {
+	Vector2 mouse_pos = Input::mouse_position;
+
+	if (button_id == BUTTONPLAY) {
+		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) && 
+			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
+			material.color = Vector4(1, 0, 0, 1);
+			if (Input::isMousePressed(SDL_BUTTON_LEFT)) {
+				Game::instance->goToStage(PLAY);
+			}
+		}
+		else {
+			material.color = Vector4(1, 1, 1, 1);
+		}
+	}
+	Entity::update(elapsed_time);
 }
