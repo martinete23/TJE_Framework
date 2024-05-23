@@ -372,3 +372,74 @@ void EntityCollider::getCollisions(const Vector3& target_position, std::vector<s
 		}
 	}
 }
+
+EntityUI::EntityUI(Vector2 size, const Material& material)
+{
+	this->size = size;
+
+	mesh = new Mesh();
+	mesh->createQuad(Game::instance->window_width / 2, Game::instance->window_height / 2, size.x, size.y, true);
+
+	this->material = material;
+
+	if (!this->material.shader) {
+		this->material.shader = Shader::Get("data/shaders/basic.vs", material.diffuse ? "data/shaders/texture.fs" : "data/shaders/flat.fs");
+
+	}
+
+}
+
+EntityUI::EntityUI(Vector2 pos, Vector2 size, const Material& material, eButtonID button_id, const std::string& name)
+{
+	position = pos;
+	this->size = size;
+	mesh = new Mesh();
+	mesh->createQuad(pos.x, pos.y, size.x, size.y, true);
+	this->material = material;
+
+	this->name = name;
+	this->button_id = button_id;
+
+	if (!this->material.shader) {
+		this->material.shader = Shader::Get("data/shaders/basic.vs", material.diffuse ? "data/shaders/texture.fs" : "data/shaders/flat.fs");
+	}
+
+
+}
+
+void EntityUI::render(Camera* camera2D)
+{
+
+	if (material.shader)
+	{
+		// Enable shader
+		material.shader->enable();
+
+		// Upload uniforms
+
+		material.shader->setUniform("u_model", getGlobalMatrix());
+		material.shader->setUniform("u_viewprojection", camera2D->viewprojection_matrix);
+		material.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
+		material.shader->setUniform("u_scale", mask);
+
+
+		if (material.diffuse) {
+			material.shader->setTexture("u_texture", material.diffuse, 0);
+		}
+
+		// Do the draw call
+		mesh->render(GL_TRIANGLES);
+
+		// Disable shader
+		material.shader->disable();
+	}
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	Entity::render(camera2D);
+
+}
+
+void EntityUI::update(float elapsed_time)
+{
+}

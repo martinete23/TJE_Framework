@@ -6,6 +6,12 @@
 #include "graphics/shader.h"
 #include "framework/animation.h"
 
+enum eButtonID {
+	BUTTONPLAY = 0,
+	BUTTONQUIT = 1,
+};
+
+
 enum eAnimationState {
 	IDLE,
 	RUN_FRONT,
@@ -95,4 +101,26 @@ public:
 
 	int getLayer() { return layer; };
 	void setLayer(int new_layer) { layer = new_layer; };
+};
+
+class EntityUI : public EntityMesh
+{
+
+public:
+	EntityUI(Vector2 size, const Material& material);
+	EntityUI(Vector2 pos, Vector2 size, const Material& material, eButtonID button_id, const std::string& name);
+
+	~EntityUI() {};
+
+	Vector2 position;
+	Vector2 size;
+
+	eButtonID button_id;
+
+	bool visible = true;
+
+	float mask = 1.0f;
+
+	void render(Camera* camera2D);
+	void update(float elapsed_time);
 };

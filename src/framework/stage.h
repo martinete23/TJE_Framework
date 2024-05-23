@@ -14,6 +14,8 @@ enum eStages {
 	STAGES_SIZE
 };
 
+class EntityUI;
+
 class Stage {
 public:
 
@@ -21,6 +23,11 @@ public:
 	Texture* texture_cube = NULL;
 	Shader* shader_cube = NULL;
 	Matrix44 m_cube;
+
+	Camera* camera2D;
+
+	EntityUI* background;
+	EntityUI* playButton;
 
 	virtual void onEnter() {};
 	virtual void onExit() {};
