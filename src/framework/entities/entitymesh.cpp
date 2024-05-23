@@ -133,6 +133,11 @@ void EntityPlayer::render(Camera* camera)
 
 void EntityPlayer::update(float elapsed_time)
 {
+	front = false;
+	back = false;
+	right = false;
+	left = false;
+
 	if (isAnimated) {
 		animator.update(elapsed_time);
 	}
@@ -150,38 +155,53 @@ void EntityPlayer::update(float elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_W))
 	{
 		move_dir += character_front;
-		if (state != RUN_FRONT && state != RUN_LEFT && state != RUN_RIGHT)
-		{
-			animator.playAnimation("data/animations/run.skanim");
-			state = RUN_FRONT;
-		}
+		front = true;
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_S))
 	{
 		move_dir -= character_front;
-		if (state != RUN_BACK && state != RUN_LEFT && state != RUN_RIGHT)
-		{
-			animator.playAnimation("data/animations/run_back.skanim");
-			state = RUN_BACK;
-		}
+		back = true;
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_A))
 	{
 		move_dir += character_right;
-		if (state != RUN_LEFT)
-		{
-			animator.playAnimation("data/animations/run_left.skanim");
-			state = RUN_LEFT;
-		}
+		left = true;
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_D))
 	{
 		move_dir -= character_right;
-		if (state != RUN_RIGHT)
-		{
-			animator.playAnimation("data/animations/run_right.skanim");
-			state = RUN_RIGHT;
-		}
+		right = true;
+	}
+
+	if (state != RUN_RIGHT && right && (front || back))
+	{
+		animator.playAnimation("data/animations/run_right.skanim");
+		state = RUN_RIGHT;
+	}
+	else if (state != RUN_LEFT && left && (front || back))
+	{
+		animator.playAnimation("data/animations/run_left.skanim");
+		state = RUN_LEFT;
+	}
+	else if (state != RUN_FRONT && front && !right && !left)
+	{
+		animator.playAnimation("data/animations/run.skanim");
+		state = RUN_FRONT;
+	}
+	else if (state != RUN_BACK && back && !right && !left)
+	{
+		animator.playAnimation("data/animations/run_back.skanim");
+		state = RUN_BACK;
+	}
+	else if (state != RUN_RIGHT && right)
+	{
+		animator.playAnimation("data/animations/run_right.skanim");
+		state = RUN_RIGHT;
+	}
+	else if (state != RUN_LEFT && left)
+	{
+		animator.playAnimation("data/animations/run_left.skanim");
+		state = RUN_LEFT;
 	}
 
 	if (!dashUse) {

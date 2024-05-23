@@ -63,6 +63,11 @@ public:
 
 	bool isAnimated;
 
+	bool front;
+	bool back;
+	bool right;
+	bool left;
+
 	EntityPlayer() {};
 	EntityPlayer(Mesh* m, Material mat);
 
