@@ -22,7 +22,7 @@ void IntroStage::onEnter()
 	material_play_button.diffuse = Texture::Get("data/textures/play_button.tga");
 	material_play_button.color = Vector4(1, 1, 1, 1);
 
-	playButton = new EntityUI(Vector2(400, 300), Vector2(80, 40), material_play_button, BUTTONPLAY, "play_button");
+	playButton = new EntityUI(Vector2(400, 450), Vector2(80, 40), material_play_button, BUTTONPLAY, "play_button");
 
 	background->addChild(playButton);
 }
@@ -54,19 +54,19 @@ void IntroStage::update(double seconds_elapsed)
 
 void PlayStage::onEnter()
 {
-
 	texture_cube = Texture::Get("data/textures/StandardCubeMap.tga");
 
 	mesh_cube = Mesh::Get("data/meshes/cubemap.obj");
 
 	shader_cube = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
+
 }
 
 void PlayStage::onExit()
 {
 }
 
-void PlayStage::render(Shader* shader)
+void PlayStage::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Ensure we clear the buffers
 	glDisable(GL_DEPTH_TEST);

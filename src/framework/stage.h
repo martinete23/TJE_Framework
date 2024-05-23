@@ -52,7 +52,7 @@ public:
 	virtual void onEnter();
 	virtual void onExit();
 
-	void render(Shader* shader);
+	void render();
 	void update(double seconds_elapsed);
 };
 
