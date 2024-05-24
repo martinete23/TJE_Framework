@@ -457,5 +457,17 @@ void EntityUI::update(float elapsed_time)
 			material.color = Vector4(1, 1, 1, 1);
 		}
 	}
+	if (button_id == BUTTONQUIT) {
+		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
+			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
+			material.color = Vector4(1, 0, 0, 1);
+			if (Input::isMousePressed(SDL_BUTTON_LEFT)) {
+				Game::instance->must_exit = true;
+			}
+		}
+		else {
+			material.color = Vector4(1, 1, 1, 1);
+		}
+	}
 	Entity::update(elapsed_time);
 }

@@ -187,6 +187,7 @@ void Game::onResize(int width, int height)
 	World::instance->camera->aspect =  width / (float)height;
 	window_width = width;
 	window_height = height;
+	stages[INTRO]->onEnter();
 }
 
 void Game::goToStage(eStages stage)

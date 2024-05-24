@@ -15,6 +15,7 @@ public:
 	Entity* root;
 	Texture* texture;
 	Camera* camera;
+
 	EntityPlayer* player;
 	
 	Vector3 SpawnPoint;

@@ -28,6 +28,7 @@ public:
 
 	EntityUI* background;
 	EntityUI* playButton;
+	EntityUI* quitButton;
 
 	virtual void onEnter() {};
 	virtual void onExit() {};
@@ -56,13 +57,22 @@ public:
 	void update(double seconds_elapsed);
 };
 
+class LoadingStage : public Stage {
+
+public:
+	virtual void onEnter();
+	virtual void onExit();
+
+	void render();
+	void update(double seconds_elapsed);
+};
 class WinStage : public Stage {
 
 public:
 	virtual void onEnter();
 	virtual void onExit();
 
-	void render(Shader* shader);
+	void render();
 	void update(double seconds_elapsed);
 };
 
@@ -72,6 +82,6 @@ public:
 	virtual void onEnter();
 	virtual void onExit();
 
-	void render(Shader* shader);
+	void render();
 	void update(double seconds_elapsed);
 };

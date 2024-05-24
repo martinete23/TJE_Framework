@@ -8,6 +8,7 @@ void IntroStage::onEnter()
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
+
 	Material material_background;
 
 	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
@@ -22,9 +23,21 @@ void IntroStage::onEnter()
 	material_play_button.diffuse = Texture::Get("data/textures/play_button.tga");
 	material_play_button.color = Vector4(1, 1, 1, 1);
 
-	playButton = new EntityUI(Vector2(400, 450), Vector2(80, 40), material_play_button, BUTTONPLAY, "play_button");
+	playButton = new EntityUI(Vector2(Game::instance->window_width/2, Game::instance->window_height/2 + Game::instance->window_height / 4), 
+		Vector2(80, 40), material_play_button, BUTTONPLAY, "play_button");
 
 	background->addChild(playButton);
+
+	Material material_quit_button;
+
+	material_quit_button.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_quit_button.diffuse = Texture::Get("data/textures/quit_button.tga");
+	material_quit_button.color = Vector4(1, 1, 1, 1);
+
+	quitButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 3),
+		Vector2(80, 40), material_quit_button, BUTTONQUIT, "quit_button");
+
+	background->addChild(quitButton);
 }
 
 void IntroStage::onExit()
@@ -110,7 +123,7 @@ void WinStage::onExit()
 {
 }
 
-void WinStage::render(Shader* shader)
+void WinStage::render()
 {
 }
 
@@ -126,10 +139,26 @@ void LoseStage::onExit()
 {
 }
 
-void LoseStage::render(Shader* shader)
+void LoseStage::render()
 {
 }
 
 void LoseStage::update(double seconds_elapsed)
+{
+}
+
+void LoadingStage::onEnter()
+{
+}
+
+void LoadingStage::onExit()
+{
+}
+
+void LoadingStage::render()
+{
+}
+
+void LoadingStage::update(double seconds_elapsed)
 {
 }
