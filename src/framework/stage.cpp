@@ -149,6 +149,20 @@ void LoseStage::update(double seconds_elapsed)
 
 void LoadingStage::onEnter()
 {
+	loading_time = 0;
+	camera2D = new Camera();
+	camera2D->view_matrix.setIdentity();
+	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
+
+	Material material_loading;
+
+	material_loading.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_loading.diffuse = Texture::Get("data/textures/loading_screen.tga");
+	material_loading.color = Vector4(1, 1, 1, 1);
+
+	loading = new EntityUI(Vector2(800, 600), material_loading);
+
+
 }
 
 void LoadingStage::onExit()
@@ -157,8 +171,28 @@ void LoadingStage::onExit()
 
 void LoadingStage::render()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	camera2D->enable();
+
+	loading->render(camera2D);
 }
 
 void LoadingStage::update(double seconds_elapsed)
 {
+	loading->update(seconds_elapsed);
+	if (loading_time == 0) {
+		Game::instance->course = LEVEL1;
+		World::instance = new World();
+	}
+	loading_time += 1 * seconds_elapsed;
+
+	if (loading_time > 1.0f) {
+		Game::instance->goToStage(PLAY);
+	}
 }

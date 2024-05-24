@@ -11,6 +11,7 @@ enum eStages {
 	PLAY,
 	WIN,
 	LOSE,
+	LOADING,
 	STAGES_SIZE
 };
 
@@ -29,6 +30,9 @@ public:
 	EntityUI* background;
 	EntityUI* playButton;
 	EntityUI* quitButton;
+
+	EntityUI* loading;
+	float loading_time;
 
 	virtual void onEnter() {};
 	virtual void onExit() {};

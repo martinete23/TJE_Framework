@@ -72,6 +72,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	stages[PLAY] = new PlayStage();
 	stages[WIN] = new WinStage();
 	stages[LOSE] = new LoseStage();
+	stages[LOADING] = new LoadingStage();
 	goToStage(INTRO);
 }
 
