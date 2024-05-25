@@ -18,7 +18,8 @@ enum eAnimationState {
 	RUN_RIGHT,
 	RUN_LEFT,
 	RUN_BACK,
-	JUMP
+	JUMP,
+	FALL
 };
 
 class EntityMesh : public Entity {
@@ -64,6 +65,8 @@ public:
 	bool isWallJumping = false;
 	Vector3 moveDirection;
 	float wallJumpTimer = 0.0f;
+
+	float jumpingTime;
 
 	int state = IDLE;
 

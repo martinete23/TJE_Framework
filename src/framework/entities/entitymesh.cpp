@@ -173,37 +173,6 @@ void EntityPlayer::update(float elapsed_time)
 		right = true;
 	}
 
-	if (state != RUN_RIGHT && right && (front || back))
-	{
-		animator.playAnimation("data/animations/run_right.skanim");
-		state = RUN_RIGHT;
-	}
-	else if (state != RUN_LEFT && left && (front || back))
-	{
-		animator.playAnimation("data/animations/run_left.skanim");
-		state = RUN_LEFT;
-	}
-	else if (state != RUN_FRONT && front && !right && !left)
-	{
-		animator.playAnimation("data/animations/run.skanim");
-		state = RUN_FRONT;
-	}
-	else if (state != RUN_BACK && back && !right && !left)
-	{
-		animator.playAnimation("data/animations/run_back.skanim");
-		state = RUN_BACK;
-	}
-	else if (state != RUN_RIGHT && right)
-	{
-		animator.playAnimation("data/animations/run_right.skanim");
-		state = RUN_RIGHT;
-	}
-	else if (state != RUN_LEFT && left)
-	{
-		animator.playAnimation("data/animations/run_left.skanim");
-		state = RUN_LEFT;
-	}
-
 	if (!dashUse) {
 		velocity += dashDirection * 3.0f;
 	}
@@ -216,14 +185,6 @@ void EntityPlayer::update(float elapsed_time)
 	move_dir.normalize();
 	move_dir *= 2.0f;
 	velocity += move_dir;
-
-	if (move_dir.x == 0.0f && move_dir.y == 0.0f && move_dir.z == 0.0f) {
-		if (state != IDLE)
-		{
-			animator.playAnimation("data/animations/idle.skanim");
-			state = IDLE;
-		}
-	}
 
 	std::vector<sCollisionData> collisions;
 	std::vector<sCollisionData> ground_collisions;
@@ -256,7 +217,6 @@ void EntityPlayer::update(float elapsed_time)
 			if (boolJump == true) {
 				World::instance->sphere_radius /= 2;
 				boolJump = false;
-				state = IDLE;
 			}
 
 			if (jumpTimer < 1.0f) {
@@ -269,8 +229,57 @@ void EntityPlayer::update(float elapsed_time)
 		}
 	}
 
+	if (is_grounded)
+	{
+		if (state == IDLE && Input::wasKeyPressed(SDL_SCANCODE_T))
+		{
+			animator.playAnimation("data/animations/twerk.skanim");
+		}
+		if (move_dir.x == 0.0f && move_dir.y == 0.0f && move_dir.z == 0.0f) {
+			if (state != IDLE)
+			{
+				animator.playAnimation("data/animations/idle.skanim");
+				state = IDLE;
+			}
+		}
+		if (state != RUN_RIGHT && right && (front || back))
+		{
+			animator.playAnimation("data/animations/run_right.skanim");
+			state = RUN_RIGHT;
+		}
+		else if (state != RUN_LEFT && left && (front || back))
+		{
+			animator.playAnimation("data/animations/run_left.skanim");
+			state = RUN_LEFT;
+		}
+		else if (state != RUN_FRONT && front && !right && !left)
+		{
+			animator.playAnimation("data/animations/run.skanim");
+			state = RUN_FRONT;
+		}
+		else if (state != RUN_BACK && back && !right && !left)
+		{
+			animator.playAnimation("data/animations/run_back.skanim");
+			state = RUN_BACK;
+		}
+		else if (state != RUN_RIGHT && right)
+		{
+			animator.playAnimation("data/animations/run_right.skanim");
+			state = RUN_RIGHT;
+		}
+		else if (state != RUN_LEFT && left)
+		{
+			animator.playAnimation("data/animations/run_left.skanim");
+			state = RUN_LEFT;
+		}
+	}
+
 	if (!is_grounded) {
-		state = JUMP;
+		if (state == JUMP && Game::instance->time - jumpingTime >= 0.8)
+		{
+			animator.playAnimation("data/animations/fall.skanim");
+			state = FALL;
+		}
 		velocity.y -= 9.8f * elapsed_time;
 		jumpTimer = 0.0f;
 
@@ -291,7 +300,13 @@ void EntityPlayer::update(float elapsed_time)
 		}
 	}
 	else if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
-		state = JUMP;
+		if (state != JUMP)
+		{
+			const float time = Game::instance->time;
+			jumpingTime = time;
+			animator.playAnimation("data/animations/jump.skanim", false);
+			state = JUMP;
+		}
 		if (jumpTimer < 0.2f) {
 			velocity.y = 8.0f;
 		}
