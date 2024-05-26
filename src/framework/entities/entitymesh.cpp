@@ -1,3 +1,4 @@
+
 #include "entitymesh.h"
 #include <iostream>
 #include <fstream>
@@ -43,7 +44,7 @@ void EntityMesh::render(Camera* camera)
 	material.shader->enable();
 	material.shader->setUniform("u_model", getGlobalMatrix());
 	material.shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
-	material.shader->setUniform("u_color", Vector4(1,1,1,1));
+	material.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
 	material.shader->setUniform("u_scale", 15.0f);
 
 	if (material.diffuse) {
@@ -105,7 +106,6 @@ void EntityPlayer::render(Camera* camera)
 		shader->setUniform("u_color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 		shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 		shader->setUniform("u_model", m);
-		mesh->render(GL_TRIANGLES);
 	}
 	{
 		m = playerMatrix;
@@ -114,7 +114,6 @@ void EntityPlayer::render(Camera* camera)
 		shader->setUniform("u_color", Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 		m.scale(sphere_radius, sphere_radius, sphere_radius);
 		shader->setUniform("u_model", m);
-		mesh->render(GL_TRIANGLES);
 	}
 
 	shader->disable();
@@ -143,13 +142,13 @@ void EntityPlayer::update(float elapsed_time)
 	if (isAnimated) {
 		animator.update(elapsed_time);
 	}
-	
+
 	float camera_yaw = World::instance->camera_yaw;
 
 	Vector3 player_pos = playerMatrix.getTranslation();
 
 	Matrix44 mYaw;
-	mYaw.setRotation(camera_yaw, Vector3(0,1,0));
+	mYaw.setRotation(camera_yaw, Vector3(0, 1, 0));
 
 	Vector3 move_dir;
 	Vector3 character_front = mYaw.frontVector();
@@ -231,9 +230,8 @@ void EntityPlayer::update(float elapsed_time)
 		}
 	}
 
-	if (is_grounded && state != JUMP)
+	if (is_grounded)
 	{
-		printf("ground\n");
 		if (state == IDLE && Input::wasKeyPressed(SDL_SCANCODE_T))
 		{
 			animator.playAnimation("data/animations/twerk.skanim");
@@ -275,19 +273,6 @@ void EntityPlayer::update(float elapsed_time)
 			animator.playAnimation("data/animations/run_left.skanim");
 			state = RUN_LEFT;
 		}
-		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
-			const float time = Game::instance->time;
-			jumpingTime = time;
-			animator.playAnimation("data/animations/jump.skanim", false);
-			state = JUMP;
-			if (jumpTimer < 0.2f) {
-				velocity.y = 8.0f;
-			}
-			else {
-				velocity.y = 5.0f;
-			}
-		}
-
 	}
 
 	if (!is_grounded) {
@@ -307,13 +292,27 @@ void EntityPlayer::update(float elapsed_time)
 		if (Input::wasKeyPressed(SDL_SCANCODE_LSHIFT) && dashUse == true) {
 			dashUse = false;
 			dashDirection = character_front;
-			//animator.playAnimation("data/animations/twerk.skanim");
 		}
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
 			velocity.y = 6.0f;
 			isWallJumping = true;
 			moveDirection = move_dir;
 			wallJumpTimer = 0.0f;
+		}
+	}
+	else if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
+		if (state != JUMP)
+		{
+			const float time = Game::instance->time;
+			jumpingTime = time;
+			animator.playAnimation("data/animations/jump.skanim", false);
+			state = JUMP;
+		}
+		if (jumpTimer < 0.2f) {
+			velocity.y = 8.0f;
+		}
+		else {
+			velocity.y = 5.0f;
 		}
 	}
 
@@ -332,8 +331,6 @@ void EntityPlayer::update(float elapsed_time)
 
 	playerMatrix.rotate(camera_yaw, Vector3(0, 1, 0));
 
-	printf("%d", state);
-
 	EntityMesh::update(elapsed_time);
 }
 
@@ -342,7 +339,7 @@ void EntityPlayer::dash(float elapsed_time)
 	float camera_yaw = World::instance->camera_yaw;
 	Matrix44 mYaw;
 	mYaw.setRotation(camera_yaw, Vector3(0, 1, 0));
-	Vector3 dash_direction = mYaw.frontVector(); 
+	Vector3 dash_direction = mYaw.frontVector();
 
 }
 
@@ -371,7 +368,7 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
-		ground_collisions.push_back({collision_point, collision_normal.normalize(), character_center.distance(collision_point)});
+		ground_collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 	}
 
 }
@@ -464,7 +461,7 @@ void EntityUI::update(float elapsed_time)
 	Vector2 mouse_pos = Input::mouse_position;
 
 	if (button_id == BUTTONPLAY) {
-		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) && 
+		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
 			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
 			material.color = Vector4(1, 0, 0, 1);
 			if (Input::isMousePressed(SDL_BUTTON_LEFT)) {

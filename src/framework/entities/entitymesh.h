@@ -19,7 +19,8 @@ enum eAnimationState {
 	RUN_LEFT,
 	RUN_BACK,
 	JUMP,
-	FALL
+	FALL,
+	DASH
 };
 
 class EntityMesh : public Entity {
