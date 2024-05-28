@@ -5,6 +5,7 @@
 #include "world.h"
 #include "graphics/texture.h"
 #include "graphics/mesh.h"
+#include "audio.h"
 
 enum eStages {
 	INTRO,
@@ -54,6 +55,9 @@ public:
 class PlayStage : public Stage {
 
 public:
+
+	HCHANNEL channel;
+
 	virtual void onEnter();
 	virtual void onExit();
 

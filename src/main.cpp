@@ -17,6 +17,7 @@
 #include "game/game.h"
 
 #include <iostream> //to output
+#include <framework/audio.h>
 
 long last_time = 0; //this is used to calcule the elapsed time between frames
 
@@ -197,10 +198,13 @@ int main(int argc, char **argv)
 
 	Input::init(window);
 
+	Audio::Init();
+
 	//launch the game (game is a global variable)
 	game = new Game(window_width, window_height, window);
 	//main loop, application gets inside here till user closes it
 	mainLoop();
+	Audio::Destroy();
 
 	//save state and free memory
 

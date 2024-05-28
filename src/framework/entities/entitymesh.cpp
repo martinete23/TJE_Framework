@@ -292,6 +292,11 @@ void EntityPlayer::update(float elapsed_time)
 		if (Input::wasKeyPressed(SDL_SCANCODE_LSHIFT) && dashUse == true) {
 			dashUse = false;
 			dashDirection = character_front;
+			if (state != DASH)
+			{
+				animator.playAnimation("data/animations/export.skanim");
+				state = DASH;
+			}
 		}
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
 			velocity.y = 6.0f;
