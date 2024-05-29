@@ -296,6 +296,7 @@ void EntityPlayer::update(float elapsed_time)
 			{
 				animator.playAnimation("data/animations/export.skanim");
 				state = DASH;
+				Audio::Play("data/sounds/yahoo.wav", 0.5);
 			}
 		}
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
@@ -303,6 +304,7 @@ void EntityPlayer::update(float elapsed_time)
 			isWallJumping = true;
 			moveDirection = move_dir;
 			wallJumpTimer = 0.0f;
+			Audio::Play("data/sounds/hoohoo.wav", 0.5);
 		}
 	}
 	else if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
@@ -315,9 +317,11 @@ void EntityPlayer::update(float elapsed_time)
 		}
 		if (jumpTimer < 0.2f) {
 			velocity.y = 8.0f;
+			Audio::Play("data/sounds/waha.wav", 0.5);
 		}
 		else {
 			velocity.y = 5.0f;
+			Audio::Play("data/sounds/hoohoo.wav", 0.5);
 		}
 	}
 

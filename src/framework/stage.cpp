@@ -38,6 +38,8 @@ void IntroStage::onEnter()
 		Vector2(80, 40), material_quit_button, BUTTONQUIT, "quit_button");
 
 	background->addChild(quitButton);
+
+	Audio::Play("data/sounds/start.wav", 0.5);
 }
 
 void IntroStage::onExit()
@@ -73,13 +75,12 @@ void PlayStage::onEnter()
 
 	shader_cube = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
 
-	// channel = Audio::Play();
-
+	//channel = Audio::Play("data/sounds/dead.wav", 0.5, BASS_SAMPLE_LOOP);
 }
 
 void PlayStage::onExit()
 {
-	// Audio::Stop(channel);
+	//Audio::Stop(channel);
 }
 
 void PlayStage::render()
