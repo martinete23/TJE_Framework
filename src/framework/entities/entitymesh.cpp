@@ -126,6 +126,9 @@ void EntityPlayer::render(Camera* camera)
 	playerMaterial.shader->setUniform("u_model", playerMatrix);
 	playerMaterial.shader->setUniform("u_scale", 1.0f);
 	playerMaterial.shader->setUniform("u_time", time);
+	//playerMaterial.shader->setUniform("u_ka", Vector3);
+	//playerMaterial.shader->setUniform("light_position", Vector3);
+	//playerMaterial.shader->setUniform("u_light_color", Vector3);
 
 	playerMesh->renderAnimated(GL_TRIANGLES, &animator.getCurrentSkeleton());
 
@@ -276,7 +279,7 @@ void EntityPlayer::update(float elapsed_time)
 	}
 
 	if (!is_grounded) {
-		if (state == JUMP && Game::instance->time - jumpingTime >= 0.8)
+		if (state != JUMP && state != FALL && state != DASH)
 		{
 			animator.playAnimation("data/animations/fall.skanim");
 			state = FALL;
@@ -294,7 +297,7 @@ void EntityPlayer::update(float elapsed_time)
 			dashDirection = character_front;
 			if (state != DASH)
 			{
-				animator.playAnimation("data/animations/export.skanim");
+				animator.playAnimation("data/animations/dash.skanim");
 				state = DASH;
 				Audio::Play("data/sounds/yahoo.wav", 0.5);
 			}
@@ -312,7 +315,7 @@ void EntityPlayer::update(float elapsed_time)
 		{
 			const float time = Game::instance->time;
 			jumpingTime = time;
-			animator.playAnimation("data/animations/jump.skanim", false);
+			animator.playAnimation("data/animations/fall.skanim");
 			state = JUMP;
 		}
 		if (jumpTimer < 0.2f) {

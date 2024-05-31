@@ -41,7 +41,6 @@ World::World()
 
 void World::render()
 {
-
 	camera->enable();
 
 	root->render(camera);
@@ -74,6 +73,13 @@ void World::update(float delta_time)
 	float orbit_dist = 1.5f;
 	eye = World::instance->player->playerMatrix.getTranslation() - front * orbit_dist;
 	center = World::instance->player->playerMatrix.getTranslation() + Vector3(0.f, 0.5f, 0.f);
+
+	Vector3 dir = eye - center;
+	/*sCollisionData data = World::instance->raycast(center, dir.normalize(), eCollisionFilter::ALL, dir.length(), root);
+
+	if (data.collided) {
+		eye = data.col_point;
+	}*/
 
 	camera->lookAt(eye, center, Vector3(0, 1, 0));
 }
@@ -172,3 +178,34 @@ bool World::parseScene(const char* filename, Entity* root)
 	std::cout << "Scene [OK]" << " Meshes added: " << mesh_count << std::endl;
 	return true;
 }
+
+//sCollisionData World::raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root)
+//{
+//	sCollisionData data;
+//
+//	for (auto e : root->children)
+//	{
+//		EntityCollider* ec = dynamic_cast<EntityCollider*>(e);
+//		if (ec == nullptr || !(ec->getLayer() & layer)) {
+//			continue;
+//		}
+//
+//		Vector3 col_point;
+//		Vector3 col_normal;
+//
+//		if (!ec->mesh->testRayCollision(ec->model, origin, direction, col_point, col_normal, max_ray_dist)) {
+//			continue;
+//		}
+//
+//		data.collided = true;
+//
+//		float max_distance = (col_point - origin).length();
+//		if (max_distance < data.distance) {
+//			data.col_point = col_point;
+//			data.col_normal = col_normal;
+//			data.distance = max_distance;
+//		}
+//	}
+//
+//	return data;
+//}

@@ -75,12 +75,12 @@ void PlayStage::onEnter()
 
 	shader_cube = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
 
-	//channel = Audio::Play("data/sounds/dead.wav", 0.5, BASS_SAMPLE_LOOP);
+	channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
 }
 
 void PlayStage::onExit()
 {
-	//Audio::Stop(channel);
+	Audio::Stop(channel);
 }
 
 void PlayStage::render()

@@ -36,5 +36,7 @@ public:
 	void update(float delta_time);
 
 	bool parseScene(const char* filename, Entity* root);
+
+	//sCollisionData raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root);
 };
 
