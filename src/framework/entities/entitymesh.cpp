@@ -334,7 +334,7 @@ void EntityPlayer::update(float elapsed_time)
 	velocity.z *= 0.5f;
 
 	if (playerMatrix.getTranslation().y < 0) {
-
+		Game::instance->goToStage(LOSE);
 		playerMatrix.setTranslation(World::instance->SpawnPoint);
 	}
 	else {
@@ -418,7 +418,7 @@ EntityUI::EntityUI(Vector2 size, const Material& material)
 
 EntityUI::EntityUI(Vector2 pos, Vector2 size, const Material& material, eButtonID button_id, const std::string& name)
 {
-	position = pos;
+	this->position = pos;
 	this->size = size;
 
 	mesh = new Mesh();

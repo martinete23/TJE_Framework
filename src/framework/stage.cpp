@@ -62,9 +62,7 @@ void IntroStage::render()
 
 void IntroStage::update(double seconds_elapsed)
 {
-
 	background->update(seconds_elapsed);
-	
 }
 
 void PlayStage::onEnter()
@@ -137,6 +135,30 @@ void WinStage::update(double seconds_elapsed)
 
 void LoseStage::onEnter()
 {
+	camera2D = new Camera();
+	camera2D->view_matrix.setIdentity();
+	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
+
+	Material material_background;
+
+	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_background.diffuse = Texture::Get("data/textures/lose.tga");
+	material_background.color = Vector4(1, 1, 1, 1);
+
+	background = new EntityUI(Vector2(800, 600), material_background);
+
+	Material material_play_again_button;
+
+	material_play_again_button.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_play_again_button.diffuse = Texture::Get("data/textures/play_again_button.tga");
+	material_play_again_button.color = Vector4(1, 1, 1, 1);
+
+	playAgainButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 4),
+		Vector2(160, 40), material_play_again_button, BUTTONPLAY, "play_again_button");
+
+	background->addChild(playAgainButton);
+
+	Audio::Play("data/sounds/lose.wav", 0.5);
 }
 
 void LoseStage::onExit()
@@ -145,10 +167,21 @@ void LoseStage::onExit()
 
 void LoseStage::render()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	camera2D->enable();
+
+	background->render(camera2D);
 }
 
 void LoseStage::update(double seconds_elapsed)
 {
+	background->update(seconds_elapsed);
 }
 
 void LoadingStage::onEnter()

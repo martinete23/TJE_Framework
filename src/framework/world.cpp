@@ -53,8 +53,8 @@ void World::update(float delta_time)
 	root->update(delta_time);
 	player->update(delta_time);
 
-	camera_yaw -= Input::mouse_delta.x * delta_time * 1.5f;
-	camera_pitch -= Input::mouse_delta.y * delta_time * 1.5f;
+	camera_yaw -= Input::mouse_delta.x * delta_time * 0.8f;
+	camera_pitch -= Input::mouse_delta.y * delta_time * 0.8f;
 
 	//pitch angle
 	camera_pitch = clamp(camera_pitch, -M_PI * 0.4f, M_PI * 0.4f);
