@@ -73,15 +73,16 @@ void World::update(float delta_time)
 	float orbit_dist = 1.5f;
 	eye = World::instance->player->playerMatrix.getTranslation() - front * orbit_dist;
 	center = World::instance->player->playerMatrix.getTranslation() + Vector3(0.f, 0.5f, 0.f);
-
+	EntityCollider* ec = new EntityCollider;
 	Vector3 dir = eye - center;
-	/*sCollisionData data = World::instance->raycast(center, dir.normalize(), eCollisionFilter::ALL, dir.length(), root);
+	sCollisionData data = ec->raycast(center, dir.normalize(), eCollisionFilter::ALL, dir.length());
 
 	if (data.collided) {
-		eye = data.col_point;
-	}*/
-
+		eye = center + dir.normalize() * data.distance;
+	}
 	camera->lookAt(eye, center, Vector3(0, 1, 0));
+
+	delete ec;
 }
 
 bool World::parseScene(const char* filename, Entity* root)

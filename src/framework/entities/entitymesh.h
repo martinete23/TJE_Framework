@@ -106,6 +106,7 @@ public:
 		EntityMesh(mesh, material, name) {};
 	~EntityCollider() {};
 
+	sCollisionData raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist);
 	void getCollisions(const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions, eCollisionFilter filter);
 
 	int getLayer() { return layer; };

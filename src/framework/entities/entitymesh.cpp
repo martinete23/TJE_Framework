@@ -408,6 +408,39 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 
 }
 
+sCollisionData EntityCollider::raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist)
+{
+	sCollisionData data;
+	data.collided = false;
+	data.distance = max_ray_dist;
+
+	for (auto e : World::instance->root->children)
+	{
+		EntityCollider* ec = dynamic_cast<EntityCollider*>(e);
+		if (ec == nullptr || !(ec->getLayer() & layer)) {
+			continue;
+		}
+
+		Vector3 col_point;
+		Vector3 col_normal;
+
+		if (!ec->mesh->testRayCollision(ec->model, origin, direction, col_point, col_normal, max_ray_dist)) {
+			continue;
+		}
+
+		data.collided = true;
+
+		float max_distance = (col_point - origin).length();
+		if (max_distance < data.distance) {
+			data.col_point = col_point;
+			data.col_normal = col_normal;
+			data.distance = max_distance;
+		}
+	}
+
+	return data;
+}
+
 void EntityCollider::getCollisions(const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions, eCollisionFilter filter)
 {
 	if (!(layer & filter))
