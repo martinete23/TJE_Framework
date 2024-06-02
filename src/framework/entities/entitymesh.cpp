@@ -17,6 +17,11 @@ EntityMesh::EntityMesh(Mesh* m, Material mat, std::string name)
 	this->name = name;
 }
 
+EntityMesh::~EntityMesh()
+{
+	delete mesh;
+}
+
 void EntityMesh::render(Camera* camera)
 {
 	if (!mesh) return;
@@ -209,7 +214,7 @@ void EntityPlayer::update(float elapsed_time)
 		velocity.z -= newDir.z;
 	}
 
-	bool is_grounded = false;
+	is_grounded = false;
 
 	for (const sCollisionData& collision : ground_collisions) {
 
@@ -310,22 +315,9 @@ void EntityPlayer::update(float elapsed_time)
 			Audio::Play("data/sounds/hoohoo.wav", 0.5);
 		}
 	}
-	else if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
-		if (state != JUMP)
-		{
-			const float time = Game::instance->time;
-			jumpingTime = time;
-			animator.playAnimation("data/animations/fall.skanim");
-			state = JUMP;
-		}
-		if (jumpTimer < 0.2f) {
-			velocity.y = 8.0f;
-			Audio::Play("data/sounds/waha.wav", 0.5);
-		}
-		else {
-			velocity.y = 5.0f;
-			Audio::Play("data/sounds/hoohoo.wav", 0.5);
-		}
+
+	if (Input::isKeyPressed(SDL_SCANCODE_SPACE) && canJump()) {
+		jump();
 	}
 
 	player_pos += velocity * elapsed_time;
@@ -353,6 +345,37 @@ void EntityPlayer::dash(float elapsed_time)
 	mYaw.setRotation(camera_yaw, Vector3(0, 1, 0));
 	Vector3 dash_direction = mYaw.frontVector();
 
+}
+
+bool EntityPlayer::canJump()
+{
+	if (is_grounded)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void EntityPlayer::jump()
+{
+	if (state != JUMP)
+	{
+		const float time = Game::instance->time;
+		jumpingTime = time;
+		animator.playAnimation("data/animations/fall.skanim");
+		state = JUMP;
+	}
+	if (jumpTimer < 0.2f) {
+		velocity.y = 8.0f;
+		Audio::Play("data/sounds/waha.wav", 0.5);
+	}
+	else {
+		velocity.y = 5.0f;
+		Audio::Play("data/sounds/hoohoo.wav", 0.5);
+	}
 }
 
 void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions)

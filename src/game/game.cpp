@@ -121,7 +121,7 @@ void Game::render(void)
 
 	current_stage->render();
 
-	drawGrid();
+	//drawGrid();
 
 	// Render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);

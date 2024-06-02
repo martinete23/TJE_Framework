@@ -28,6 +28,7 @@ class EntityMesh : public Entity {
 public:
 	EntityMesh() {};
 	EntityMesh(Mesh* m, Material mat, std::string name);
+	~EntityMesh();
 
 	// Attributes of the derived class  
 	Mesh* mesh = nullptr;
@@ -55,6 +56,8 @@ public:
 	Matrix44 playerMatrix;
 	Mesh* playerMesh;
 	Material playerMaterial;
+
+	bool is_grounded = false;
 
 	bool boolJump = false;
 
@@ -84,6 +87,8 @@ public:
 	void render(Camera* camera);
 	void update(float elapsed_time);
 	void dash(float elapsed_time);
+	bool canJump();
+	void jump();
 };
 
 class EntityCollider : public EntityMesh
