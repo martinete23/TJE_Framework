@@ -32,7 +32,7 @@ World::World()
 	player->isAnimated = true;
 
 	if (Game::instance->course == TUTORIAL) {
-		parseScene("data/myscene.scene", root);
+		parseScene("data/Tutorial.scene", root);
 	}
 	if (Game::instance->course == LEVEL1) {
 		parseScene("data/myscene2.scene", root);
