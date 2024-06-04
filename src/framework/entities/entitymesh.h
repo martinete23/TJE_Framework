@@ -134,3 +134,18 @@ public:
 	void render(Camera* camera2D);
 	void update(float elapsed_time);
 };
+
+class EntityCrystal : public EntityMesh
+{
+public:
+
+	Matrix44 crystalMatrix;
+	Mesh* crystalMesh;
+	Material crystalMaterial;
+
+	EntityCrystal(Mesh* m, Material mat);
+	~EntityCrystal();
+
+	void render(Camera* camera);
+	void update(float elapsed_time);
+};

@@ -186,7 +186,7 @@ void EntityPlayer::update(float elapsed_time)
 		velocity += dashDirection * 3.0f;
 	}
 
-	if (isWallJumping && wallJumpTimer < 0.5f) {
+	if (isWallJumping && wallJumpTimer < 0.8f) {
 		velocity -= moveDirection * 2.0f;
 		wallJumpTimer += 1.0f * elapsed_time;
 	}
@@ -553,4 +553,38 @@ void EntityUI::update(float elapsed_time)
 		}
 	}
 	Entity::update(elapsed_time);
+}
+
+EntityCrystal::EntityCrystal(Mesh* m, Material mat)
+{
+	crystalMesh = m;
+	crystalMaterial = mat;
+
+	crystalMatrix.setTranslation(0, 3.0f, 0);
+}
+
+EntityCrystal::~EntityCrystal()
+{
+	delete crystalMesh;
+}
+
+void EntityCrystal::render(Camera* camera)
+{
+	crystalMaterial.shader->enable();
+
+	crystalMaterial.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
+	crystalMaterial.shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
+	crystalMaterial.shader->setUniform("u_texture", crystalMaterial.diffuse, 0);
+	crystalMaterial.shader->setUniform("u_model", crystalMatrix);
+	crystalMaterial.shader->setUniform("u_scale", 1.0f);
+	crystalMaterial.shader->setUniform("u_time", time);
+
+	crystalMesh->render(GL_TRIANGLES);
+
+	crystalMaterial.shader->disable();
+}
+
+void EntityCrystal::update(float elapsed_time)
+{
+	crystalMatrix.rotate(elapsed_time, Vector3(0.0f, 1.0f, 0.0f));
 }

@@ -31,6 +31,13 @@ World::World()
 	player = new EntityPlayer(Mesh::Get("data/meshes/polygon.MESH"), player_material);
 	player->isAnimated = true;
 
+	Material crystal_material;
+	crystal_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	crystal_material.diffuse = Texture::Get("data/textures/red_cristal_texture.tga");
+	crystal_material.color = Vector4(1, 1, 1, 1);
+
+	crystal = new EntityCrystal(Mesh::Get("data/meshes/red_cristal.obj"), crystal_material);
+
 	if (Game::instance->course == TUTORIAL) {
 		parseScene("data/Tutorial.scene", root);
 	}
@@ -46,12 +53,20 @@ void World::render()
 	root->render(camera);
 
 	player->render(camera);
+
+	crystal->render(camera);
 }
 
 void World::update(float delta_time)
 {
 	root->update(delta_time);
 	player->update(delta_time);
+	crystal->update(delta_time);
+
+	if (Input::isKeyPressed(SDL_SCANCODE_K))
+	{
+		crystal->~EntityCrystal();
+	}
 
 	camera_yaw -= Input::mouse_delta.x * delta_time * 0.08f;
 	camera_pitch -= Input::mouse_delta.y * delta_time * 0.08f;
