@@ -91,6 +91,9 @@ void mainLoop()
 	long now = start_time;
 	long frames_this_second = 0;
 
+	const int FPS_LIMIT = 60;
+	const int FRAME_DURATION = 1000 / FPS_LIMIT;
+
 	while (!game->must_exit)
 	{
 		Input::update();
@@ -151,7 +154,7 @@ void mainLoop()
 		game->elapsed_time = static_cast<float>(elapsed_time);
 		game->frame++;
 		frames_this_second++;
-		if (int(last_time_seconds *2) != int(game->time*2)) //next half second
+		if (int(last_time_seconds * 2) != int(game->time*2)) //next half second
 		{
 			game->fps = (int)frames_this_second*2;
 			frames_this_second = 0;
@@ -167,6 +170,11 @@ void mainLoop()
 		#ifdef _DEBUG
 			checkGLErrors();
 		#endif
+		long frame_time = SDL_GetTicks() - now;
+		if (frame_time < FRAME_DURATION)
+		{
+			SDL_Delay(FRAME_DURATION - frame_time);
+		}
 	}
 
 	SDL_GL_DeleteContext(glcontext);
