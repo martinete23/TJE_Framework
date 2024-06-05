@@ -308,6 +308,7 @@ void EntityPlayer::update(float elapsed_time)
 			}
 		}
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
+			dashUse = true;
 			velocity.y = 6.0f;
 			isWallJumping = true;
 			moveDirection = move_dir;
@@ -363,8 +364,6 @@ void EntityPlayer::jump()
 {
 	if (state != JUMP)
 	{
-		const float time = Game::instance->time;
-		jumpingTime = time;
 		animator.playAnimation("data/animations/fall.skanim");
 		state = JUMP;
 	}

@@ -67,11 +67,11 @@ void IntroStage::update(double seconds_elapsed)
 
 void PlayStage::onEnter()
 {
-	texture_cube = Texture::Get("data/textures/redsky_cubemap.tga");
+	texture_cube.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
+	texture_cube.diffuse = new Texture();
+	texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/cave_cubemap/nz.png", "data/textures/cave_cubemap/pz.png", "data/textures/cave_cubemap/ny.png", "data/textures/cave_cubemap/py.png", "data/textures/cave_cubemap/px.png", "data/textures/cave_cubemap/nx.png" });
 
-	mesh_cube = Mesh::Get("data/meshes/cubemap.obj");
-
-	shader_cube = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
+	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
 
 	channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
 }
@@ -85,31 +85,21 @@ void PlayStage::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Ensure we clear the buffers
 	glDisable(GL_DEPTH_TEST);
+	if (texture_cube.shader)
+	{
+		texture_cube.shader->enable();
+		texture_cube.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
+		texture_cube.shader->setUniform("u_viewprojection", World::instance->camera->viewprojection_matrix);
+		texture_cube.shader->setUniform("u_texture", texture_cube.diffuse, 0);
+		skybox->render(World::instance->camera);
+		texture_cube.shader->disable();
+	}
+	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	World::instance->render();
-
-	if (shader_cube)
-	{
-		// Enable shader
-		shader_cube->enable();
-
-		// Upload uniforms
-		shader_cube->setUniform("u_color", Vector4(1, 1, 1, 1));
-		shader_cube->setUniform("u_viewprojection", World::instance->camera->viewprojection_matrix);
-		shader_cube->setUniform("u_texture", texture_cube, 0);
-		shader_cube->setUniform("u_model", m_cube);
-		shader_cube->setUniform("u_time", time);
-
-
-		// Do the draw call
-		mesh_cube->render(GL_TRIANGLES);
-
-		// Disable shader
-		shader_cube->disable();
-	}
 }
 
 void PlayStage::update(double seconds_elapsed)

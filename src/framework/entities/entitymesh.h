@@ -70,8 +70,6 @@ public:
 	Vector3 moveDirection;
 	float wallJumpTimer = 0.0f;
 
-	float jumpingTime;
-
 	int state = IDLE;
 
 	bool isAnimated;

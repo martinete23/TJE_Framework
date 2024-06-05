@@ -17,13 +17,14 @@ enum eStages {
 };
 
 class EntityUI;
+class EntityMesh;
 
 class Stage {
 public:
 
-	Mesh* mesh_cube = NULL;
-	Texture* texture_cube = NULL;
-	Shader* shader_cube = NULL;
+	EntityMesh* skybox;
+	Mesh mesh_cube;
+	Material texture_cube;
 	Matrix44 m_cube;
 
 	Camera* camera2D;

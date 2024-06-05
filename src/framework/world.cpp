@@ -68,8 +68,8 @@ void World::update(float delta_time)
 		crystal->~EntityCrystal();
 	}
 
-	camera_yaw -= Input::mouse_delta.x * delta_time * 0.08f;
-	camera_pitch -= Input::mouse_delta.y * delta_time * 0.08f;
+	camera_yaw -= Input::mouse_delta.x * 0.005f;
+	camera_pitch -= Input::mouse_delta.y * 0.005f;
 
 	//pitch angle
 	camera_pitch = clamp(camera_pitch, -M_PI * 0.4f, M_PI * 0.4f);
