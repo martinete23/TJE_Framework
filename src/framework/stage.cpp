@@ -67,7 +67,7 @@ void IntroStage::update(double seconds_elapsed)
 
 void PlayStage::onEnter()
 {
-	texture_cube = Texture::Get("data/textures/StandardCubeMap.tga");
+	texture_cube = Texture::Get("data/textures/redsky_cubemap.tga");
 
 	mesh_cube = Mesh::Get("data/meshes/cubemap.obj");
 

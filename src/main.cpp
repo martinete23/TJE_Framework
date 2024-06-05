@@ -170,11 +170,11 @@ void mainLoop()
 		#ifdef _DEBUG
 			checkGLErrors();
 		#endif
-		//long frame_time = SDL_GetTicks() - now;
-		//if (frame_time < FRAME_DURATION)
-		//{
-		//	SDL_Delay(FRAME_DURATION - frame_time);
-		//}
+		long frame_time = SDL_GetTicks() - now;
+		if (frame_time < FRAME_DURATION)
+		{
+			SDL_Delay(FRAME_DURATION - frame_time);
+		}
 	}
 
 	SDL_GL_DeleteContext(glcontext);
