@@ -69,7 +69,7 @@ void PlayStage::onEnter()
 {
 	texture_cube.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
 	texture_cube.diffuse = new Texture();
-	texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/cave_cubemap/nz.png", "data/textures/cave_cubemap/pz.png", "data/textures/cave_cubemap/ny.png", "data/textures/cave_cubemap/py.png", "data/textures/cave_cubemap/px.png", "data/textures/cave_cubemap/nx.png" });
+	texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/cave_cubemap/px.png", "data/textures/cave_cubemap/nx.png", "data/textures/cave_cubemap/ny.png", "data/textures/cave_cubemap/py.png", "data/textures/cave_cubemap/pz.png", "data/textures/cave_cubemap/nz.png" });
 
 	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
 
