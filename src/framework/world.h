@@ -4,6 +4,7 @@
 #include "framework/camera.h"
 
 #define RED_CRISTALS_TOT 8
+#define YELLOW_CRISTALS_TOT 2
 
 class Entity;
 class EntityPlayer;
@@ -21,7 +22,10 @@ public:
 
 	EntityPlayer* player;
 
-	EntityCrystal* crystals[RED_CRISTALS_TOT];
+	EntityCrystal* Redcrystals[RED_CRISTALS_TOT];
+
+	EntityCrystal* YellowCristal[YELLOW_CRISTALS_TOT];
+
 	int crystalsCollected;
 	
 	Vector3 SpawnPoint;

@@ -209,11 +209,11 @@ void EntityPlayer::update(float elapsed_time)
 	}
 
 	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
-		if (World::instance->crystals[i]->active) {
+		if (World::instance->Redcrystals[i]->active) {
 			Crystal_collided = false;
-			World::instance->crystals[i]->getCollisions(player_pos + velocity * elapsed_time, collisions, ground_collisions, SCENARIO);
+			World::instance->Redcrystals[i]->getCollisions(player_pos + velocity * elapsed_time, collisions, ground_collisions, SCENARIO);
 			if (Crystal_collided) {
-				World::instance->deleteCrystal(World::instance->crystals[i]);
+				World::instance->deleteCrystal(World::instance->Redcrystals[i]);
 			}
 		}
 	}
