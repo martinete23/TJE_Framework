@@ -9,6 +9,7 @@
 #include "game/game.h"
 
 class EntityCollider;
+bool Crystal_collided = false;
 
 EntityMesh::EntityMesh(Mesh* m, Material mat, std::string name)
 {
@@ -207,6 +208,16 @@ void EntityPlayer::update(float elapsed_time)
 		}
 	}
 
+	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
+		if (World::instance->crystals[i]->active) {
+			Crystal_collided = false;
+			World::instance->crystals[i]->getCollisions(player_pos + velocity * elapsed_time, collisions, ground_collisions, SCENARIO);
+			if (Crystal_collided) {
+				World::instance->deleteCrystal(World::instance->crystals[i]);
+			}
+		}
+	}
+
 	for (const sCollisionData& collision : collisions) {
 		Vector3 newDir = velocity.dot(collision.col_normal) * collision.col_normal;
 		velocity.x -= newDir.x;
@@ -398,8 +409,8 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		if (this->name == "scene/Sphere/Sphere.obj") {
 			Game::instance->goToStage(LOADING);
 		}
-		if (this->name == "crystal") {
-			World::instance->root->removeChild(World::instance->crystal);
+		if (this->name == "red_crystal") {
+			Crystal_collided = true;
 		}
 		World::instance->wallDetected = true;
 		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
@@ -559,7 +570,7 @@ void EntityUI::update(float elapsed_time)
 
 EntityCrystal::EntityCrystal(Mesh* m, Material mat, std::string name) : EntityCollider(m, mat, name)
 {
-	this->model.setTranslation(0, 3.0f, 0);
+	active = false;
 }
 
 EntityCrystal::~EntityCrystal()

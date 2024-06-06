@@ -3,6 +3,8 @@
 #include "graphics/material.h"
 #include "framework/camera.h"
 
+#define RED_CRISTALS_TOT 8
+
 class Entity;
 class EntityPlayer;
 class EntityCrystal;
@@ -19,7 +21,8 @@ public:
 
 	EntityPlayer* player;
 
-	EntityCrystal* crystal;
+	EntityCrystal* crystals[RED_CRISTALS_TOT];
+	int crystalsCollected;
 	
 	Vector3 SpawnPoint;
 
@@ -39,6 +42,8 @@ public:
 	void update(float delta_time);
 
 	bool parseScene(const char* filename, Entity* root);
+
+	void deleteCrystal(EntityCrystal* crystal);
 
 	//sCollisionData raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root);
 };

@@ -35,15 +35,17 @@ World::World()
 	crystal_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	crystal_material.diffuse = Texture::Get("data/textures/red_cristal_texture.tga");
 	crystal_material.color = Vector4(1, 1, 1, 1);
+	crystalsCollected = 0;
+	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
+		crystals[i] = new EntityCrystal(Mesh::Get("data/meshes/red_cristal.obj"), crystal_material, "red_crystal");
+	}
 
-	crystal = new EntityCrystal(Mesh::Get("data/meshes/red_cristal.obj"), crystal_material, "crystal");
-	root->addChild(crystal);
 
 	if (Game::instance->course == TUTORIAL) {
 		parseScene("data/Tutorial.scene", root);
 	}
 	if (Game::instance->course == LEVEL1) {
-		parseScene("data/myscene2.scene", root);
+		parseScene("data/Level1.scene", root);
 	}
 }
 
@@ -54,13 +56,25 @@ void World::render()
 	root->render(camera);
 
 	player->render(camera);
+
+	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
+		if (crystals[i]->active) {
+			crystals[i]->render(camera);
+		}
+	}
 }
 
 void World::update(float delta_time)
 {
+
 	root->update(delta_time);
 	player->update(delta_time);
-	crystal->update(delta_time);
+	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
+		if (crystals[i]->active) {
+			crystals[i]->update(delta_time);
+		}
+	}
+
 
 	camera_yaw -= Input::mouse_delta.x * 0.005f;
 	camera_pitch -= Input::mouse_delta.y * 0.005f;
@@ -147,6 +161,21 @@ bool World::parseScene(const char* filename, Entity* root)
 
 		size_t tag = data.first.find("@tag");
 		size_t playerTag = data.first.find("@player");
+		size_t RedCrystal = data.first.find("@R1");
+		size_t RedCrystal2 = data.first.find("@R2");
+		size_t RedCrystal3 = data.first.find("@R3");
+		size_t RedCrystal4 = data.first.find("@R4");
+		size_t RedCrystal5 = data.first.find("@R5");
+		size_t RedCrystal6 = data.first.find("@R6");
+		size_t RedCrystal7 = data.first.find("@R7");
+		size_t RedCrystal8 = data.first.find("@R8");
+		//RedCrystal = data.first.find("@R2");
+		//RedCrystal = data.first.find("@R3");
+		//RedCrystal = data.first.find("@R4");
+		//RedCrystal = data.first.find("@R5");
+		//RedCrystal = data.first.find("@R6");
+		//RedCrystal = data.first.find("@R7");
+		//RedCrystal = data.first.find("@R8");
 
 		if (tag != std::string::npos) {
 			Mesh* mesh = Mesh::Get("...");
@@ -155,6 +184,22 @@ bool World::parseScene(const char* filename, Entity* root)
 
 			SpawnPoint = render_data.models[0].getTranslation();
 			player->playerMatrix.setTranslation(SpawnPoint);
+			continue;
+		}
+		if (RedCrystal != std::string::npos || RedCrystal2 != std::string::npos ||
+			RedCrystal3 != std::string::npos || RedCrystal4 != std::string::npos ||
+			RedCrystal5 != std::string::npos || RedCrystal6 != std::string::npos ||
+			RedCrystal7 != std::string::npos || RedCrystal8 != std::string::npos) {
+
+			SpawnPoint = render_data.models[0].getTranslation();
+			for (int i = 0; i < RED_CRISTALS_TOT; i++) {
+				if (!crystals[i]->active) {
+					crystals[i]->model.setTranslation(SpawnPoint);
+					crystals[i]->active = true;
+					i = RED_CRISTALS_TOT;
+				}
+			}
+			
 			continue;
 		}
 
@@ -187,6 +232,37 @@ bool World::parseScene(const char* filename, Entity* root)
 
 	std::cout << "Scene [OK]" << " Meshes added: " << mesh_count << std::endl;
 	return true;
+}
+
+void World::deleteCrystal(EntityCrystal* crystal)
+{
+	crystal->active = false;
+	crystalsCollected += 1;
+	//printf("%d\n", crystalsCollected);
+	if (crystalsCollected == 1) {
+		Audio::Play("data/sounds/red_coin_1.wav", 0.5);
+	}
+	else if (crystalsCollected == 2) {
+		Audio::Play("data/sounds/red_coin_2.wav", 0.5);
+	}
+	else if (crystalsCollected == 3) {
+		Audio::Play("data/sounds/red_coin_3.wav", 0.5);
+	}
+	else if (crystalsCollected == 4) {
+		Audio::Play("data/sounds/red_coin_4.wav", 0.5);
+	}
+	else if (crystalsCollected == 5) {
+		Audio::Play("data/sounds/red_coin_5.wav", 0.5);
+	}
+	else if (crystalsCollected == 6) {
+		Audio::Play("data/sounds/red_coin_6.wav", 0.5);
+	}
+	else if (crystalsCollected == 7) {
+		Audio::Play("data/sounds/red_coin_7.wav", 0.5);
+	}
+	else if (crystalsCollected == 8) {
+		Audio::Play("data/sounds/red_coin_8.wav", 0.5);
+	}
 }
 
 //sCollisionData World::raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root)
