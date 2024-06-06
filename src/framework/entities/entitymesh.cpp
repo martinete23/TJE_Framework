@@ -402,22 +402,31 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 	Vector3 floor_sphere_center = center + Vector3(0.0f, sphere_ground_radius, 0.0f);
 
 	if (mesh->testSphereCollision(m, floor_sphere_center, sphere_radius, collision_point, collision_normal)) {
-		collisions.push_back({ collision_point, collision_normal.normalize(), floor_sphere_center.distance(collision_point) });
+		if (this->name == "red_crystal") {
+			Crystal_collided = true;
+		} else {
+			collisions.push_back({ collision_point, collision_normal.normalize(), floor_sphere_center.distance(collision_point) });
+		}
 	}
 	Vector3 character_center = center + Vector3(0.0f, player_height, 0.0f);
 	if (mesh->testSphereCollision(m, character_center, sphere_radius, collision_point, collision_normal)) {
-		if (this->name == "scene/Sphere/Sphere.obj") {
-			Game::instance->goToStage(LOADING);
+		if (this->name == "red_crystal") {
+			Crystal_collided = true;
+		} else {
+			if (this->name == "scene/Sphere/Sphere.obj") {
+				Game::instance->goToStage(LOADING);
+			}
+			World::instance->wallDetected = true;
+			collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 		}
+	}
+	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
 		if (this->name == "red_crystal") {
 			Crystal_collided = true;
 		}
-		World::instance->wallDetected = true;
-		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
-
-	}
-	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
-		ground_collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
+		else {
+			ground_collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
+		}
 	}
 }
 
