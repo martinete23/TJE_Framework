@@ -62,6 +62,7 @@ void IntroStage::render()
 
 void IntroStage::update(double seconds_elapsed)
 {
+
 	background->update(seconds_elapsed);
 }
 

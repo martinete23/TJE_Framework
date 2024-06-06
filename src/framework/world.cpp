@@ -42,7 +42,7 @@ World::World()
 
 	crystal_material.diffuse = Texture::Get("data/textures/yellow_cristal_texture.tga");
 	for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
-		YellowCristal[i] = new EntityCrystal(Mesh::Get("data/meshes/crystal.obj"), crystal_material, "yellow_crystal");
+		Yellowcrystals[i] = new EntityCrystal(Mesh::Get("data/meshes/crystal.obj"), crystal_material, "yellow_crystal");
 	}
 
 	if (Game::instance->course == TUTORIAL) {
@@ -66,50 +66,66 @@ void World::render()
 			Redcrystals[i]->render(camera);
 		}
 	}
+	for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
+		if (Yellowcrystals[i]->active) {
+			Yellowcrystals[i]->render(camera);
+		}
+	}
 }
 
 void World::update(float delta_time)
 {
 
 	root->update(delta_time);
-	player->update(delta_time);
+
 	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
 		if (Redcrystals[i]->active) {
 			Redcrystals[i]->update(delta_time);
 		}
 	}
-
-
-	camera_yaw -= Input::mouse_delta.x * 0.005f;
-	camera_pitch -= Input::mouse_delta.y * 0.005f;
-
-	//pitch angle
-	camera_pitch = clamp(camera_pitch, -M_PI * 0.4f, M_PI * 0.4f);
-
-	//mYaw and mPitch
-	Matrix44 mYaw;
-	mYaw.setRotation(camera_yaw, Vector3(0, 1, 0));
-	Matrix44 mPitch;
-	mPitch.setRotation(camera_pitch, Vector3(-1, 0, 0));
-
-	//front
-	Vector3 front = (mPitch * mYaw).frontVector().normalize();
-	Vector3 eye;
-	Vector3 center;
-
-	float orbit_dist = 1.5f;
-	eye = World::instance->player->playerMatrix.getTranslation() - front * orbit_dist;
-	center = World::instance->player->playerMatrix.getTranslation() + Vector3(0.f, 0.5f, 0.f);
-	EntityCollider* ec = new EntityCollider;
-	Vector3 dir = eye - center;
-	sCollisionData data = ec->raycast(center, dir.normalize(), eCollisionFilter::ALL, dir.length());
-
-	if (data.collided) {
-		eye = center + dir.normalize() * data.distance;
+	for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
+		if (Yellowcrystals[i]->active) {
+			Yellowcrystals[i]->update(delta_time);
+		}
 	}
-	camera->lookAt(eye, center, Vector3(0, 1, 0));
+	if (CrystalAnimation) {
+		animation_in_game(delta_time);
+	}
+	else {
+		player->update(delta_time);
 
-	delete ec;
+		camera_yaw -= Input::mouse_delta.x * 0.005f;
+		camera_pitch -= Input::mouse_delta.y * 0.005f;
+
+		//pitch angle
+		camera_pitch = clamp(camera_pitch, -M_PI * 0.4f, M_PI * 0.4f);
+
+		//mYaw and mPitch
+		Matrix44 mYaw;
+		mYaw.setRotation(camera_yaw, Vector3(0, 1, 0));
+		Matrix44 mPitch;
+		mPitch.setRotation(camera_pitch, Vector3(-1, 0, 0));
+
+		//front
+		Vector3 front = (mPitch * mYaw).frontVector().normalize();
+		Vector3 eye;
+		Vector3 center;
+
+		float orbit_dist = 1.5f;
+		eye = World::instance->player->playerMatrix.getTranslation() - front * orbit_dist;
+		center = World::instance->player->playerMatrix.getTranslation() + Vector3(0.f, 0.5f, 0.f);
+		EntityCollider* ec = new EntityCollider;
+		Vector3 dir = eye - center;
+		sCollisionData data = ec->raycast(center, dir.normalize(), eCollisionFilter::ALL, dir.length());
+
+		if (data.collided) {
+			eye = center + dir.normalize() * data.distance;
+		}
+		camera->lookAt(eye, center, Vector3(0, 1, 0));
+
+		delete ec;
+	}
+
 }
 
 bool World::parseScene(const char* filename, Entity* root)
@@ -165,6 +181,8 @@ bool World::parseScene(const char* filename, Entity* root)
 
 		size_t tag = data.first.find("@tag");
 		size_t playerTag = data.first.find("@player");
+		size_t YellowCrystal = data.first.find("@Y");
+		size_t YellowRed = data.first.find("@YR");
 		size_t RedCrystal = data.first.find("@R1");
 		size_t RedCrystal2 = data.first.find("@R2");
 		size_t RedCrystal3 = data.first.find("@R3");
@@ -173,13 +191,6 @@ bool World::parseScene(const char* filename, Entity* root)
 		size_t RedCrystal6 = data.first.find("@R6");
 		size_t RedCrystal7 = data.first.find("@R7");
 		size_t RedCrystal8 = data.first.find("@R8");
-		//RedCrystal = data.first.find("@R2");
-		//RedCrystal = data.first.find("@R3");
-		//RedCrystal = data.first.find("@R4");
-		//RedCrystal = data.first.find("@R5");
-		//RedCrystal = data.first.find("@R6");
-		//RedCrystal = data.first.find("@R7");
-		//RedCrystal = data.first.find("@R8");
 
 		if (tag != std::string::npos) {
 			Mesh* mesh = Mesh::Get("...");
@@ -204,6 +215,22 @@ bool World::parseScene(const char* filename, Entity* root)
 				}
 			}
 			
+			continue;
+		}
+		if (YellowCrystal != std::string::npos || YellowRed != std::string::npos) {
+			SpawnPoint = render_data.models[0].getTranslation();
+			for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
+				if (!Yellowcrystals[i]->active) {
+					Yellowcrystals[i]->model.setTranslation(SpawnPoint);
+					if (YellowRed != std::string::npos) {
+						Yellowcrystals[i]->active = false;
+					}
+					else {
+						Yellowcrystals[i]->active = true;
+					}
+					i = YELLOW_CRISTALS_TOT;
+				}
+			}
 			continue;
 		}
 
@@ -266,7 +293,34 @@ void World::deleteCrystal(EntityCrystal* crystal)
 	}
 	else if (crystalsCollected == 8) {
 		Audio::Play("data/sounds/red_coin_8.wav", 0.5);
+		CrystalAnimation = true;
+		Audio::Play("data/sounds/crystal_appears.wav", 0.5);
 	}
+}
+
+void World::animation_in_game(float delta_time) {
+	for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
+		if (!Yellowcrystals[i]->active) {
+			DirectionCrystal = Yellowcrystals[i]->model.getTranslation();
+			DirectionCrystalCamera = Vector3(DirectionCrystal.x + 5, DirectionCrystal.y, DirectionCrystal.z + 5);
+			Yellowcrystals[i]->active = true;
+		}
+	}
+	if ((DirectionCrystalCamera.x > DirectionCrystal.x + 2) && (DirectionCrystalCamera.z > DirectionCrystal.z + 2)) {
+		DirectionCrystalCamera.x -= 2 * delta_time;
+		DirectionCrystalCamera.z -= 2 * delta_time;
+	}
+	else {
+		if (CrystalAnimationTime > 2.0) {
+			CrystalAnimation = false;
+			CrystalAnimationTime = 0.0;
+		}
+		else {
+			CrystalAnimationTime += 1 * delta_time;
+		}
+		
+	}
+	camera->lookAt(DirectionCrystalCamera, DirectionCrystal, Vector3(0, 1, 0));
 }
 
 //sCollisionData World::raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root)

@@ -24,7 +24,11 @@ public:
 
 	EntityCrystal* Redcrystals[RED_CRISTALS_TOT];
 
-	EntityCrystal* YellowCristal[YELLOW_CRISTALS_TOT];
+	EntityCrystal* Yellowcrystals[YELLOW_CRISTALS_TOT];
+	bool CrystalAnimation = false;
+	Vector3 DirectionCrystal;
+	Vector3 DirectionCrystalCamera;
+	float CrystalAnimationTime = 0.0;
 
 	int crystalsCollected;
 	
@@ -48,6 +52,8 @@ public:
 	bool parseScene(const char* filename, Entity* root);
 
 	void deleteCrystal(EntityCrystal* crystal);
+	
+	void animation_in_game(float delta_time);
 
 	//sCollisionData raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root);
 };
