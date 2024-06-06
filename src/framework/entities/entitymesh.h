@@ -133,15 +133,10 @@ public:
 	void update(float elapsed_time);
 };
 
-class EntityCrystal : public EntityMesh
+class EntityCrystal : public EntityCollider
 {
 public:
-
-	Matrix44 crystalMatrix;
-	Mesh* crystalMesh;
-	Material crystalMaterial;
-
-	EntityCrystal(Mesh* m, Material mat);
+	EntityCrystal(Mesh* m, Material mat, std::string name);
 	~EntityCrystal();
 
 	void render(Camera* camera);

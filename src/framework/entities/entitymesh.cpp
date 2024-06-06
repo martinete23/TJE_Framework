@@ -398,13 +398,16 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		if (this->name == "scene/Sphere/Sphere.obj") {
 			Game::instance->goToStage(LOADING);
 		}
+		if (this->name == "crystal") {
+			World::instance->root->removeChild(World::instance->crystal);
+		}
 		World::instance->wallDetected = true;
 		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
+
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
 		ground_collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 	}
-
 }
 
 sCollisionData EntityCollider::raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist)
@@ -554,36 +557,33 @@ void EntityUI::update(float elapsed_time)
 	Entity::update(elapsed_time);
 }
 
-EntityCrystal::EntityCrystal(Mesh* m, Material mat)
+EntityCrystal::EntityCrystal(Mesh* m, Material mat, std::string name) : EntityCollider(m, mat, name)
 {
-	crystalMesh = m;
-	crystalMaterial = mat;
-
-	crystalMatrix.setTranslation(0, 3.0f, 0);
+	this->model.setTranslation(0, 3.0f, 0);
 }
 
 EntityCrystal::~EntityCrystal()
 {
-	delete crystalMesh;
+	delete this->mesh;
 }
 
 void EntityCrystal::render(Camera* camera)
 {
-	crystalMaterial.shader->enable();
+	this->material.shader->enable();
 
-	crystalMaterial.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
-	crystalMaterial.shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
-	crystalMaterial.shader->setUniform("u_texture", crystalMaterial.diffuse, 0);
-	crystalMaterial.shader->setUniform("u_model", crystalMatrix);
-	crystalMaterial.shader->setUniform("u_scale", 1.0f);
-	crystalMaterial.shader->setUniform("u_time", time);
+	this->material.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
+	this->material.shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
+	this->material.shader->setUniform("u_texture", this->material.diffuse, 0);
+	this->material.shader->setUniform("u_model", this->model);
+	this->material.shader->setUniform("u_scale", 1.0f);
+	this->material.shader->setUniform("u_time", time);
 
-	crystalMesh->render(GL_TRIANGLES);
+	this->mesh->render(GL_TRIANGLES);
 
-	crystalMaterial.shader->disable();
+	this->material.shader->disable();
 }
 
 void EntityCrystal::update(float elapsed_time)
 {
-	crystalMatrix.rotate(elapsed_time, Vector3(0.0f, 1.0f, 0.0f));
+	this->model.rotate(elapsed_time, Vector3(0.0f, 1.0f, 0.0f));
 }
