@@ -37,9 +37,13 @@ World::World()
 	crystal_material.color = Vector4(1, 1, 1, 1);
 	crystalsCollected = 0;
 	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
-		crystals[i] = new EntityCrystal(Mesh::Get("data/meshes/red_cristal.obj"), crystal_material, "red_crystal");
+		Redcrystals[i] = new EntityCrystal(Mesh::Get("data/meshes/crystal.obj"), crystal_material, "red_crystal");
 	}
 
+	crystal_material.diffuse = Texture::Get("data/textures/yellow_cristal_texture.tga");
+	for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
+		YellowCristal[i] = new EntityCrystal(Mesh::Get("data/meshes/crystal.obj"), crystal_material, "yellow_crystal");
+	}
 
 	if (Game::instance->course == TUTORIAL) {
 		parseScene("data/Tutorial.scene", root);
@@ -58,8 +62,8 @@ void World::render()
 	player->render(camera);
 
 	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
-		if (crystals[i]->active) {
-			crystals[i]->render(camera);
+		if (Redcrystals[i]->active) {
+			Redcrystals[i]->render(camera);
 		}
 	}
 }
@@ -70,8 +74,8 @@ void World::update(float delta_time)
 	root->update(delta_time);
 	player->update(delta_time);
 	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
-		if (crystals[i]->active) {
-			crystals[i]->update(delta_time);
+		if (Redcrystals[i]->active) {
+			Redcrystals[i]->update(delta_time);
 		}
 	}
 
@@ -193,9 +197,9 @@ bool World::parseScene(const char* filename, Entity* root)
 
 			SpawnPoint = render_data.models[0].getTranslation();
 			for (int i = 0; i < RED_CRISTALS_TOT; i++) {
-				if (!crystals[i]->active) {
-					crystals[i]->model.setTranslation(SpawnPoint);
-					crystals[i]->active = true;
+				if (!Redcrystals[i]->active) {
+					Redcrystals[i]->model.setTranslation(SpawnPoint);
+					Redcrystals[i]->active = true;
 					i = RED_CRISTALS_TOT;
 				}
 			}
