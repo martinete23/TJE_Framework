@@ -412,13 +412,12 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 	if (mesh->testSphereCollision(m, character_center, sphere_radius, collision_point, collision_normal)) {
 		if (this->name == "red_crystal") {
 			Crystal_collided = true;
-		} else {
-			if (this->name == "scene/Sphere/Sphere.obj") {
-				Game::instance->goToStage(LOADING);
-			}
-			World::instance->wallDetected = true;
-			collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 		}
+		else if (this->name == "scene/Portal_Nexus/Portal_Nexus.obj" || this->name == "scene/Level1Portal/Level1Portal.obj") {
+			Game::instance->goToStage(LOADING);
+		}
+		World::instance->wallDetected = true;
+		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
 		if (this->name == "red_crystal") {
@@ -580,6 +579,7 @@ void EntityUI::update(float elapsed_time)
 EntityCrystal::EntityCrystal(Mesh* m, Material mat, std::string name) : EntityCollider(m, mat, name)
 {
 	active = false;
+	finalCrystal = false;
 }
 
 EntityCrystal::~EntityCrystal()

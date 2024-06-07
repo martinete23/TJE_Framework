@@ -48,7 +48,10 @@ World::World()
 	if (Game::instance->course == TUTORIAL) {
 		parseScene("data/Tutorial.scene", root);
 	}
-	if (Game::instance->course == LEVEL1) {
+	else if (Game::instance->course == NEXUS) {
+		parseScene("data/NexusWorld.scene", root);
+	}
+	else if (Game::instance->course == LEVEL1) {
 		parseScene("data/Level1.scene", root);
 	}
 }
@@ -227,6 +230,7 @@ bool World::parseScene(const char* filename, Entity* root)
 					}
 					else {
 						Yellowcrystals[i]->active = true;
+						Yellowcrystals[i]->finalCrystal = true;
 					}
 					i = YELLOW_CRISTALS_TOT;
 				}

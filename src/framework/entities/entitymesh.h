@@ -138,7 +138,7 @@ class EntityCrystal : public EntityCollider
 public:
 	
 	bool active;
-
+	bool finalCrystal;
 	EntityCrystal(Mesh* m, Material mat, std::string name);
 	~EntityCrystal();
 
