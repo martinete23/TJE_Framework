@@ -94,6 +94,9 @@ void World::update(float delta_time)
 	if (CrystalAnimation) {
 		animation_in_game(delta_time);
 	}
+	else if (YellowCrystalCollectedAnimation) {
+		animation_get_crystal(delta_time);
+	}
 	else {
 		player->update(delta_time);
 
@@ -227,6 +230,7 @@ bool World::parseScene(const char* filename, Entity* root)
 					Yellowcrystals[i]->model.setTranslation(SpawnPoint);
 					if (YellowRed != std::string::npos) {
 						Yellowcrystals[i]->active = false;
+						Yellowcrystals[i]->RedYellowCrystal = true;
 					}
 					else {
 						Yellowcrystals[i]->active = true;
@@ -269,7 +273,7 @@ bool World::parseScene(const char* filename, Entity* root)
 	return true;
 }
 
-void World::deleteCrystal(EntityCrystal* crystal)
+void World::deleteRedCrystal(EntityCrystal* crystal)
 {
 	crystal->active = false;
 	crystalsCollected += 1;
@@ -301,10 +305,18 @@ void World::deleteCrystal(EntityCrystal* crystal)
 		Audio::Play("data/sounds/crystal_appears.wav", 0.5);
 	}
 }
+void World::deleteYellowCrystal(EntityCrystal* crystal) 
+{
+	crystal->active = false;
+	YellowCrystalCollectedAnimation = true;
+	player->animator.playAnimation("data/animations/twerk.skanim");
+	Audio::Play("data/sounds/got_crystal.wav", 0.5);
+
+}
 
 void World::animation_in_game(float delta_time) {
 	for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
-		if (!Yellowcrystals[i]->active) {
+		if (!Yellowcrystals[i]->active && Yellowcrystals[i]->RedYellowCrystal) {
 			DirectionCrystal = Yellowcrystals[i]->model.getTranslation();
 			DirectionCrystalCamera = Vector3(DirectionCrystal.x + 5, DirectionCrystal.y, DirectionCrystal.z + 5);
 			Yellowcrystals[i]->active = true;
@@ -327,33 +339,16 @@ void World::animation_in_game(float delta_time) {
 	camera->lookAt(DirectionCrystalCamera, DirectionCrystal, Vector3(0, 1, 0));
 }
 
-//sCollisionData World::raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root)
-//{
-//	sCollisionData data;
-//
-//	for (auto e : root->children)
-//	{
-//		EntityCollider* ec = dynamic_cast<EntityCollider*>(e);
-//		if (ec == nullptr || !(ec->getLayer() & layer)) {
-//			continue;
-//		}
-//
-//		Vector3 col_point;
-//		Vector3 col_normal;
-//
-//		if (!ec->mesh->testRayCollision(ec->model, origin, direction, col_point, col_normal, max_ray_dist)) {
-//			continue;
-//		}
-//
-//		data.collided = true;
-//
-//		float max_distance = (col_point - origin).length();
-//		if (max_distance < data.distance) {
-//			data.col_point = col_point;
-//			data.col_normal = col_normal;
-//			data.distance = max_distance;
-//		}
-//	}
-//
-//	return data;
-//}
+void World::animation_get_crystal(float delta_time) 
+{
+	if (CrystalAnimationTime > 3.0) {
+		if (Input::wasKeyPressed(SDL_SCANCODE_Z)) {
+			CrystalAnimationTime = 0.0;
+			YellowCrystalCollectedAnimation = false;
+		}
+	}
+	else {
+		CrystalAnimationTime += 1 * delta_time;
+	}
+
+}

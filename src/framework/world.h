@@ -31,6 +31,9 @@ public:
 	float CrystalAnimationTime = 0.0;
 
 	int crystalsCollected;
+
+	bool YellowCrystalCollected = false;
+	bool YellowCrystalCollectedAnimation = false;
 	
 	Vector3 SpawnPoint;
 
@@ -51,9 +54,11 @@ public:
 
 	bool parseScene(const char* filename, Entity* root);
 
-	void deleteCrystal(EntityCrystal* crystal);
+	void deleteRedCrystal(EntityCrystal* crystal);
+	void deleteYellowCrystal(EntityCrystal* crystal);
 	
 	void animation_in_game(float delta_time);
+	void animation_get_crystal(float delta_time);
 
 	//sCollisionData raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root);
 };

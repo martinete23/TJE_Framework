@@ -9,7 +9,8 @@
 #include "game/game.h"
 
 class EntityCollider;
-bool Crystal_collided = false;
+bool RedCrystal_collided = false;
+bool YellowCrystal_collided = false;
 
 EntityMesh::EntityMesh(Mesh* m, Material mat, std::string name)
 {
@@ -210,10 +211,19 @@ void EntityPlayer::update(float elapsed_time)
 
 	for (int i = 0; i < RED_CRISTALS_TOT; i++) {
 		if (World::instance->Redcrystals[i]->active) {
-			Crystal_collided = false;
+			RedCrystal_collided = false;
 			World::instance->Redcrystals[i]->getCollisions(player_pos + velocity * elapsed_time, collisions, ground_collisions, SCENARIO);
-			if (Crystal_collided) {
-				World::instance->deleteCrystal(World::instance->Redcrystals[i]);
+			if (RedCrystal_collided) {
+				World::instance->deleteRedCrystal(World::instance->Redcrystals[i]);
+			}
+		}
+	}
+	for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
+		if (World::instance->Yellowcrystals[i]->active) {
+			YellowCrystal_collided = false;
+			World::instance->Yellowcrystals[i]->getCollisions(player_pos + velocity * elapsed_time, collisions, ground_collisions, SCENARIO);
+			if (YellowCrystal_collided) {
+				World::instance->deleteYellowCrystal(World::instance->Yellowcrystals[i]);
 			}
 		}
 	}
@@ -403,17 +413,29 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 
 	if (mesh->testSphereCollision(m, floor_sphere_center, sphere_radius, collision_point, collision_normal)) {
 		if (this->name == "red_crystal") {
-			Crystal_collided = true;
-		} else {
+			RedCrystal_collided = true;
+		}
+		else if (this->name == "yellow_crystal") {
+			YellowCrystal_collided = true;
+		}
+		else {
 			collisions.push_back({ collision_point, collision_normal.normalize(), floor_sphere_center.distance(collision_point) });
 		}
 	}
 	Vector3 character_center = center + Vector3(0.0f, player_height, 0.0f);
 	if (mesh->testSphereCollision(m, character_center, sphere_radius, collision_point, collision_normal)) {
 		if (this->name == "red_crystal") {
-			Crystal_collided = true;
+			RedCrystal_collided = true;
 		}
-		else if (this->name == "scene/Portal_Nexus/Portal_Nexus.obj" || this->name == "scene/Level1Portal/Level1Portal.obj") {
+		else if (this->name == "yellow_crystal") {
+			YellowCrystal_collided = true;
+		}
+		else if (this->name == "scene/Portal_Nexus/Portal_Nexus.obj") {
+			Game::instance->course = NEXUS;
+			Game::instance->goToStage(LOADING);
+		}
+		else if (this->name == "scene/Level1Portal/Level1Portal.obj") {
+			Game::instance->course = LEVEL1;
 			Game::instance->goToStage(LOADING);
 		}
 		World::instance->wallDetected = true;
@@ -421,7 +443,10 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
 		if (this->name == "red_crystal") {
-			Crystal_collided = true;
+			RedCrystal_collided = true;
+		}
+		else if (this->name == "yellow_crystal") {
+			YellowCrystal_collided = true;
 		}
 		else {
 			ground_collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
@@ -580,6 +605,7 @@ EntityCrystal::EntityCrystal(Mesh* m, Material mat, std::string name) : EntityCo
 {
 	active = false;
 	finalCrystal = false;
+	RedYellowCrystal = false;
 }
 
 EntityCrystal::~EntityCrystal()

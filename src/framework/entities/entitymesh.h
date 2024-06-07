@@ -139,6 +139,7 @@ public:
 	
 	bool active;
 	bool finalCrystal;
+	bool RedYellowCrystal;
 	EntityCrystal(Mesh* m, Material mat, std::string name);
 	~EntityCrystal();
 

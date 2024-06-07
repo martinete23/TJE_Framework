@@ -215,12 +215,6 @@ void LoadingStage::update(double seconds_elapsed)
 {
 	loading->update(seconds_elapsed);
 	if (loading_time == 0) {
-		if (Game::instance->course == TUTORIAL) {
-			Game::instance->course = NEXUS;
-		}
-		else if (Game::instance->course == NEXUS) {
-			Game::instance->course = LEVEL1;
-		}
 		
 		World::instance = new World();
 	}
