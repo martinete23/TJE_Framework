@@ -34,6 +34,8 @@ public:
 	EntityUI* quitButton;
 	EntityUI* playAgainButton;
 
+	EntityUI* icon;
+
 	EntityUI* loading;
 	float loading_time;
 

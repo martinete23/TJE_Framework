@@ -116,6 +116,7 @@ class EntityUI : public EntityMesh
 
 public:
 	EntityUI(Vector2 size, const Material& material);
+	EntityUI(Vector2 pos, Vector2 size, const Material& material);
 	EntityUI(Vector2 pos, Vector2 size, const Material& material, eButtonID button_id, const std::string& name);
 
 	~EntityUI() {};

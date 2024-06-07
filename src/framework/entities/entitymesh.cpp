@@ -438,8 +438,10 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 			Game::instance->course = LEVEL1;
 			Game::instance->goToStage(LOADING);
 		}
-		World::instance->wallDetected = true;
-		collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
+		else {
+			World::instance->wallDetected = true;
+			collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
+		}
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
 		if (this->name == "red_crystal") {
@@ -515,6 +517,22 @@ EntityUI::EntityUI(Vector2 size, const Material& material)
 		this->material.shader = Shader::Get("data/shaders/basic.vs", material.diffuse ? "data/shaders/texture.fs" : "data/shaders/flat.fs");
 
 	}
+
+}
+
+EntityUI::EntityUI(Vector2 pos, Vector2 size, const Material& material)
+{
+	this->position = pos;
+	this->size = size;
+
+	mesh = new Mesh();
+	mesh->createQuad(pos.x, pos.y, size.x, size.y, true);
+	this->material = material;
+
+	if (!this->material.shader) {
+		this->material.shader = Shader::Get("data/shaders/basic.vs", material.diffuse ? "data/shaders/texture.fs" : "data/shaders/flat.fs");
+	}
+
 
 }
 

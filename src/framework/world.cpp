@@ -344,7 +344,7 @@ void World::animation_get_crystal(float delta_time)
 	if (CrystalAnimationTime > 3.0) {
 		if (Input::wasKeyPressed(SDL_SCANCODE_Z)) {
 			CrystalAnimationTime = 0.0;
-			YellowCrystalCollectedAnimation = false;
+			YellowCrystalCollectedAnimation = false;	
 		}
 	}
 	else {

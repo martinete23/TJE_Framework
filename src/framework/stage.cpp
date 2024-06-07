@@ -68,6 +68,19 @@ void IntroStage::update(double seconds_elapsed)
 
 void PlayStage::onEnter()
 {
+	camera2D = new Camera();
+	camera2D->view_matrix.setIdentity();
+	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
+
+	Material icon_material;
+
+	icon_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	icon_material.diffuse = Texture::Get("data/textures/icon.tga");
+	icon_material.color = Vector4(1, 1, 1, 1);
+
+	icon = new EntityUI(Vector2(Game::instance->window_width - 20, 20),
+		Vector2(18, 32), icon_material);
+
 	texture_cube.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
 	texture_cube.diffuse = new Texture();
 	texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/cave_cubemap/px.png", "data/textures/cave_cubemap/nx.png", "data/textures/cave_cubemap/ny.png", "data/textures/cave_cubemap/py.png", "data/textures/cave_cubemap/pz.png", "data/textures/cave_cubemap/nz.png" });
@@ -99,6 +112,10 @@ void PlayStage::render()
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	camera2D->enable();
+
+	icon->render(camera2D);
 
 	World::instance->render();
 }
