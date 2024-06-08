@@ -445,6 +445,10 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 			Game::instance->course = LEVEL1;
 			Game::instance->goToStage(LOADING);
 		}
+		else if (this->name == "scene/Level2Portal/Level2Portal.obj") {
+			Game::instance->course = LEVEL2;
+			Game::instance->goToStage(LOADING);
+		}
 		else {
 			World::instance->wallDetected = true;
 			collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });

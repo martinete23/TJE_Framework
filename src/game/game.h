@@ -12,7 +12,8 @@
 enum eSageLevel {
 	TUTORIAL = 0,
 	NEXUS = 1,
-	LEVEL1 = 2
+	LEVEL1 = 2,
+	LEVEL2 = 3
 };
 
 class Game
@@ -22,7 +23,7 @@ public:
 
 	World* world = nullptr;
 
-	eSageLevel course = TUTORIAL;
+	eSageLevel course = NEXUS;
 
 	Stage* stages[STAGES_SIZE];
 
