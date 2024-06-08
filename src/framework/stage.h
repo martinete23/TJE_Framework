@@ -34,7 +34,9 @@ public:
 	EntityUI* quitButton;
 	EntityUI* playAgainButton;
 
-	EntityUI* icon;
+	EntityUI* icon0;
+	EntityUI* icon1;
+	EntityUI* icon2;
 	EntityUI* crystal_obtained_icon;
 
 	EntityUI* loading;

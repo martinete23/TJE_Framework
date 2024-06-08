@@ -307,6 +307,7 @@ void World::deleteRedCrystal(EntityCrystal* crystal)
 }
 void World::deleteYellowCrystal(EntityCrystal* crystal) 
 {
+	counter++;
 	crystal->active = false;
 	YellowCrystalCollectedAnimation = true;
 	player->animator.playAnimation("data/animations/twerk.skanim");

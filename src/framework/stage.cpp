@@ -75,11 +75,21 @@ void PlayStage::onEnter()
 	Material icon_material;
 
 	icon_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	icon_material.diffuse = Texture::Get("data/textures/icon.tga");
+	icon_material.diffuse = Texture::Get("data/textures/icon0.tga");
 	icon_material.color = Vector4(1, 1, 1, 1);
 
-	icon = new EntityUI(Vector2(Game::instance->window_width - 20, 20),
-		Vector2(18, 32), icon_material);
+	icon0 = new EntityUI(Vector2(Game::instance->window_width - 50, 35),
+		Vector2(90, 48), icon_material);
+
+	icon_material.diffuse = Texture::Get("data/textures/icon1.tga");
+
+	icon1 = new EntityUI(Vector2(Game::instance->window_width - 50, 35),
+		Vector2(90, 48), icon_material);
+
+	icon_material.diffuse = Texture::Get("data/textures/icon2.tga");
+
+	icon2 = new EntityUI(Vector2(Game::instance->window_width - 50, 35),
+		Vector2(90, 48), icon_material);
 
 	icon_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	icon_material.diffuse = Texture::Get("data/textures/crystal_obtained.tga");
@@ -124,7 +134,18 @@ void PlayStage::render()
 	if (World::instance->showCrystalobtainedIcon) {
 		crystal_obtained_icon->render(camera2D);
 	}
-	icon->render(camera2D);
+	if (World::instance->counter == 0)
+	{
+		icon0->render(camera2D);
+	}
+	if (World::instance->counter == 1)
+	{
+		icon1->render(camera2D);
+	}
+	if (World::instance->counter == 2)
+	{
+		icon2->render(camera2D);
+	}
 
 	World::instance->render();
 }
