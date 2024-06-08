@@ -348,11 +348,10 @@ void World::animation_get_crystal(float delta_time)
 			CrystalAnimationTime = 0.0;
 			YellowCrystalCollectedAnimation = false;
 			showCrystalobtainedIcon = false;
-			for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
-				if (!Yellowcrystals[i]->active && Yellowcrystals[i]->finalCrystal) {
-					Game::instance->course = NEXUS;
-					Game::instance->goToStage(LOADING);
-				}
+			if (counter == 2)
+			{
+				Game::instance->course = NEXUS;
+				Game::instance->goToStage(LOADING);
 			}
 		}
 	}
