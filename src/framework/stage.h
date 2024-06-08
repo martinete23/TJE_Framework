@@ -35,6 +35,7 @@ public:
 	EntityUI* playAgainButton;
 
 	EntityUI* icon;
+	EntityUI* crystal_obtained_icon;
 
 	EntityUI* loading;
 	float loading_time;

@@ -81,6 +81,13 @@ void PlayStage::onEnter()
 	icon = new EntityUI(Vector2(Game::instance->window_width - 20, 20),
 		Vector2(18, 32), icon_material);
 
+	icon_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	icon_material.diffuse = Texture::Get("data/textures/crystal_obtained.tga");
+	icon_material.color = Vector4(1, 1, 1, 1);
+
+	crystal_obtained_icon = new EntityUI(Vector2(Game::instance->window_width/2, 50),
+		Vector2(600, 100), icon_material);
+
 	texture_cube.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
 	texture_cube.diffuse = new Texture();
 	texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/cave_cubemap/px.png", "data/textures/cave_cubemap/nx.png", "data/textures/cave_cubemap/ny.png", "data/textures/cave_cubemap/py.png", "data/textures/cave_cubemap/pz.png", "data/textures/cave_cubemap/nz.png" });
@@ -114,7 +121,9 @@ void PlayStage::render()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	camera2D->enable();
-
+	if (World::instance->showCrystalobtainedIcon) {
+		crystal_obtained_icon->render(camera2D);
+	}
 	icon->render(camera2D);
 
 	World::instance->render();

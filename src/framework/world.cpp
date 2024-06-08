@@ -342,9 +342,17 @@ void World::animation_in_game(float delta_time) {
 void World::animation_get_crystal(float delta_time) 
 {
 	if (CrystalAnimationTime > 3.0) {
-		if (Input::wasKeyPressed(SDL_SCANCODE_Z)) {
+		showCrystalobtainedIcon = true;
+		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
 			CrystalAnimationTime = 0.0;
-			YellowCrystalCollectedAnimation = false;	
+			YellowCrystalCollectedAnimation = false;
+			showCrystalobtainedIcon = false;
+			for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
+				if (!Yellowcrystals[i]->active && Yellowcrystals[i]->finalCrystal) {
+					Game::instance->course = NEXUS;
+					Game::instance->goToStage(LOADING);
+				}
+			}
 		}
 	}
 	else {

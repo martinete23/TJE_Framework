@@ -34,6 +34,7 @@ public:
 
 	bool YellowCrystalCollected = false;
 	bool YellowCrystalCollectedAnimation = false;
+	bool showCrystalobtainedIcon = false;
 	
 	Vector3 SpawnPoint;
 
