@@ -52,7 +52,7 @@ void EntityMesh::render(Camera* camera)
 	material.shader->setUniform("u_model", getGlobalMatrix());
 	material.shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 	material.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
-	material.shader->setUniform("u_scale", 15.0f);
+	material.shader->setUniform("u_scale", 20.0f);
 
 	if (material.diffuse) {
 		material.shader->setTexture("u_texture", material.diffuse, 0);
@@ -113,6 +113,8 @@ void EntityPlayer::render(Camera* camera)
 		shader->setUniform("u_color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 		shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
 		shader->setUniform("u_model", m);
+
+		//mesh->render(GL_TRIANGLES);
 	}
 	{
 		m = playerMatrix;
@@ -121,6 +123,8 @@ void EntityPlayer::render(Camera* camera)
 		shader->setUniform("u_color", Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 		m.scale(sphere_radius, sphere_radius, sphere_radius);
 		shader->setUniform("u_model", m);
+
+		//mesh->render(GL_TRIANGLES);
 	}
 
 	shader->disable();
@@ -305,13 +309,15 @@ void EntityPlayer::update(float elapsed_time)
 	}
 
 	if (!is_grounded) {
+
+		velocity.y -= 9.8f * elapsed_time;
+		jumpTimer = 0.0f;
+
 		if (state != JUMP && state != FALL && state != DASH)
 		{
 			animator.playAnimation("data/animations/fall.skanim");
 			state = FALL;
 		}
-		velocity.y -= 9.8f * elapsed_time;
-		jumpTimer = 0.0f;
 
 		if (boolJump == false) {
 			World::instance->sphere_radius *= 2;
@@ -420,6 +426,7 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		}
 		else {
 			collisions.push_back({ collision_point, collision_normal.normalize(), floor_sphere_center.distance(collision_point) });
+			//printf("ground_wall_col");
 		}
 	}
 	Vector3 character_center = center + Vector3(0.0f, player_height, 0.0f);
@@ -441,6 +448,7 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		else {
 			World::instance->wallDetected = true;
 			collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
+			//printf("wall_col");
 		}
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
@@ -452,6 +460,7 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		}
 		else {
 			ground_collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
+			//printf("ground_col");
 		}
 	}
 }
