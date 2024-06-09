@@ -13,6 +13,7 @@ enum eStages {
 	WIN,
 	LOSE,
 	LOADING,
+	PAUSE,
 	STAGES_SIZE
 };
 
@@ -37,6 +38,8 @@ public:
 	EntityUI* icon0;
 	EntityUI* icon1;
 	EntityUI* icon2;
+	EntityUI* icon3;
+	EntityUI* icon4;
 	EntityUI* crystal_obtained_icon;
 
 	EntityUI* loading;
@@ -92,6 +95,16 @@ public:
 };
 
 class LoseStage : public Stage {
+
+public:
+	virtual void onEnter();
+	virtual void onExit();
+
+	void render();
+	void update(double seconds_elapsed);
+};
+
+class PauseStage : public Stage {
 
 public:
 	virtual void onEnter();

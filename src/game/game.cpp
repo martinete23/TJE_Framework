@@ -79,6 +79,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	stages[WIN] = new WinStage();
 	stages[LOSE] = new LoseStage();
 	stages[LOADING] = new LoadingStage();
+	stages[PAUSE] = new PauseStage();
 	goToStage(INTRO);
 }
 
@@ -139,7 +140,6 @@ void Game::render(void)
 void Game::update(double seconds_elapsed)
 {
 	current_stage->update(seconds_elapsed);
-
 }
 
 //Keyboard event handler (sync input)
@@ -147,7 +147,6 @@ void Game::onKeyDown( SDL_KeyboardEvent event )
 {
 	switch(event.keysym.sym)
 	{
-		case SDLK_ESCAPE: must_exit = true; break; //ESC key, kill the app
 		case SDLK_F1: Shader::ReloadAll(); break; 
 	}
 }
