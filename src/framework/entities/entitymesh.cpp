@@ -188,7 +188,7 @@ void EntityPlayer::update(float elapsed_time)
 		right = true;
 	}
 
-	if (!dashUse) {
+	if (hasDashed) {
 		velocity += dashDirection * 3.0f;
 	}
 
@@ -246,10 +246,11 @@ void EntityPlayer::update(float elapsed_time)
 		float up_factor = fabsf(collision.col_normal.dot(Vector3::UP));
 		if (up_factor > 0.8) {
 			is_grounded = true;
-			dashUse = true;
+			hasDashed = false;
+			canDash = true;
 
 			if (boolJump == true) {
-				World::instance->sphere_radius /= 2;
+				//World::instance->sphere_radius /= 2;
 				boolJump = false;
 			}
 
@@ -320,12 +321,13 @@ void EntityPlayer::update(float elapsed_time)
 		}
 
 		if (boolJump == false) {
-			World::instance->sphere_radius *= 2;
+			//World::instance->sphere_radius *= 2;
 			boolJump = true;
 		}
 
-		if (Input::wasKeyPressed(SDL_SCANCODE_LSHIFT) && dashUse == true) {
-			dashUse = false;
+		if (Input::wasKeyPressed(SDL_SCANCODE_LSHIFT) && canDash == true) {
+			canDash = false;
+			hasDashed = true;
 			dashDirection = character_front;
 			if (state != DASH)
 			{
@@ -335,7 +337,9 @@ void EntityPlayer::update(float elapsed_time)
 			}
 		}
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
-			dashUse = true;
+			printf("Reboto a la paret\n");
+			canDash = false;
+			hasDashed = false;
 			velocity.y = 6.0f;
 			isWallJumping = true;
 			moveDirection = move_dir;
@@ -343,8 +347,7 @@ void EntityPlayer::update(float elapsed_time)
 			Audio::Play("data/sounds/hoohoo.wav", 0.5);
 		}
 	}
-
-	if (Input::isKeyPressed(SDL_SCANCODE_SPACE) && canJump()) {
+	else if (Input::isKeyPressed(SDL_SCANCODE_SPACE)) {
 		jump();
 	}
 
@@ -373,18 +376,6 @@ void EntityPlayer::dash(float elapsed_time)
 	mYaw.setRotation(camera_yaw, Vector3(0, 1, 0));
 	Vector3 dash_direction = mYaw.frontVector();
 
-}
-
-bool EntityPlayer::canJump()
-{
-	if (is_grounded)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
 
 void EntityPlayer::jump()
@@ -426,7 +417,6 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		}
 		else {
 			collisions.push_back({ collision_point, collision_normal.normalize(), floor_sphere_center.distance(collision_point) });
-			//printf("ground_wall_col");
 		}
 	}
 	Vector3 character_center = center + Vector3(0.0f, player_height, 0.0f);
@@ -452,7 +442,6 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		else {
 			World::instance->wallDetected = true;
 			collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
-			//printf("wall_col");
 		}
 	}
 	if (mesh->testRayCollision(m, character_center, Vector3(0, -1, 0), collision_point, collision_normal, player_height + 0.01f)) {
@@ -464,7 +453,6 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 		}
 		else {
 			ground_collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
-			//printf("ground_col");
 		}
 	}
 }
@@ -528,7 +516,6 @@ EntityUI::EntityUI(Vector2 size, const Material& material)
 
 	if (!this->material.shader) {
 		this->material.shader = Shader::Get("data/shaders/basic.vs", material.diffuse ? "data/shaders/texture.fs" : "data/shaders/flat.fs");
-
 	}
 
 }
@@ -545,7 +532,6 @@ EntityUI::EntityUI(Vector2 pos, Vector2 size, const Material& material)
 	if (!this->material.shader) {
 		this->material.shader = Shader::Get("data/shaders/basic.vs", material.diffuse ? "data/shaders/texture.fs" : "data/shaders/flat.fs");
 	}
-
 
 }
 

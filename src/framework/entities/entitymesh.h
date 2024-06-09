@@ -61,7 +61,8 @@ public:
 
 	bool boolJump = false;
 
-	bool dashUse = true;
+	bool canDash = true;
+	bool hasDashed = false;
 	Vector3 dashDirection;
 	float angle = 0;
 	float jumpTimer = 0.0f;
@@ -85,7 +86,6 @@ public:
 	void render(Camera* camera);
 	void update(float elapsed_time);
 	void dash(float elapsed_time);
-	bool canJump();
 	void jump();
 };
 
