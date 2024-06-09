@@ -29,7 +29,7 @@ public:
 
 	World* world = nullptr;
 
-	eSageLevel course = NEXUS;
+	eSageLevel course = TUTORIAL;
 
 	Stage* stages[STAGES_SIZE];
 

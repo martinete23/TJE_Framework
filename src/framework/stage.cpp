@@ -100,11 +100,30 @@ void PlayStage::onEnter()
 
 	texture_cube.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
 	texture_cube.diffuse = new Texture();
-	texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/cave_cubemap/px.png", "data/textures/cave_cubemap/nx.png", "data/textures/cave_cubemap/ny.png", "data/textures/cave_cubemap/py.png", "data/textures/cave_cubemap/pz.png", "data/textures/cave_cubemap/nz.png" });
+	if (Game::instance->course == TUTORIAL) {
+		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/cave_cubemap/px.png", "data/textures/cave_cubemap/nx.png", 
+			"data/textures/cave_cubemap/ny.png", "data/textures/cave_cubemap/py.png", "data/textures/cave_cubemap/pz.png", "data/textures/cave_cubemap/nz.png" });
+		channel = Audio::Play("data/sounds/Tutorial_Course.mp3", 0.3, BASS_SAMPLE_LOOP);
+	}
+	else if (Game::instance->course == NEXUS) {
+		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/BlackSky/px.png", "data/textures/BlackSky/nx.png",
+			"data/textures/BlackSky/ny.png", "data/textures/BlackSky/py.png", "data/textures/BlackSky/pz.png", "data/textures/BlackSky/nz.png" });
+		channel = Audio::Play("data/sounds/Nexus_Course.mp3", 0.3, BASS_SAMPLE_LOOP);
+	}
+	else if (Game::instance->course == LEVEL1) {
+		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/BlueSky/px.png", "data/textures/BlueSky/nx.png",
+			"data/textures/BlueSky/ny.png", "data/textures/BlueSky/py.png", "data/textures/BlueSky/pz.png", "data/textures/BlueSky/nz.png" });
+		channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
+	}
+	else if (Game::instance->course == LEVEL2) {
+		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/RedSky/px.png", "data/textures/RedSky/nx.png", 
+			"data/textures/RedSky/ny.png", "data/textures/RedSky/py.png", "data/textures/RedSky/pz.png", "data/textures/RedSky/nz.png" });
+		channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
+	}
+	
 
 	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
-
-	channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
+	
 }
 
 void PlayStage::onExit()
