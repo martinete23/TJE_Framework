@@ -310,7 +310,19 @@ void World::deleteRedCrystal(EntityCrystal* crystal)
 }
 void World::deleteYellowCrystal(EntityCrystal* crystal) 
 {
-	counter++;
+	if (crystal->finalCrystal) {
+		if (!Game::instance->CrystalTracking[Game::instance->course].FinalCrystal) {
+			Game::instance->CrystalTracking[Game::instance->course].FinalCrystal = true;
+			Game::instance->CrystalCounter += 1;
+		}
+	}
+	else if (crystal->RedYellowCrystal) {
+		if (!Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal) {
+			Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal = true;
+			Game::instance->CrystalCounter += 1;
+		}
+	}
+	
 	crystal->active = false;
 	YellowCrystalCollectedAnimation = true;
 	player->animator.playAnimation("data/animations/twerk.skanim");
@@ -351,12 +363,8 @@ void World::animation_get_crystal(float delta_time)
 			CrystalAnimationTime = 0.0;
 			YellowCrystalCollectedAnimation = false;
 			showCrystalobtainedIcon = false;
-			for (int i = 0; i < YELLOW_CRISTALS_TOT; i++) {
-				if (!Yellowcrystals[i]->active && Yellowcrystals[i]->finalCrystal) {
-					Game::instance->course = NEXUS;
-					Game::instance->goToStage(LOADING);
-				}
-			}
+			Game::instance->course = NEXUS;
+			Game::instance->goToStage(LOADING);
 		}
 	}
 	else {

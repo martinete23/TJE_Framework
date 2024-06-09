@@ -114,8 +114,12 @@ void PlayStage::onExit()
 
 void PlayStage::render()
 {
+
+
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Ensure we clear the buffers
 	glDisable(GL_DEPTH_TEST);
+
 	if (texture_cube.shader)
 	{
 		texture_cube.shader->enable();
@@ -134,15 +138,15 @@ void PlayStage::render()
 	if (World::instance->showCrystalobtainedIcon) {
 		crystal_obtained_icon->render(camera2D);
 	}
-	if (World::instance->counter == 0)
+	if (Game::instance->CrystalCounter == 0)
 	{
 		icon0->render(camera2D);
 	}
-	if (World::instance->counter == 1)
+	if (Game::instance->CrystalCounter == 1)
 	{
 		icon1->render(camera2D);
 	}
-	if (World::instance->counter == 2)
+	if (Game::instance->CrystalCounter == 2)
 	{
 		icon2->render(camera2D);
 	}

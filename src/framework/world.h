@@ -35,7 +35,6 @@ public:
 	bool YellowCrystalCollected = false;
 	bool YellowCrystalCollectedAnimation = false;
 	bool showCrystalobtainedIcon = false;
-	int counter = 0;
 	
 	Vector3 SpawnPoint;
 

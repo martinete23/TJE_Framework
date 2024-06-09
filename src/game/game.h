@@ -13,7 +13,13 @@ enum eSageLevel {
 	TUTORIAL = 0,
 	NEXUS = 1,
 	LEVEL1 = 2,
-	LEVEL2 = 3
+	LEVEL2 = 3,
+	TOTAL_STAGES = 4
+};
+
+struct CourseCrystals {
+	bool FinalCrystal;
+	bool FinalRedCrystal;
 };
 
 class Game
@@ -26,6 +32,9 @@ public:
 	eSageLevel course = NEXUS;
 
 	Stage* stages[STAGES_SIZE];
+
+	CourseCrystals CrystalTracking[TOTAL_STAGES];
+	int CrystalCounter;
 
 	//window
 	SDL_Window* window;
