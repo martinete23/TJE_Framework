@@ -152,12 +152,12 @@ void PlayStage::onEnter()
 	else if (Game::instance->course == LEVEL1) {
 		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/BlueSky/px.png", "data/textures/BlueSky/nx.png",
 			"data/textures/BlueSky/ny.png", "data/textures/BlueSky/py.png", "data/textures/BlueSky/pz.png", "data/textures/BlueSky/nz.png" });
-		channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
+		channel = Audio::Play("data/sounds/Castle_Theme.mp3", 0.3, BASS_SAMPLE_LOOP);
 	}
 	else if (Game::instance->course == LEVEL2) {
 		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/RedSky/px.png", "data/textures/RedSky/nx.png", 
 			"data/textures/RedSky/ny.png", "data/textures/RedSky/py.png", "data/textures/RedSky/pz.png", "data/textures/RedSky/nz.png" });
-		channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
+		channel = Audio::Play("data/sounds/Volcano_Theme.mp3", 0.3, BASS_SAMPLE_LOOP);
 	}
 	else if (Game::instance->course == LEVEL3) {
 		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/PurpleSky/px.png", "data/textures/PurpleSky/nx.png",
