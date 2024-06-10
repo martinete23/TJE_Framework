@@ -68,6 +68,8 @@ void IntroStage::render()
 		texture_cube.shader->disable();
 	}
 	glEnable(GL_DEPTH_TEST);
+	World::instance->render();
+	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -75,8 +77,7 @@ void IntroStage::render()
 	camera2D->enable();
 
 	background->render(camera2D);
-
-	World::instance->render();
+	
 }
 
 void IntroStage::update(double seconds_elapsed)
@@ -150,7 +151,6 @@ void PlayStage::onEnter()
 			"data/textures/RedSky/ny.png", "data/textures/RedSky/py.png", "data/textures/RedSky/pz.png", "data/textures/RedSky/nz.png" });
 		channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
 	}
-	
 
 	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
 	
@@ -175,6 +175,8 @@ void PlayStage::render()
 		texture_cube.shader->disable();
 	}
 	glEnable(GL_DEPTH_TEST);
+	World::instance->render();
+	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -204,7 +206,6 @@ void PlayStage::render()
 		icon4->render(camera2D);
 	}
 
-	World::instance->render();
 }
 
 void PlayStage::update(double seconds_elapsed)
