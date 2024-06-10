@@ -337,7 +337,6 @@ void EntityPlayer::update(float elapsed_time)
 			}
 		}
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
-			printf("Reboto a la paret\n");
 			canDash = false;
 			hasDashed = false;
 			velocity.y = 6.0f;

@@ -12,10 +12,11 @@ void IntroStage::onEnter()
 	Material material_background;
 
 	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	material_background.diffuse = Texture::Get("data/textures/background.tga");
+	material_background.diffuse = Texture::Get("data/textures/lletres.tga");
 	material_background.color = Vector4(1, 1, 1, 1);
 
-	background = new EntityUI(Vector2(800, 600), material_background);
+	background = new EntityUI(Vector2(Game::instance->window_width / 2, 140),
+		Vector2(776, 280), material_background);
 
 	Material material_play_button;
 
@@ -39,6 +40,13 @@ void IntroStage::onEnter()
 
 	background->addChild(quitButton);
 
+	texture_cube.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/cubetext.fs");
+	texture_cube.diffuse = new Texture();
+	texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/cave_cubemap/px.png", "data/textures/cave_cubemap/nx.png",
+		"data/textures/cave_cubemap/ny.png", "data/textures/cave_cubemap/py.png", "data/textures/cave_cubemap/pz.png", "data/textures/cave_cubemap/nz.png" });
+		
+	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
+
 	Audio::Play("data/sounds/start.wav", 0.5);
 }
 
@@ -49,8 +57,17 @@ void IntroStage::onExit()
 void IntroStage::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	glDisable(GL_DEPTH_TEST);
+	if (texture_cube.shader)
+	{
+		texture_cube.shader->enable();
+		texture_cube.shader->setUniform("u_color", Vector4(1, 1, 1, 1));
+		texture_cube.shader->setUniform("u_viewprojection", World::instance->camera->viewprojection_matrix);
+		texture_cube.shader->setUniform("u_texture", texture_cube.diffuse, 0);
+		skybox->render(World::instance->camera);
+		texture_cube.shader->disable();
+	}
+	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -58,11 +75,15 @@ void IntroStage::render()
 	camera2D->enable();
 
 	background->render(camera2D);
+
+	World::instance->render();
 }
 
 void IntroStage::update(double seconds_elapsed)
 {
 	background->update(seconds_elapsed);
+
+	World::instance->camera->eye = Vector3(30 * cos(Game::instance->time * 0.05), 20, 30 * sin(Game::instance->time * 0.05));
 }
 
 void PlayStage::onEnter()
@@ -142,12 +163,8 @@ void PlayStage::onExit()
 
 void PlayStage::render()
 {
-
-
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Ensure we clear the buffers
 	glDisable(GL_DEPTH_TEST);
-
 	if (texture_cube.shader)
 	{
 		texture_cube.shader->enable();
