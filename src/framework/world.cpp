@@ -1,5 +1,6 @@
 #include "world.h"
 #include "entities/entitymesh.h"
+#include "stage.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -56,6 +57,9 @@ World::World()
 	}
 	else if (Game::instance->course == LEVEL2) {
 		parseScene("data/Level2.scene", root);
+	}
+	else if (Game::instance->course == LEVEL3) {
+		parseScene("data/Level3.scene", root);
 	}
 }
 

@@ -9,6 +9,7 @@
 enum eButtonID {
 	BUTTONPLAY = 0,
 	BUTTONQUIT = 1,
+	BUTTONEXITCOURSE = 2
 };
 
 

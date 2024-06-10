@@ -14,7 +14,8 @@ enum eSageLevel {
 	NEXUS = 1,
 	LEVEL1 = 2,
 	LEVEL2 = 3,
-	TOTAL_STAGES = 4
+	LEVEL3 = 4,
+	TOTAL_STAGES = 5
 };
 
 struct CourseCrystals {

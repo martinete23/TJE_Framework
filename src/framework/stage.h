@@ -34,6 +34,7 @@ public:
 	EntityUI* playButton;
 	EntityUI* quitButton;
 	EntityUI* playAgainButton;
+	EntityUI* exitCourseButton;
 
 	EntityUI* icon0;
 	EntityUI* icon1;
@@ -41,9 +42,12 @@ public:
 	EntityUI* icon3;
 	EntityUI* icon4;
 	EntityUI* crystal_obtained_icon;
+	EntityUI* icon_RedCrystals;
 
 	EntityUI* loading;
 	float loading_time;
+
+	HCHANNEL channel;
 
 	virtual void onEnter() {};
 	virtual void onExit() {};
@@ -66,7 +70,7 @@ class PlayStage : public Stage {
 
 public:
 
-	HCHANNEL channel;
+	Material icon_redCrystal_manterial;
 
 	virtual void onEnter();
 	virtual void onExit();

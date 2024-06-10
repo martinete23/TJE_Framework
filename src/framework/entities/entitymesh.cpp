@@ -337,7 +337,6 @@ void EntityPlayer::update(float elapsed_time)
 			}
 		}
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
-			canDash = false;
 			hasDashed = false;
 			velocity.y = 6.0f;
 			isWallJumping = true;
@@ -438,8 +437,13 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 			Game::instance->course = LEVEL2;
 			Game::instance->goToStage(LOADING);
 		}
+		else if (this->name == "scene/Level3Portal/Level3Portal.obj") {
+			Game::instance->course = LEVEL3;
+			Game::instance->goToStage(LOADING);
+		}
 		else {
 			World::instance->wallDetected = true;
+			//printf("wall Detected");
 			collisions.push_back({ collision_point, collision_normal.normalize(), character_center.distance(collision_point) });
 		}
 	}
@@ -608,6 +612,19 @@ void EntityUI::update(float elapsed_time)
 			material.color = Vector4(1, 0, 0, 1);
 			if (Input::isMousePressed(SDL_BUTTON_LEFT)) {
 				Game::instance->must_exit = true;
+			}
+		}
+		else {
+			material.color = Vector4(1, 1, 1, 1);
+		}
+	}
+	if (button_id == BUTTONEXITCOURSE) {
+		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
+			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
+			material.color = Vector4(1, 0, 0, 1);
+			if (Input::isMousePressed(SDL_BUTTON_LEFT)) {
+				Game::instance->goToStage(LOADING);
+				Game::instance->course = NEXUS;
 			}
 		}
 		else {

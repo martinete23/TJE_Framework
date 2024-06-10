@@ -47,11 +47,12 @@ void IntroStage::onEnter()
 		
 	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
 
-	Audio::Play("data/sounds/start.wav", 0.5);
+	channel = Audio::Play("data/sounds/Intro_game.mp3", 0.3, BASS_SAMPLE_LOOP);
 }
 
 void IntroStage::onExit()
 {
+	Audio::Stop(channel);
 }
 
 void IntroStage::render()
@@ -92,6 +93,13 @@ void PlayStage::onEnter()
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
+
+	icon_redCrystal_manterial.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	icon_redCrystal_manterial.diffuse = Texture::Get("data/textures/icon_redCrystal.tga");
+	icon_redCrystal_manterial.color = Vector4(1, 1, 1, 1);
+
+	icon_RedCrystals = new EntityUI(Vector2(-160, 40),
+		Vector2(320, 64), icon_redCrystal_manterial);
 
 	Material icon_material;
 
@@ -151,6 +159,11 @@ void PlayStage::onEnter()
 			"data/textures/RedSky/ny.png", "data/textures/RedSky/py.png", "data/textures/RedSky/pz.png", "data/textures/RedSky/nz.png" });
 		channel = Audio::Play("data/sounds/theme.mp3", 0.3, BASS_SAMPLE_LOOP);
 	}
+	else if (Game::instance->course == LEVEL3) {
+		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/PurpleSky/px.png", "data/textures/PurpleSky/nx.png",
+			"data/textures/PurpleSky/ny.png", "data/textures/PurpleSky/py.png", "data/textures/PurpleSky/pz.png", "data/textures/PurpleSky/nz.png" });
+		channel = Audio::Play("data/sounds/Challenge_Course.mp3", 0.3, BASS_SAMPLE_LOOP);
+	}
 
 	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
 	
@@ -205,6 +218,7 @@ void PlayStage::render()
 	{
 		icon4->render(camera2D);
 	}
+	icon_RedCrystals->render(camera2D);
 
 }
 
@@ -215,6 +229,38 @@ void PlayStage::update(double seconds_elapsed)
 	if (Input::wasKeyPressed(SDL_SCANCODE_ESCAPE))
 	{
 		Game::instance->goToStage(PAUSE);
+	}
+	if (World::instance->crystalsCollected == 1) {
+		icon_RedCrystals = new EntityUI(Vector2(-120, 40),
+			Vector2(320, 64), icon_redCrystal_manterial);
+	}
+	else if (World::instance->crystalsCollected == 2) {
+		icon_RedCrystals = new EntityUI(Vector2(-80, 40),
+			Vector2(320, 64), icon_redCrystal_manterial);
+	}
+	else if (World::instance->crystalsCollected == 3) {
+		icon_RedCrystals = new EntityUI(Vector2(-40, 40),
+			Vector2(320, 64), icon_redCrystal_manterial);
+	}
+	else if (World::instance->crystalsCollected == 4) {
+		icon_RedCrystals = new EntityUI(Vector2(0, 40),
+			Vector2(320, 64), icon_redCrystal_manterial);
+	}
+	else if (World::instance->crystalsCollected == 5) {
+		icon_RedCrystals = new EntityUI(Vector2(40, 40),
+			Vector2(320, 64), icon_redCrystal_manterial);
+	}
+	else if (World::instance->crystalsCollected == 6) {
+		icon_RedCrystals = new EntityUI(Vector2(80, 40),
+			Vector2(320, 64), icon_redCrystal_manterial);
+	}
+	else if (World::instance->crystalsCollected == 7) {
+		icon_RedCrystals = new EntityUI(Vector2(120, 40),
+			Vector2(320, 64), icon_redCrystal_manterial);
+	}
+	else if (World::instance->crystalsCollected == 8) {
+		icon_RedCrystals = new EntityUI(Vector2(160, 40),
+			Vector2(320, 64), icon_redCrystal_manterial);
 	}
 }
 
@@ -356,10 +402,20 @@ void PauseStage::onEnter()
 	material_play_button.diffuse = Texture::Get("data/textures/continue.tga");
 	material_play_button.color = Vector4(1, 1, 1, 1);
 
-	playButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 4),
+	playButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 5),
 		Vector2(118, 40), material_play_button, BUTTONPLAY, "play_button");
 
 	background->addChild(playButton);
+
+	Material material_exitCourse_button;
+	material_exitCourse_button.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_exitCourse_button.diffuse = Texture::Get("data/textures/Exit_Course.tga");
+	material_exitCourse_button.color = Vector4(1, 1, 1, 1);
+
+	exitCourseButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 3.8),
+		Vector2(118, 40), material_exitCourse_button, BUTTONEXITCOURSE, "exitCourse_button");
+
+	background->addChild(exitCourseButton);
 
 	Material material_quit_button;
 
@@ -371,6 +427,8 @@ void PauseStage::onEnter()
 		Vector2(118, 40), material_quit_button, BUTTONQUIT, "quit_button");
 
 	background->addChild(quitButton);
+
+
 }
 
 void PauseStage::onExit()
