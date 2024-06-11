@@ -193,7 +193,7 @@ void EntityPlayer::update(float elapsed_time)
 	}
 
 	if (isWallJumping && wallJumpTimer < 0.8f) {
-		velocity -= moveDirection * 2.0f;
+		velocity -= moveDirection * 1.5f;
 		wallJumpTimer += 1.0f * elapsed_time;
 	}
 
@@ -250,7 +250,7 @@ void EntityPlayer::update(float elapsed_time)
 			canDash = true;
 
 			if (boolJump == true) {
-				//World::instance->sphere_radius /= 2;
+				World::instance->sphere_radius /= 2.2;
 				boolJump = false;
 			}
 
@@ -321,7 +321,7 @@ void EntityPlayer::update(float elapsed_time)
 		}
 
 		if (boolJump == false) {
-			//World::instance->sphere_radius *= 2;
+			World::instance->sphere_radius *= 2.2;
 			boolJump = true;
 		}
 
