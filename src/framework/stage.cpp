@@ -98,8 +98,8 @@ void PlayStage::onEnter()
 	icon_redCrystal_manterial.diffuse = Texture::Get("data/textures/icon_redCrystal.tga");
 	icon_redCrystal_manterial.color = Vector4(1, 1, 1, 1);
 
-	icon_RedCrystals = new EntityUI(Vector2(-160, 40),
-		Vector2(320, 64), icon_redCrystal_manterial);
+	icon_RedCrystals = new EntityUI(Vector2(-120, 40),
+		Vector2(240, 48), icon_redCrystal_manterial);
 
 	Material icon_material;
 
@@ -231,36 +231,36 @@ void PlayStage::update(double seconds_elapsed)
 		Game::instance->goToStage(PAUSE);
 	}
 	if (World::instance->crystalsCollected == 1) {
-		icon_RedCrystals = new EntityUI(Vector2(-120, 40),
-			Vector2(320, 64), icon_redCrystal_manterial);
+		icon_RedCrystals = new EntityUI(Vector2(-90, 40),
+			Vector2(240, 48), icon_redCrystal_manterial);
 	}
 	else if (World::instance->crystalsCollected == 2) {
-		icon_RedCrystals = new EntityUI(Vector2(-80, 40),
-			Vector2(320, 64), icon_redCrystal_manterial);
+		icon_RedCrystals = new EntityUI(Vector2(-60, 40),
+			Vector2(240, 48), icon_redCrystal_manterial);
 	}
 	else if (World::instance->crystalsCollected == 3) {
-		icon_RedCrystals = new EntityUI(Vector2(-40, 40),
-			Vector2(320, 64), icon_redCrystal_manterial);
+		icon_RedCrystals = new EntityUI(Vector2(-30, 40),
+			Vector2(240, 48), icon_redCrystal_manterial);
 	}
 	else if (World::instance->crystalsCollected == 4) {
 		icon_RedCrystals = new EntityUI(Vector2(0, 40),
-			Vector2(320, 64), icon_redCrystal_manterial);
+			Vector2(240, 48), icon_redCrystal_manterial);
 	}
 	else if (World::instance->crystalsCollected == 5) {
-		icon_RedCrystals = new EntityUI(Vector2(40, 40),
-			Vector2(320, 64), icon_redCrystal_manterial);
+		icon_RedCrystals = new EntityUI(Vector2(30, 40),
+			Vector2(240, 48), icon_redCrystal_manterial);
 	}
 	else if (World::instance->crystalsCollected == 6) {
-		icon_RedCrystals = new EntityUI(Vector2(80, 40),
-			Vector2(320, 64), icon_redCrystal_manterial);
+		icon_RedCrystals = new EntityUI(Vector2(60, 40),
+			Vector2(240, 48), icon_redCrystal_manterial);
 	}
 	else if (World::instance->crystalsCollected == 7) {
-		icon_RedCrystals = new EntityUI(Vector2(120, 40),
-			Vector2(320, 64), icon_redCrystal_manterial);
+		icon_RedCrystals = new EntityUI(Vector2(90, 40),
+			Vector2(240, 48), icon_redCrystal_manterial);
 	}
 	else if (World::instance->crystalsCollected == 8) {
-		icon_RedCrystals = new EntityUI(Vector2(160, 40),
-			Vector2(320, 64), icon_redCrystal_manterial);
+		icon_RedCrystals = new EntityUI(Vector2(120, 40),
+			Vector2(240, 48), icon_redCrystal_manterial);
 	}
 }
 
