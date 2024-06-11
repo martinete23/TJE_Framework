@@ -17,19 +17,6 @@ float mouse_speed = 100.0f;
 
 Game* Game::instance = NULL;
 
-//for jump
-bool is_jumping = false;
-bool is_falling = false;
-float jump_velocity = 20.f;
-
-float jump_duration = 1.0f; // Duration of the jump animation in seconds
-float jump_height = 250.0f; // Height of the jump
-float initial_y_position = 0.0f; // Initial Y position before jumping
-float jump_timer = 0.0f; // Timer for tracking the progress of the jump animation
-bool free_camera = false;
-
-//for movement
-
 
 
 Stage* current_stage;
@@ -193,8 +180,8 @@ void Game::onResize(int width, int height)
 	World::instance->camera->aspect =  width / (float)height;
 	window_width = width;
 	window_height = height;
-	stages[INTRO]->onExit();
-	stages[INTRO]->onEnter();
+	current_stage->onExit();
+	current_stage->onEnter();
 }
 
 void Game::goToStage(eStages stage)

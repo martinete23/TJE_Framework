@@ -46,7 +46,10 @@ World::World()
 		Yellowcrystals[i] = new EntityCrystal(Mesh::Get("data/meshes/crystal.obj"), crystal_material, "yellow_crystal");
 	}
 
-	if (Game::instance->course == TUTORIAL) {
+	if (Game::instance->course == STOCK) {
+		parseScene("data/Stock.scene", root);
+	}
+	else if (Game::instance->course == TUTORIAL) {
 		parseScene("data/Tutorial.scene", root);
 	}
 	else if (Game::instance->course == NEXUS) {
@@ -103,6 +106,7 @@ void World::update(float delta_time)
 	}
 	else if (YellowCrystalCollectedAnimation) {
 		animation_get_crystal(delta_time);
+		player->animationUpdate(delta_time);
 	}
 	else {
 		player->update(delta_time);
@@ -314,24 +318,29 @@ void World::deleteRedCrystal(EntityCrystal* crystal)
 }
 void World::deleteYellowCrystal(EntityCrystal* crystal) 
 {
-	if (crystal->finalCrystal) {
-		if (!Game::instance->CrystalTracking[Game::instance->course].FinalCrystal) {
-			Game::instance->CrystalTracking[Game::instance->course].FinalCrystal = true;
-			Game::instance->CrystalCounter += 1;
-		}
+	if (Game::instance->course == LEVEL3) {
+		Game::instance->course = STOCK;
+		Game::instance->goToStage(LOADING);
 	}
-	else if (crystal->RedYellowCrystal) {
-		if (!Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal) {
-			Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal = true;
-			Game::instance->CrystalCounter += 1;
+	else {
+		if (crystal->finalCrystal) {
+			if (!Game::instance->CrystalTracking[Game::instance->course].FinalCrystal) {
+				Game::instance->CrystalTracking[Game::instance->course].FinalCrystal = true;
+				Game::instance->CrystalCounter += 1;
+			}
 		}
-	}
-	
-	crystal->active = false;
-	YellowCrystalCollectedAnimation = true;
-	player->animator.playAnimation("data/animations/twerk.skanim");
-	Audio::Play("data/sounds/got_crystal.wav", 0.5);
+		else if (crystal->RedYellowCrystal) {
+			if (!Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal) {
+				Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal = true;
+				Game::instance->CrystalCounter += 1;
+			}
+		}
 
+		crystal->active = false;
+		YellowCrystalCollectedAnimation = true;
+		player->animator.playAnimation("data/animations/twerk.skanim");
+		Audio::Play("data/sounds/got_crystal.wav", 0.5);
+	}
 }
 
 void World::animation_in_game(float delta_time) {

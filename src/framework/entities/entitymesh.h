@@ -9,7 +9,9 @@
 enum eButtonID {
 	BUTTONPLAY = 0,
 	BUTTONQUIT = 1,
-	BUTTONEXITCOURSE = 2
+	BUTTONEXITCOURSE = 2,
+	PLAYAGAIN = 3,
+	CONTINUE = 4
 };
 
 
@@ -88,6 +90,8 @@ public:
 	void update(float elapsed_time);
 	void dash(float elapsed_time);
 	void jump();
+
+	void animationUpdate(float elapsed_time);
 };
 
 class EntityCollider : public EntityMesh

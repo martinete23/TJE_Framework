@@ -393,6 +393,14 @@ void EntityPlayer::jump()
 	}
 }
 
+void EntityPlayer::animationUpdate(float elapsed_time)
+{
+	if (isAnimated) {
+		animator.update(elapsed_time);
+	}
+	EntityMesh::update(elapsed_time);
+}
+
 void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions)
 {
 	Vector3 collision_point;
@@ -595,6 +603,37 @@ void EntityUI::update(float elapsed_time)
 	Vector2 mouse_pos = Input::mouse_position;
 
 	if (button_id == BUTTONPLAY) {
+		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
+			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
+			material.color = Vector4(1, 0, 0, 1);
+			if (Input::isMousePressed(SDL_BUTTON_LEFT)) {
+				Game::instance->course = TUTORIAL;
+				Game::instance->goToStage(LOADING);
+			}
+		}
+		else {
+			material.color = Vector4(1, 1, 1, 1);
+		}
+	}
+	if (button_id == PLAYAGAIN) {
+		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
+			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
+			material.color = Vector4(1, 0, 0, 1);
+			if (Input::isMousePressed(SDL_BUTTON_LEFT)) {
+				if (Game::instance->course == TUTORIAL) {
+					Game::instance->goToStage(PLAY);
+				}
+				else {
+					Game::instance->course = NEXUS;
+					Game::instance->goToStage(LOADING);
+				}
+			}
+		}
+		else {
+			material.color = Vector4(1, 1, 1, 1);
+		}
+	}
+	if (button_id == CONTINUE) {
 		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
 			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
 			material.color = Vector4(1, 0, 0, 1);

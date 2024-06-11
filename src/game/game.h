@@ -15,7 +15,8 @@ enum eSageLevel {
 	LEVEL1 = 2,
 	LEVEL2 = 3,
 	LEVEL3 = 4,
-	TOTAL_STAGES = 5
+	STOCK = 5,
+	TOTAL_STAGES = 6
 };
 
 struct CourseCrystals {
@@ -30,7 +31,7 @@ public:
 
 	World* world = nullptr;
 
-	eSageLevel course = TUTORIAL;
+	eSageLevel course = STOCK;
 
 	Stage* stages[STAGES_SIZE];
 
