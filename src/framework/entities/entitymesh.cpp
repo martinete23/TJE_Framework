@@ -337,7 +337,7 @@ void EntityPlayer::update(float elapsed_time)
 				Audio::Play("data/sounds/yahoo.wav", 0.5);
 			}
 		}
-		if ((Input::wasKeyPressed(SDL_SCANCODE_SPACE) || Input::gamepads->wasButtonPressed(A_BUTTON)) && World::instance->wallDetected == true) {
+		if ((Input::isKeyPressed(SDL_SCANCODE_SPACE) || Input::gamepads->isButtonPressed(A_BUTTON)) && World::instance->wallDetected == true && !(move_dir.x == 0.0f && move_dir.y == 0.0f && move_dir.z == 0.0f)) {
 			hasDashed = false;
 			velocity.y = 6.0f;
 			isWallJumping = true;
