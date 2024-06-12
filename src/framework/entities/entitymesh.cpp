@@ -167,22 +167,23 @@ void EntityPlayer::update(float elapsed_time)
 	Vector3 move_dir;
 	Vector3 character_front = mYaw.frontVector();
 	Vector3 character_right = mYaw.rightVector();
-	if (Input::isKeyPressed(SDL_SCANCODE_W))
+
+	if (Input::isKeyPressed(SDL_SCANCODE_W) || (Input::gamepads->axis[LEFT_ANALOG_Y] <= -1))
 	{
 		move_dir += character_front;
 		front = true;
 	}
-	if (Input::isKeyPressed(SDL_SCANCODE_S))
+	if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::gamepads->axis[LEFT_ANALOG_Y] > 0)
 	{
 		move_dir -= character_front;
 		back = true;
 	}
-	if (Input::isKeyPressed(SDL_SCANCODE_A))
+	if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::gamepads->axis[LEFT_ANALOG_X] < 0)
 	{
 		move_dir += character_right;
 		left = true;
 	}
-	if (Input::isKeyPressed(SDL_SCANCODE_D))
+	if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::gamepads->axis[LEFT_ANALOG_X] > 0)
 	{
 		move_dir -= character_right;
 		right = true;
@@ -325,7 +326,7 @@ void EntityPlayer::update(float elapsed_time)
 			boolJump = true;
 		}
 
-		if (Input::wasKeyPressed(SDL_SCANCODE_LSHIFT) && canDash == true) {
+		if ((Input::wasKeyPressed(SDL_SCANCODE_LSHIFT) || Input::gamepads->wasButtonPressed(X_BUTTON)) && canDash == true){
 			canDash = false;
 			hasDashed = true;
 			dashDirection = character_front;
@@ -336,7 +337,7 @@ void EntityPlayer::update(float elapsed_time)
 				Audio::Play("data/sounds/yahoo.wav", 0.5);
 			}
 		}
-		if (Input::isKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
+		if ((Input::wasKeyPressed(SDL_SCANCODE_SPACE) || Input::gamepads->wasButtonPressed(A_BUTTON)) && World::instance->wallDetected == true) {
 			hasDashed = false;
 			velocity.y = 6.0f;
 			isWallJumping = true;
@@ -345,7 +346,7 @@ void EntityPlayer::update(float elapsed_time)
 			Audio::Play("data/sounds/hoohoo.wav", 0.5);
 		}
 	}
-	else if (Input::isKeyPressed(SDL_SCANCODE_SPACE)) {
+	else if ((Input::isKeyPressed(SDL_SCANCODE_SPACE)) || Input::gamepads->isButtonPressed(A_BUTTON)) {
 		jump();
 	}
 
