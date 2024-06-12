@@ -114,6 +114,23 @@ void World::update(float delta_time)
 		camera_yaw -= Input::mouse_delta.x * 0.005f;
 		camera_pitch -= Input::mouse_delta.y * 0.005f;
 
+		std::cout << Input::mouse_delta.x;
+
+		if (Input::gamepads->connected) {
+			if (Input::gamepads->axis[RIGHT_ANALOG_X] < 0) {
+				camera_yaw -= 8 * 0.005f;
+			}
+			else if (Input::gamepads->axis[RIGHT_ANALOG_X] > 0) {
+				camera_yaw += 8 * 0.005f;
+			}
+			if (Input::gamepads->axis[RIGHT_ANALOG_Y] <= -1) {
+				camera_pitch -= 8 * 0.005f;
+			}
+			else if (Input::gamepads->axis[RIGHT_ANALOG_Y] > 0) {
+				camera_pitch += 8 * 0.005f;
+			}
+		}
+
 		//pitch angle
 		camera_pitch = clamp(camera_pitch, -M_PI * 0.4f, M_PI * 0.4f);
 
@@ -372,7 +389,7 @@ void World::animation_get_crystal(float delta_time)
 {
 	if (CrystalAnimationTime > 3.0) {
 		showCrystalobtainedIcon = true;
-		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
+		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) || Input::gamepads->wasButtonPressed(A_BUTTON)) {
 			CrystalAnimationTime = 0.0;
 			YellowCrystalCollectedAnimation = false;
 			showCrystalobtainedIcon = false;
