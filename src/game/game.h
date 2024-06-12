@@ -38,6 +38,11 @@ public:
 	CourseCrystals CrystalTracking[TOTAL_STAGES];
 	int CrystalCounter;
 
+	bool displayImage = false;
+	float timer = 0.0f;
+	bool displayImage2 = false;
+	float timer2 = 0.0f;
+
 	//window
 	SDL_Window* window;
 	int window_width;

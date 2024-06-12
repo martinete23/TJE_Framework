@@ -44,6 +44,9 @@ public:
 	EntityUI* crystal_obtained_icon;
 	EntityUI* icon_RedCrystals;
 
+	EntityUI* level2;
+	EntityUI* level3;
+
 	EntityUI* loading;
 	float loading_time;
 

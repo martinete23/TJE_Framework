@@ -95,17 +95,17 @@ void PlayStage::onEnter()
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
 
-	Material material_background;
+	Material material_portal;
 
-	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	material_background.diffuse = Texture::Get("data/textures/level2.tga");
-	material_background.color = Vector4(1, 1, 1, 1);
+	material_portal.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_portal.diffuse = Texture::Get("data/textures/level2.tga");
+	material_portal.color = Vector4(1, 1, 1, 1);
 
-	Vector4 pos2D = World::instance->camera->viewprojection_matrix * Vector4(-2.5, 5, 11.7, 1.0);
-	pos2D.x /= pos2D.w;
-	pos2D.y /= pos2D.w;
+	level2 = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 - 200), Vector2(400, 80), material_portal);
 
-	background = new EntityUI(Vector2(pos2D.x, pos2D.y), Vector2(99, 11), material_background);
+	material_portal.diffuse = Texture::Get("data/textures/level3.tga");
+
+	level3 = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 - 200), Vector2(400, 80), material_portal);
 
 	icon_redCrystal_manterial.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	icon_redCrystal_manterial.diffuse = Texture::Get("data/textures/icon_redCrystal.tga");
@@ -202,10 +202,6 @@ void PlayStage::render()
 	}
 	glEnable(GL_DEPTH_TEST);
 	World::instance->render();
-	if (Game::instance->course == NEXUS)
-	{
-		background->render(World::instance->camera);
-	}
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -238,6 +234,23 @@ void PlayStage::render()
 
 	icon_RedCrystals->render(camera2D);
 
+	if (Game::instance->displayImage == true && Game::instance->timer <= 2.0f)
+	{
+		level2->render(camera2D);
+	}
+	else
+	{
+		Game::instance->displayImage = false;
+	}
+
+	if (Game::instance->displayImage2 == true && Game::instance->timer2 <= 2.0f)
+	{
+		level3->render(camera2D);
+	}
+	else
+	{
+		Game::instance->displayImage2 = false;
+	}
 }
 
 void PlayStage::update(double seconds_elapsed)
@@ -279,6 +292,24 @@ void PlayStage::update(double seconds_elapsed)
 	else if (World::instance->crystalsCollected == 8) {
 		icon_RedCrystals = new EntityUI(Vector2(120, 40),
 			Vector2(240, 48), icon_redCrystal_manterial);
+	}
+
+	if (Game::instance->displayImage == true)
+	{
+		Game::instance->timer += 1.0f * seconds_elapsed;
+	}
+	else
+	{
+		Game::instance->timer = 0.0f;
+	}
+
+	if (Game::instance->displayImage2 == true)
+	{
+		Game::instance->timer2 += 1.0f * seconds_elapsed;
+	}
+	else
+	{
+		Game::instance->timer2 = 0.0f;
 	}
 }
 

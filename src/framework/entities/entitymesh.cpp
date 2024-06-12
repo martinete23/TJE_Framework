@@ -445,12 +445,16 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 			if (Game::instance->CrystalCounter >= 1) {
 				Game::instance->course = LEVEL2;
 				Game::instance->goToStage(LOADING);
+			} else {
+				Game::instance->displayImage = true;
 			}
 		}
 		else if (this->name == "scene/Level3Portal/Level3Portal.obj") {
 			if (Game::instance->CrystalCounter >= 2) {
 				Game::instance->course = LEVEL3;
 				Game::instance->goToStage(LOADING);
+			} else {
+				Game::instance->displayImage2 = true;
 			}
 		}
 		else {
