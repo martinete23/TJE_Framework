@@ -336,7 +336,7 @@ void EntityPlayer::update(float elapsed_time)
 				Audio::Play("data/sounds/yahoo.wav", 0.5);
 			}
 		}
-		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
+		if (Input::isKeyPressed(SDL_SCANCODE_SPACE) && World::instance->wallDetected == true) {
 			hasDashed = false;
 			velocity.y = 6.0f;
 			isWallJumping = true;
@@ -442,12 +442,16 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 			Game::instance->goToStage(LOADING);
 		}
 		else if (this->name == "scene/Level2Portal/Level2Portal.obj") {
-			Game::instance->course = LEVEL2;
-			Game::instance->goToStage(LOADING);
+			if (Game::instance->CrystalCounter >= 1) {
+				Game::instance->course = LEVEL2;
+				Game::instance->goToStage(LOADING);
+			}
 		}
 		else if (this->name == "scene/Level3Portal/Level3Portal.obj") {
-			Game::instance->course = LEVEL3;
-			Game::instance->goToStage(LOADING);
+			if (Game::instance->CrystalCounter >= 2) {
+				Game::instance->course = LEVEL3;
+				Game::instance->goToStage(LOADING);
+			}
 		}
 		else {
 			World::instance->wallDetected = true;

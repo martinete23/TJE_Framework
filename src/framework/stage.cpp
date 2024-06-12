@@ -95,6 +95,18 @@ void PlayStage::onEnter()
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
 
+	Material material_background;
+
+	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_background.diffuse = Texture::Get("data/textures/level2.tga");
+	material_background.color = Vector4(1, 1, 1, 1);
+
+	Vector4 pos2D = World::instance->camera->viewprojection_matrix * Vector4(-2.5, 5, 11.7, 1.0);
+	pos2D.x /= pos2D.w;
+	pos2D.y /= pos2D.w;
+
+	background = new EntityUI(Vector2(pos2D.x, pos2D.y), Vector2(99, 11), material_background);
+
 	icon_redCrystal_manterial.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	icon_redCrystal_manterial.diffuse = Texture::Get("data/textures/icon_redCrystal.tga");
 	icon_redCrystal_manterial.color = Vector4(1, 1, 1, 1);
@@ -190,6 +202,10 @@ void PlayStage::render()
 	}
 	glEnable(GL_DEPTH_TEST);
 	World::instance->render();
+	if (Game::instance->course == NEXUS)
+	{
+		background->render(World::instance->camera);
+	}
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -219,6 +235,7 @@ void PlayStage::render()
 	{
 		icon4->render(camera2D);
 	}
+
 	icon_RedCrystals->render(camera2D);
 
 }
