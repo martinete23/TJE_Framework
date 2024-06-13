@@ -255,6 +255,18 @@ void PlayStage::render()
 	{
 		icon4->render(camera2D);
 	}
+	if (Game::instance->CrystalCounter == 5)
+	{
+		icon5->render(camera2D);
+	}
+	if (Game::instance->CrystalCounter == 6)
+	{
+		icon6->render(camera2D);
+	}
+	if (Game::instance->CrystalCounter == 7)
+	{
+		icon7->render(camera2D);
+	}
 
 	icon_RedCrystals->render(camera2D);
 
