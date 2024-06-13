@@ -36,10 +36,10 @@ void IntroStage::onEnter()
 
 	background->addChild(quitButton);
 
-	material_button.diffuse = Texture::Get("data/textures/tutorial_button.tga");
+	material_button.diffuse = Texture::Get("data/textures/controls_button.tga");
 
 	tutorialButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 2.4),
-		Vector2(100, 40), material_button, BUTTONTUTORIAL, "tutorial_button");
+		Vector2(100, 40), material_button, BUTTONCONTROLLER, "controller_button");
 
 	background->addChild(tutorialButton);
 
@@ -145,6 +145,21 @@ void PlayStage::onEnter()
 	icon4 = new EntityUI(Vector2(Game::instance->window_width - 50, 35),
 		Vector2(90, 48), icon_material);
 
+	icon_material.diffuse = Texture::Get("data/textures/icon5.tga");
+
+	icon5 = new EntityUI(Vector2(Game::instance->window_width - 50, 35),
+		Vector2(90, 48), icon_material);
+
+	icon_material.diffuse = Texture::Get("data/textures/icon6.tga");
+
+	icon6 = new EntityUI(Vector2(Game::instance->window_width - 50, 35),
+		Vector2(90, 48), icon_material);
+
+	icon_material.diffuse = Texture::Get("data/textures/icon7.tga");
+
+	icon7 = new EntityUI(Vector2(Game::instance->window_width - 50, 35),
+		Vector2(90, 48), icon_material);
+
 	icon_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	icon_material.diffuse = Texture::Get("data/textures/crystal_obtained.tga");
 	icon_material.color = Vector4(1, 1, 1, 1);
@@ -182,6 +197,13 @@ void PlayStage::onEnter()
 
 	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
 	
+	for (int i = 0; i < 20; ++i)
+	{
+		std::string texturePath = "data/textures/animation/frame" + std::to_string(i) + ".tga";
+		Texture* frame = Texture::Get(texturePath.c_str());
+		animationFrames.push_back(frame);
+	}
+
 }
 
 void PlayStage::onExit()
@@ -253,6 +275,16 @@ void PlayStage::render()
 	{
 		Game::instance->displayImage2 = false;
 	}
+
+	if (World::instance->Portal_Animated) {
+		Material animationMaterial;
+		animationMaterial.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+		animationMaterial.diffuse = animationFrames[currentFrame];
+		animationMaterial.color = Vector4(1, 1, 1, 1);
+
+		EntityUI animationEntity(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2), animationMaterial);
+		animationEntity.render(camera2D);
+	}
 }
 
 void PlayStage::update(double seconds_elapsed)
@@ -313,6 +345,15 @@ void PlayStage::update(double seconds_elapsed)
 	{
 		Game::instance->timer2 = 0.0f;
 	}
+	if (World::instance->Portal_Animated) {
+		timeSinceLastFrame += seconds_elapsed;
+		if (timeSinceLastFrame >= 1.0f / animationSpeed)
+		{
+			currentFrame = (currentFrame + 1) % animationFrames.size();
+			timeSinceLastFrame = 0.0f;
+		}
+	}
+
 }
 
 void WinStage::onEnter()
@@ -587,7 +628,7 @@ void TutorialStage::onEnter()
 	Material material_background;
 
 	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	material_background.diffuse = Texture::Get("data/textures/tutorial.tga");
+	material_background.diffuse = Texture::Get("data/textures/controls1.tga");
 	material_background.color = Vector4(1, 1, 1, 1);
 
 	background = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2),
@@ -596,13 +637,14 @@ void TutorialStage::onEnter()
 	Material button_material;
 
 	button_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	button_material.diffuse = Texture::Get("data/textures/back_button.tga");
+	button_material.diffuse = Texture::Get("data/textures/press_space_button.tga");
 	button_material.color = Vector4(1, 1, 1, 1);
 
-	backButton = new EntityUI(Vector2(100, Game::instance->window_height - 50),
-		Vector2(100, 40), button_material, BUTTONBACK, "button_back");
+	nextButton = new EntityUI(Vector2(Game::instance->window_width / 2 + Game::instance->window_width / 4, Game::instance->window_height - 50),
+		Vector2(100, 40), button_material, BUTTONNEXT, "button_back");
 
-	background->addChild(backButton);
+	background->addChild(nextButton);
+	channel = Audio::Play("data/sounds/controller_screen.mp3", 0.3, BASS_SAMPLE_LOOP);
 }
 
 void TutorialStage::onExit()
@@ -621,10 +663,101 @@ void TutorialStage::render()
 
 	camera2D->enable();
 
+	if (Controller_background == 1) {
+		background->material.diffuse = Texture::Get("data/textures/controls2.tga");
+	}
+	else if (Controller_background == 2) {
+		background->material.diffuse = Texture::Get("data/textures/controls3.tga");
+	}
+	else if (Controller_background == 3) {
+		background->material.diffuse = Texture::Get("data/textures/controls4.tga");
+	}
+	
 	background->render(camera2D);
 }
 
 void TutorialStage::update(double seconds_elapsed)
+{
+	background->update(seconds_elapsed);
+
+	if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
+		if (Controller_background < 3) {
+			Controller_background += 1;
+		}
+		else {
+			Controller_background = 0;
+			Game::instance->goToStage(INTRO);
+		}
+	}
+}
+
+void CoursesSelectStage::onEnter()
+{
+	camera2D = new Camera();
+	camera2D->view_matrix.setIdentity();
+	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
+
+	Material material_background;
+
+	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_background.diffuse = Texture::Get("data/textures/select_stage_background.tga");
+	material_background.color = Vector4(1, 1, 1, 1);
+
+	background = new EntityUI(Vector2(800, 600), material_background);
+
+	Material material_button;
+
+	material_button.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	material_button.diffuse = Texture::Get("data/textures/tutorialCourse_button.tga");
+	material_button.color = Vector4(1, 1, 1, 1);
+
+	TutorialButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 3),
+		Vector2(118, 40), material_button, BUTTONTUTORIAL, "tutorial_button");
+
+	background->addChild(TutorialButton);
+
+	material_button.diffuse = Texture::Get("data/textures/level1_button.tga");
+
+	Level1Button = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 3 + 80),
+		Vector2(118, 40), material_button, BUTTONLEVEL1, "level1_button");
+
+	background->addChild(Level1Button);
+
+	material_button.diffuse = Texture::Get("data/textures/level2_button.tga");
+
+	Level2Button = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 3 + 160),
+		Vector2(118, 40), material_button, BUTTONLEVEL2, "level2_button");
+
+	background->addChild(Level2Button);
+
+	material_button.diffuse = Texture::Get("data/textures/level3_button.tga");
+
+	Level3Button = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 3 + 240),
+		Vector2(118, 40), material_button, BUTTONLEVEL3, "level3_button");
+
+	background->addChild(Level3Button);
+
+}
+
+void CoursesSelectStage::onExit()
+{
+}
+
+void CoursesSelectStage::render()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	camera2D->enable();
+
+	background->render(camera2D);
+}
+
+void CoursesSelectStage::update(double seconds_elapsed)
 {
 	background->update(seconds_elapsed);
 }

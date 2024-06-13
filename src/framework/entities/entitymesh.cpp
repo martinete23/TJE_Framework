@@ -435,8 +435,8 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 			YellowCrystal_collided = true;
 		}
 		else if (this->name == "scene/Portal_Nexus/Portal_Nexus.obj") {
-			Game::instance->course = NEXUS;
-			Game::instance->goToStage(LOADING);
+			Audio::Play("data/sounds/portal_spawn.wav", 0.5);
+			World::instance->Portal_Animated = true;
 		}
 		else if (this->name == "scene/Level1Portal/Level1Portal.obj") {
 			Game::instance->course = LEVEL1;
@@ -612,13 +612,31 @@ void EntityUI::update(float elapsed_time)
 {
 	Vector2 mouse_pos = Input::mouse_position;
 
-	if (button_id == BUTTONPLAY) {
+	if (button_id == BUTTONPLAY || button_id == BUTTONTUTORIAL || button_id == BUTTONLEVEL1 || button_id == BUTTONLEVEL2 || button_id == BUTTONLEVEL3) {
 		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
 			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
 			material.color = Vector4(1, 0, 0, 1);
 			if (Input::isMousePressed(SDL_BUTTON_LEFT)) {
-				Game::instance->course = TUTORIAL;
-				Game::instance->goToStage(LOADING);
+				if (button_id == BUTTONPLAY) {
+					Game::instance->course = TUTORIAL;
+					Game::instance->goToStage(LOADING);
+				}
+				else if (button_id == BUTTONTUTORIAL) {
+					Game::instance->course = TUTORIAL;
+					Game::instance->goToStage(LOADING);
+				}
+				else if (button_id == BUTTONLEVEL1) {
+					Game::instance->course = LEVEL1;
+					Game::instance->goToStage(LOADING);
+				}
+				else if (button_id == BUTTONLEVEL2) {
+					Game::instance->course = LEVEL2;
+					Game::instance->goToStage(LOADING);
+				}
+				else if (button_id == BUTTONLEVEL3) {
+					Game::instance->course = LEVEL3;
+					Game::instance->goToStage(LOADING);
+				}
 			}
 		}
 		else {
@@ -680,7 +698,7 @@ void EntityUI::update(float elapsed_time)
 			material.color = Vector4(1, 1, 1, 1);
 		}
 	}
-	if (button_id == BUTTONTUTORIAL) {
+	if (button_id == BUTTONCONTROLLER) {
 		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
 			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
 			material.color = Vector4(1, 0, 0, 1);

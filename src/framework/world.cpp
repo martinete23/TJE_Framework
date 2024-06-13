@@ -108,13 +108,14 @@ void World::update(float delta_time)
 		animation_get_crystal(delta_time);
 		player->animationUpdate(delta_time);
 	}
+	else if (Portal_Animated) {
+		animation_portal(delta_time);
+	}
 	else {
 		player->update(delta_time);
 
 		camera_yaw -= Input::mouse_delta.x * 0.005f;
 		camera_pitch -= Input::mouse_delta.y * 0.005f;
-
-		std::cout << Input::mouse_delta.x;
 
 		if (Input::gamepads->connected) {
 			if (Input::gamepads->axis[RIGHT_ANALOG_X] < 0) {
@@ -335,29 +336,23 @@ void World::deleteRedCrystal(EntityCrystal* crystal)
 }
 void World::deleteYellowCrystal(EntityCrystal* crystal) 
 {
-	if (Game::instance->course == LEVEL3) {
-		Game::instance->course = STOCK;
-		Game::instance->goToStage(LOADING);
+	if (crystal->finalCrystal) {
+		if (!Game::instance->CrystalTracking[Game::instance->course].FinalCrystal) {
+			Game::instance->CrystalTracking[Game::instance->course].FinalCrystal = true;
+			Game::instance->CrystalCounter += 1;
+		}
 	}
-	else {
-		if (crystal->finalCrystal) {
-			if (!Game::instance->CrystalTracking[Game::instance->course].FinalCrystal) {
-				Game::instance->CrystalTracking[Game::instance->course].FinalCrystal = true;
-				Game::instance->CrystalCounter += 1;
-			}
+	else if (crystal->RedYellowCrystal) {
+		if (!Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal) {
+			Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal = true;
+			Game::instance->CrystalCounter += 1;
 		}
-		else if (crystal->RedYellowCrystal) {
-			if (!Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal) {
-				Game::instance->CrystalTracking[Game::instance->course].FinalRedCrystal = true;
-				Game::instance->CrystalCounter += 1;
-			}
-		}
+	}
 
-		crystal->active = false;
-		YellowCrystalCollectedAnimation = true;
-		player->animator.playAnimation("data/animations/twerk.skanim");
-		Audio::Play("data/sounds/got_crystal.wav", 0.5);
-	}
+	crystal->active = false;
+	YellowCrystalCollectedAnimation = true;
+	player->animator.playAnimation("data/animations/twerk.skanim");
+	Audio::Play("data/sounds/got_crystal.wav", 0.5);
 }
 
 void World::animation_in_game(float delta_time) {
@@ -385,20 +380,47 @@ void World::animation_in_game(float delta_time) {
 	camera->lookAt(DirectionCrystalCamera, DirectionCrystal, Vector3(0, 1, 0));
 }
 
-void World::animation_get_crystal(float delta_time) 
+void World::animation_get_crystal(float delta_time)
 {
 	if (CrystalAnimationTime > 3.0) {
 		showCrystalobtainedIcon = true;
 		if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) || Input::gamepads->wasButtonPressed(A_BUTTON)) {
+
 			CrystalAnimationTime = 0.0;
 			YellowCrystalCollectedAnimation = false;
 			showCrystalobtainedIcon = false;
+			if (Game::instance->course == LEVEL3) {
+				Audio::Play("data/sounds/portal_spawn.wav", 0.5);
+				Portal_Animated = true;
+			}
+			else {
+				Game::instance->course = NEXUS;
+				Game::instance->goToStage(LOADING);
+			}
+
+		}
+	}
+	else {
+		CrystalAnimationTime += 1 * delta_time;
+	}
+
+}
+
+void World::animation_portal(float delta_time) {
+	if (Portal_Time > 2.0) {
+		Audio::Play("data/sounds/warpping.wav", 0.5);
+		Portal_Time = 0.0;
+		if (Game::instance->course == LEVEL3) {
+			Game::instance->course = STOCK;
+			Game::instance->goToStage(LOADING);
+		}
+		else {
 			Game::instance->course = NEXUS;
 			Game::instance->goToStage(LOADING);
 		}
 	}
 	else {
-		CrystalAnimationTime += 1 * delta_time;
+		Portal_Time += 1.0 * delta_time;
 	}
 
 }

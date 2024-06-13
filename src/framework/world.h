@@ -35,7 +35,9 @@ public:
 	bool YellowCrystalCollected = false;
 	bool YellowCrystalCollectedAnimation = false;
 	bool showCrystalobtainedIcon = false;
-	
+	bool Portal_Animated = false;
+	float Portal_Time = 0.0;
+
 	Vector3 SpawnPoint;
 
 	float sphere_radius = 0.28f;
@@ -60,6 +62,7 @@ public:
 	
 	void animation_in_game(float delta_time);
 	void animation_get_crystal(float delta_time);
+	void animation_portal(float delta_time);
 
 	//sCollisionData raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist, Entity* root);
 };

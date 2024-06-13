@@ -68,6 +68,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	stages[LOADING] = new LoadingStage();
 	stages[PAUSE] = new PauseStage();
 	stages[TUTORIALIMAGE] = new TutorialStage();
+	stages[COURSESELECT] = new CoursesSelectStage();
 	goToStage(INTRO);
 }
 
@@ -128,6 +129,10 @@ void Game::render(void)
 void Game::update(double seconds_elapsed)
 {
 	current_stage->update(seconds_elapsed);
+
+	if (Input::isKeyPressed(SDL_SCANCODE_P)) {
+		goToStage(COURSESELECT);
+	}
 }
 
 //Keyboard event handler (sync input)

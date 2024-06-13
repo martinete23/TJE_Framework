@@ -15,8 +15,10 @@ enum eStages {
 	LOADING,
 	PAUSE,
 	TUTORIALIMAGE,
+	COURSESELECT,
 	STAGES_SIZE
 };
+
 
 class EntityUI;
 class EntityMesh;
@@ -37,21 +39,17 @@ public:
 	EntityUI* tutorialButton;
 	EntityUI* playAgainButton;
 	EntityUI* exitCourseButton;
-	EntityUI* backButton;
-
-	EntityUI* icon0;
-	EntityUI* icon1;
-	EntityUI* icon2;
-	EntityUI* icon3;
-	EntityUI* icon4;
-	EntityUI* crystal_obtained_icon;
-	EntityUI* icon_RedCrystals;
 
 	EntityUI* level2;
 	EntityUI* level3;
 
 	EntityUI* loading;
 	float loading_time;
+
+	std::vector<Texture*> animationFrames; // Animation frames
+	int currentFrame = 0;
+	float animationSpeed = 10.0f; // Frames per second
+	float timeSinceLastFrame = 0;
 
 	HCHANNEL channel;
 
@@ -75,6 +73,17 @@ public:
 class PlayStage : public Stage {
 
 public:
+
+	EntityUI* icon0;
+	EntityUI* icon1;
+	EntityUI* icon2;
+	EntityUI* icon3;
+	EntityUI* icon4;
+	EntityUI* icon5;
+	EntityUI* icon6;
+	EntityUI* icon7;
+	EntityUI* crystal_obtained_icon;
+	EntityUI* icon_RedCrystals;
 
 	Material icon_redCrystal_manterial;
 
@@ -127,6 +136,23 @@ public:
 class TutorialStage : public Stage {
 
 public:
+	int Controller_background = 0;
+	EntityUI* nextButton;
+	virtual void onEnter();
+	virtual void onExit();
+
+	void render();
+	void update(double seconds_elapsed);
+};
+
+class CoursesSelectStage : public Stage {
+
+public:
+	EntityUI* TutorialButton;
+	EntityUI* Level1Button;
+	EntityUI* Level2Button;
+	EntityUI* Level3Button;
+
 	virtual void onEnter();
 	virtual void onExit();
 
