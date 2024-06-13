@@ -14,6 +14,7 @@ enum eStages {
 	LOSE,
 	LOADING,
 	PAUSE,
+	TUTORIALIMAGE,
 	STAGES_SIZE
 };
 
@@ -33,8 +34,10 @@ public:
 	EntityUI* background;
 	EntityUI* playButton;
 	EntityUI* quitButton;
+	EntityUI* tutorialButton;
 	EntityUI* playAgainButton;
 	EntityUI* exitCourseButton;
+	EntityUI* backButton;
 
 	EntityUI* icon0;
 	EntityUI* icon1;
@@ -112,6 +115,16 @@ public:
 };
 
 class PauseStage : public Stage {
+
+public:
+	virtual void onEnter();
+	virtual void onExit();
+
+	void render();
+	void update(double seconds_elapsed);
+};
+
+class TutorialStage : public Stage {
 
 public:
 	virtual void onEnter();
