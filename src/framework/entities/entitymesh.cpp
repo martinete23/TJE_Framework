@@ -548,6 +548,7 @@ EntityUI::EntityUI(Vector2 pos, Vector2 size, const Material& material)
 	mesh = new Mesh();
 	mesh->createQuad(pos.x, pos.y, size.x, size.y, true);
 	this->material = material;
+	this->button_id = BACKGROUND;
 
 	if (!this->material.shader) {
 		this->material.shader = Shader::Get("data/shaders/basic.vs", material.diffuse ? "data/shaders/texture.fs" : "data/shaders/flat.fs");
