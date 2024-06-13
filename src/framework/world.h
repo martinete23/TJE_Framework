@@ -38,7 +38,7 @@ public:
 	
 	Vector3 SpawnPoint;
 
-	float sphere_radius = 0.14f;
+	float sphere_radius = 0.28f;
 	float sphere_ground_radius = 0.09f;
 	float player_height = 0.5f;
 

@@ -251,7 +251,7 @@ void EntityPlayer::update(float elapsed_time)
 			canDash = true;
 
 			if (boolJump == true) {
-				World::instance->sphere_radius /= 2.2;
+				//World::instance->sphere_radius /= 2.2;
 				boolJump = false;
 			}
 
@@ -322,7 +322,7 @@ void EntityPlayer::update(float elapsed_time)
 		}
 
 		if (boolJump == false) {
-			World::instance->sphere_radius *= 2.2;
+			//World::instance->sphere_radius *= 2.2;
 			boolJump = true;
 		}
 
@@ -337,7 +337,7 @@ void EntityPlayer::update(float elapsed_time)
 				Audio::Play("data/sounds/yahoo.wav", 0.5);
 			}
 		}
-		if ((Input::isKeyPressed(SDL_SCANCODE_SPACE) || Input::gamepads->isButtonPressed(A_BUTTON)) && World::instance->wallDetected == true && !(move_dir.x == 0.0f && move_dir.y == 0.0f && move_dir.z == 0.0f)) {
+		if ((Input::wasKeyPressed(SDL_SCANCODE_SPACE) || Input::gamepads->isButtonPressed(A_BUTTON)) && World::instance->wallDetected == true) {
 			hasDashed = false;
 			velocity.y = 6.0f;
 			isWallJumping = true;
