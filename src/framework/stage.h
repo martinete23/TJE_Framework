@@ -34,14 +34,6 @@ public:
 	Camera* camera2D;
 
 	EntityUI* background;
-	EntityUI* playButton;
-	EntityUI* quitButton;
-	EntityUI* tutorialButton;
-	EntityUI* playAgainButton;
-	EntityUI* exitCourseButton;
-
-	EntityUI* level2;
-	EntityUI* level3;
 
 	EntityUI* loading;
 	float loading_time;
@@ -63,6 +55,11 @@ public:
 class IntroStage : public Stage {
 
 public:
+
+	EntityUI* playButton;
+	EntityUI* quitButton;
+	EntityUI* tutorialButton;
+
 	virtual void onEnter();
 	virtual void onExit();
 
@@ -85,7 +82,10 @@ public:
 	EntityUI* crystal_obtained_icon;
 	EntityUI* icon_RedCrystals;
 
-	Material icon_redCrystal_manterial;
+	EntityUI* level2;
+	EntityUI* level3;
+
+	Material icon_redCrystal_material;
 
 	virtual void onEnter();
 	virtual void onExit();
@@ -106,6 +106,10 @@ public:
 class WinStage : public Stage {
 
 public:
+
+	EntityUI* playButton;
+	EntityUI* quitButton;
+
 	virtual void onEnter();
 	virtual void onExit();
 
@@ -116,6 +120,9 @@ public:
 class LoseStage : public Stage {
 
 public:
+
+	EntityUI* playAgainButton;
+
 	virtual void onEnter();
 	virtual void onExit();
 
@@ -126,6 +133,11 @@ public:
 class PauseStage : public Stage {
 
 public:
+
+	EntityUI* continueButton;
+	EntityUI* exitCourseButton;
+	EntityUI* quitButton;
+
 	virtual void onEnter();
 	virtual void onExit();
 
@@ -136,8 +148,10 @@ public:
 class TutorialStage : public Stage {
 
 public:
+
 	int Controller_background = 0;
 	EntityUI* nextButton;
+
 	virtual void onEnter();
 	virtual void onExit();
 
@@ -148,6 +162,7 @@ public:
 class CoursesSelectStage : public Stage {
 
 public:
+
 	EntityUI* TutorialButton;
 	EntityUI* Level1Button;
 	EntityUI* Level2Button;
