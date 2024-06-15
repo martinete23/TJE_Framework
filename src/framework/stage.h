@@ -84,9 +84,12 @@ public:
 
 	EntityUI* level2;
 	EntityUI* level3;
+	EntityUI* levelChallenge;
 
 	Material icon_redCrystal_material;
 
+	float animation_width;
+	float animation_height;
 	virtual void onEnter();
 	virtual void onExit();
 
@@ -110,6 +113,7 @@ public:
 	EntityUI* playButton;
 	EntityUI* quitButton;
 
+	float endingTimer = 0.0f;
 	virtual void onEnter();
 	virtual void onExit();
 

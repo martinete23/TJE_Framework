@@ -458,6 +458,15 @@ void EntityCollider::getCollisionWithModel(const Matrix44& m, const Vector3& tar
 				Game::instance->displayImage2 = true;
 			}
 		}
+		else if (this->name == "scene/ChallengePortal/ChallengePortal.obj") {
+			if (Game::instance->CrystalCounter >= 5) {
+				Game::instance->course = CHALLENGE;
+				Game::instance->goToStage(LOADING);
+			}
+			else {
+				Game::instance->displayImage3 = true;
+			}
+		}
 		else {
 			World::instance->wallDetected = true;
 			//printf("wall Detected");

@@ -43,6 +43,8 @@ public:
 	float timer = 0.0f;
 	bool displayImage2 = false;
 	float timer2 = 0.0f;
+	bool displayImage3 = false;
+	float timer3 = 0.0f;
 
 	//window
 	SDL_Window* window;

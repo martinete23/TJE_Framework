@@ -109,6 +109,10 @@ void PlayStage::onEnter()
 
 	level3 = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 - 200), Vector2(400, 80), material_portal);
 
+	material_portal.diffuse = Texture::Get("data/textures/level_challenge.tga");
+
+	levelChallenge = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 - 200), Vector2(400, 80), material_portal);
+
 	icon_redCrystal_material.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	icon_redCrystal_material.diffuse = Texture::Get("data/textures/icon_redCrystal.tga");
 	icon_redCrystal_material.color = Vector4(1, 1, 1, 1);
@@ -202,6 +206,9 @@ void PlayStage::onEnter()
 
 	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
 	
+	animation_width = Game::instance->window_width / 2;
+	animation_height = Game::instance->window_height / 2;
+
 	for (int i = 0; i < 20; ++i)
 	{
 		std::string texturePath = "data/textures/animation/frame" + std::to_string(i) + ".tga";
@@ -292,6 +299,14 @@ void PlayStage::render()
 	{
 		Game::instance->displayImage2 = false;
 	}
+	if (Game::instance->displayImage3 == true && Game::instance->timer3 <= 2.0f)
+	{
+		levelChallenge->render(camera2D);
+	}
+	else
+	{
+		Game::instance->displayImage3 = false;
+	}
 
 	if (World::instance->Portal_Animated) {
 		Material animationMaterial;
@@ -299,7 +314,7 @@ void PlayStage::render()
 		animationMaterial.diffuse = animationFrames[currentFrame];
 		animationMaterial.color = Vector4(1, 1, 1, 1);
 
-		EntityUI animationEntity(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2), animationMaterial);
+		EntityUI animationEntity(Vector2(animation_width, animation_height), animationMaterial);
 		animationEntity.render(camera2D);
 	}
 }
@@ -362,6 +377,14 @@ void PlayStage::update(double seconds_elapsed)
 	{
 		Game::instance->timer2 = 0.0f;
 	}
+	if (Game::instance->displayImage3 == true)
+	{
+		Game::instance->timer3 += 1.0f * seconds_elapsed;
+	}
+	else
+	{
+		Game::instance->timer3 = 0.0f;
+	}
 	if (World::instance->Portal_Animated) {
 		timeSinceLastFrame += seconds_elapsed;
 		if (timeSinceLastFrame >= 1.0f / animationSpeed)
@@ -369,8 +392,9 @@ void PlayStage::update(double seconds_elapsed)
 			currentFrame = (currentFrame + 1) % animationFrames.size();
 			timeSinceLastFrame = 0.0f;
 		}
+		animation_width += 1000 * seconds_elapsed;
+		animation_height += 1000 * seconds_elapsed;
 	}
-
 }
 
 void WinStage::onEnter()
@@ -446,11 +470,15 @@ void WinStage::render()
 
 	camera2D->enable();
 
-	background->render(camera2D);
+	if (endingTimer > 6.0) {
+		background->render(camera2D);
+	}
+
 }
 
 void WinStage::update(double seconds_elapsed)
 {
+	endingTimer += 1 * seconds_elapsed;
 	background->update(seconds_elapsed);
 	Vector3 CameraPos = World::instance->player->playerMatrix.getTranslation();
 	World::instance->camera->eye = Vector3(CameraPos.x - 2 * cos(Game::instance->time * 0.05), 3, CameraPos.z - 2 * sin(Game::instance->time * 0.05));
