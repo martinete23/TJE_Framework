@@ -194,6 +194,11 @@ void PlayStage::onEnter()
 			"data/textures/PurpleSky/ny.png", "data/textures/PurpleSky/py.png", "data/textures/PurpleSky/pz.png", "data/textures/PurpleSky/nz.png" });
 		channel = Audio::Play("data/sounds/Challenge_Course.mp3", 0.3, BASS_SAMPLE_LOOP);
 	}
+	else if (Game::instance->course == CHALLENGE) {
+		texture_cube.diffuse->loadCubemap("cubemap", { "data/textures/PurpleSky/px.png", "data/textures/PurpleSky/nx.png",
+			"data/textures/PurpleSky/ny.png", "data/textures/PurpleSky/py.png", "data/textures/PurpleSky/pz.png", "data/textures/PurpleSky/nz.png" });
+		channel = Audio::Play("data/sounds/Challenge_Course.mp3", 0.3, BASS_SAMPLE_LOOP);
+	}
 
 	skybox = new EntityMesh(Mesh::Get("data/meshes/cubemap.obj"), texture_cube, "cubemap");
 	
@@ -737,6 +742,13 @@ void CoursesSelectStage::onEnter()
 		Vector2(118, 40), material_button, BUTTONLEVEL3, "level3_button");
 
 	background->addChild(Level3Button);
+
+	material_button.diffuse = Texture::Get("data/textures/challenge_button.tga");
+
+	ChallengeButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 3 + 320),
+		Vector2(118, 40), material_button, BUTTONCHALLENGE, "challenge_button");
+
+	background->addChild(ChallengeButton);
 
 }
 

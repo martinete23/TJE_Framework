@@ -16,7 +16,8 @@ enum eSageLevel {
 	LEVEL2 = 3,
 	LEVEL3 = 4,
 	STOCK = 5,
-	TOTAL_STAGES = 6
+	CHALLENGE = 6,
+	TOTAL_STAGES = 7
 };
 
 struct CourseCrystals {

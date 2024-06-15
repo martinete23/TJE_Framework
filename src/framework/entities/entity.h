@@ -24,7 +24,6 @@ struct sCollisionData {
 class Entity {
 
 public:
-
 	Entity() {}; 			// Constructor
 	virtual ~Entity() {}; 	// Destructor
 

@@ -167,6 +167,7 @@ public:
 	EntityUI* Level1Button;
 	EntityUI* Level2Button;
 	EntityUI* Level3Button;
+	EntityUI* ChallengeButton;
 
 	virtual void onEnter();
 	virtual void onExit();

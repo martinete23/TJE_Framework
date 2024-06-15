@@ -365,7 +365,7 @@ void EntityPlayer::update(float elapsed_time)
 
 	playerMatrix.rotate(camera_yaw, Vector3(0, 1, 0));
 
-	EntityMesh::update(elapsed_time);
+	//EntityMesh::update(elapsed_time);
 }
 
 void EntityPlayer::dash(float elapsed_time)
@@ -525,6 +525,33 @@ void EntityCollider::getCollisions(const Vector3& target_position, std::vector<s
 	}
 }
 
+void EntityCollider::update(float deltaTime)
+{
+	currentPosition += direction * speed * deltaTime;
+
+
+	if (currentPosition >= maxDistance || currentPosition <= -maxDistance) {
+		direction = -direction;
+	}
+
+
+	Vector3 translation = model.getTranslation();
+	if (horizontalMovement) {
+		translation.z = direction * speed * deltaTime;
+
+		model.translate(Vector3(0, 0, translation.z));
+	}
+	else if (verticalMovement) {
+		translation.y = direction * speed * deltaTime;
+		model.translate(Vector3(0, translation.y, 0));
+	}
+	else if (diagonalMovement) {
+		translation.y = direction * speed * deltaTime;
+		translation.z = direction * speed * deltaTime;
+		model.translate(Vector3(0, translation.y, translation.z));
+	}
+}
+
 EntityUI::EntityUI(Vector2 size, const Material& material)
 {
 	this->size = size;
@@ -612,7 +639,8 @@ void EntityUI::update(float elapsed_time)
 {
 	Vector2 mouse_pos = Input::mouse_position;
 
-	if (button_id == BUTTONPLAY || button_id == BUTTONTUTORIAL || button_id == BUTTONLEVEL1 || button_id == BUTTONLEVEL2 || button_id == BUTTONLEVEL3) {
+	if (button_id == BUTTONPLAY || button_id == BUTTONTUTORIAL || button_id == BUTTONLEVEL1 || button_id == BUTTONLEVEL2 
+		|| button_id == BUTTONLEVEL3 || button_id == BUTTONCHALLENGE) {
 		if ((mouse_pos.x >= position.x - size.x / 2) && (mouse_pos.x <= position.x + size.x / 2) &&
 			(mouse_pos.y >= position.y - size.y / 2) && (mouse_pos.y <= position.y + size.y / 2)) {
 			material.color = Vector4(1, 0, 0, 1);
@@ -635,6 +663,10 @@ void EntityUI::update(float elapsed_time)
 				}
 				else if (button_id == BUTTONLEVEL3) {
 					Game::instance->course = LEVEL3;
+					Game::instance->goToStage(LOADING);
+				}
+				else if (button_id == BUTTONCHALLENGE) {
+					Game::instance->course = CHALLENGE;
 					Game::instance->goToStage(LOADING);
 				}
 			}

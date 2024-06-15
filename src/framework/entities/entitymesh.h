@@ -19,7 +19,8 @@ enum eButtonID {
 	BUTTONLEVEL2 = 9,
 	BUTTONLEVEL3 = 10,
 	BUTTONTUTORIAL = 11,
-	BUTTONNEXT = 12
+	BUTTONNEXT = 12,
+	BUTTONCHALLENGE = 13
 };
 
 
@@ -105,12 +106,19 @@ public:
 class EntityCollider : public EntityMesh
 {
 public:
-
 	void getCollisionWithModel(const Matrix44& m, const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions);
 
 	int layer = eCollisionFilter::SCENARIO;
 
 	bool isStatic = true;
+	bool horizontalMovement = false;
+	bool verticalMovement = false;
+	bool diagonalMovement = false;
+
+	float currentPosition = 0.0f;
+	float maxDistance = 20.0f;    
+	float speed = 10.0f;
+	int direction = (std::rand() % 2) == 0 ? 1 : -1;
 
 	EntityCollider() {};
 	EntityCollider(Mesh* mesh, const Material& material, std::string name):
@@ -120,6 +128,7 @@ public:
 	sCollisionData raycast(const Vector3& origin, const Vector3& direction, int layer, float max_ray_dist);
 	void getCollisions(const Vector3& target_position, std::vector<sCollisionData>& collisions, std::vector<sCollisionData>& ground_collisions, eCollisionFilter filter);
 
+	void update(float deltaTime);
 	int getLayer() { return layer; };
 	void setLayer(int new_layer) { layer = new_layer; };
 };

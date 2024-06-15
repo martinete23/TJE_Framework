@@ -188,6 +188,9 @@ int main(int argc, char **argv)
 {
 	std::cout << "Initiating game..." << std::endl;
 
+	//create a random seed
+	std::srand(static_cast<unsigned>(std::time(nullptr)));
+
 	//prepare SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
 

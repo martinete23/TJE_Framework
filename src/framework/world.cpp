@@ -50,7 +50,7 @@ World::World()
 		parseScene("data/Stock.scene", root);
 	}
 	else if (Game::instance->course == TUTORIAL) {
-		parseScene("data/Tutorial.scene", root);
+		parseScene("data/tutorial.scene", root);
 	}
 	else if (Game::instance->course == NEXUS) {
 		parseScene("data/NexusWorld.scene", root);
@@ -63,6 +63,9 @@ World::World()
 	}
 	else if (Game::instance->course == LEVEL3) {
 		parseScene("data/Level3.scene", root);
+	}
+	else if (Game::instance->course == CHALLENGE) {
+		parseScene("data/challenge.scene", root);
 	}
 }
 
@@ -203,7 +206,6 @@ bool World::parseScene(const char* filename, Entity* root)
 	for (auto data : meshes_to_load) {
 
 		mesh_name = "data/" + data.first;
-
 		sRenderData& render_data = data.second;
 
 		// No transforms, nothing to do here
@@ -293,6 +295,15 @@ bool World::parseScene(const char* filename, Entity* root)
 			new_entity->model = render_data.models[0];
 		}
 
+		if (data.first.find("horizontal") != std::string::npos) {
+			new_entity->horizontalMovement = true;
+		}
+		else if (data.first.find("vertical") != std::string::npos) {
+			new_entity->verticalMovement = true;
+		}
+		else if (data.first.find("diagonal") != std::string::npos) {
+			new_entity->diagonalMovement = true;
+		}
 		// Add entity to scene root
 		
 		root->addChild(new_entity);
