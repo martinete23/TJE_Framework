@@ -618,7 +618,7 @@ void PauseStage::onEnter()
 	Material material_background;
 
 	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	material_background.diffuse = Texture::Get("data/textures/pausa.tga");
+	material_background.diffuse = Texture::Get("data/textures/pause.tga");
 	material_background.color = Vector4(1, 1, 1, 1);
 
 	background = new EntityUI(Vector2(800, 600), material_background);
