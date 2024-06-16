@@ -120,7 +120,7 @@ void Game::render(void)
 	//drawGrid();
 
 	// Render the FPS, Draw Calls, etc
-	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
+	//drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
 
 	// Swap between front buffer and back buffer
 	SDL_GL_SwapWindow(this->window);

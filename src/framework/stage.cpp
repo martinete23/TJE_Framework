@@ -329,6 +329,7 @@ void PlayStage::update(double seconds_elapsed)
 {
 	if (Input::wasKeyPressed(SDL_SCANCODE_ESCAPE))
 	{
+		Audio::Play("data/sounds/Pause.wav", 0.5);
 		Game::instance->goToStage(PAUSE);
 	}
 
@@ -618,7 +619,7 @@ void PauseStage::onEnter()
 	Material material_background;
 
 	material_background.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	material_background.diffuse = Texture::Get("data/textures/pausa.tga");
+	material_background.diffuse = Texture::Get("data/textures/pause.tga");
 	material_background.color = Vector4(1, 1, 1, 1);
 
 	background = new EntityUI(Vector2(800, 600), material_background);
