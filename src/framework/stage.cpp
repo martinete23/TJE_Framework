@@ -24,7 +24,12 @@ void IntroStage::onEnter()
 	Material material_button;
 
 	material_button.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	material_button.diffuse = Texture::Get("data/textures/play_button.tga");
+	if (Input::gamepads->connected) {
+		material_button.diffuse = Texture::Get("data/textures/play_button_controller.tga");
+	}
+	else {
+		material_button.diffuse = Texture::Get("data/textures/play_button.tga");
+	}
 	material_button.color = Vector4(1, 1, 1, 1);
 
 	playButton = new EntityUI(Vector2(Game::instance->window_width/2, Game::instance->window_height / 2 + Game::instance->window_height / 4), 
@@ -32,14 +37,24 @@ void IntroStage::onEnter()
 
 	background->addChild(playButton);
 
-	material_button.diffuse = Texture::Get("data/textures/quit_button.tga");
+	if (Input::gamepads->connected) {
+		material_button.diffuse = Texture::Get("data/textures/quit_button_controller.tga");
+	}
+	else {
+		material_button.diffuse = Texture::Get("data/textures/quit_button.tga");
+	}
 
 	quitButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 2.4),
 		Vector2(100, 40), material_button, BUTTONQUIT, "quit_button");
 
 	background->addChild(quitButton);
 
-	material_button.diffuse = Texture::Get("data/textures/controls_button.tga");
+	if (Input::gamepads->connected) {
+		material_button.diffuse = Texture::Get("data/textures/controls_button_controller.tga");
+	}
+	else {
+		material_button.diffuse = Texture::Get("data/textures/controls_button.tga");
+	}
 
 	tutorialButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 3),
 		Vector2(100, 40), material_button, BUTTONCONTROLLER, "controller_button");
@@ -92,6 +107,17 @@ void IntroStage::update(double seconds_elapsed)
 
 	World::instance->camera->eye = Vector3(30 * cos(Game::instance->time * 0.05), 20, 30 * sin(Game::instance->time * 0.05));
 	World::instance->player->animationUpdate(seconds_elapsed);
+
+	if(Input::gamepads->isButtonPressed(A_BUTTON)){
+		Game::instance->course = TUTORIAL;
+		Game::instance->goToStage(LOADING);
+	}
+	else if (Input::gamepads->isButtonPressed(X_BUTTON)) {
+		Game::instance->goToStage(TUTORIALIMAGE);
+	}
+	else if (Input::gamepads->isButtonPressed(B_BUTTON)) {
+		Game::instance->must_exit = true;
+	}
 }
 
 void PlayStage::onEnter()
@@ -327,7 +353,7 @@ void PlayStage::render()
 
 void PlayStage::update(double seconds_elapsed)
 {
-	if (Input::wasKeyPressed(SDL_SCANCODE_ESCAPE))
+	if (Input::wasKeyPressed(SDL_SCANCODE_ESCAPE) || Input::gamepads->wasButtonPressed(START_BUTTON))
 	{
 		Audio::Play("data/sounds/Pause.wav", 0.5);
 		Game::instance->goToStage(PAUSE);
@@ -496,6 +522,15 @@ void WinStage::update(double seconds_elapsed)
 	World::instance->camera->eye = Vector3(CameraPos.x - 2 * cos(Game::instance->time * 0.05), 3, CameraPos.z - 2 * sin(Game::instance->time * 0.05));
 	World::instance->camera->center = Vector3(CameraPos.x, CameraPos.y, CameraPos.z);
 	World::instance->player->animationUpdate(seconds_elapsed);
+
+	if (Input::gamepads->wasButtonPressed(A_BUTTON)) {
+		Game::instance->course = TUTORIAL;
+		Game::instance->goToStage(LOADING);
+	}
+	else if (Input::gamepads->wasButtonPressed(B_BUTTON)) {
+		Game::instance->must_exit = true;
+	}
+
 }
 
 void LoseStage::onEnter()
@@ -551,6 +586,17 @@ void LoseStage::render()
 void LoseStage::update(double seconds_elapsed)
 {
 	background->update(seconds_elapsed);
+
+	if (Input::gamepads->wasButtonPressed(A_BUTTON)) {
+		if (Game::instance->course != TUTORIAL) {
+			Game::instance->course = NEXUS;
+			Game::instance->goToStage(LOADING);
+		}
+		else {
+			Game::instance->goToStage(PLAY);
+		}
+	}
+
 }
 
 void LoadingStage::onEnter()
@@ -627,7 +673,14 @@ void PauseStage::onEnter()
 	Material material_button;
 
 	material_button.shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-	material_button.diffuse = Texture::Get("data/textures/continue_button.tga");
+
+	if (Input::gamepads->connected) {
+		material_button.diffuse = Texture::Get("data/textures/continue_button_controller.tga");
+	}
+	else {
+		material_button.diffuse = Texture::Get("data/textures/continue_button.tga");
+	}
+
 	material_button.color = Vector4(1, 1, 1, 1);
 
 	continueButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2),
@@ -635,15 +688,26 @@ void PauseStage::onEnter()
 
 	background->addChild(continueButton);
 
-	material_button.diffuse = Texture::Get("data/textures/nexus_button.tga");
+	if (Input::gamepads->connected) {
+		material_button.diffuse = Texture::Get("data/textures/nexus_button_controller.tga");
+	}
+	else {
+		material_button.diffuse = Texture::Get("data/textures/nexus_button.tga");
+	}
 
 	exitCourseButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 10),
 		Vector2(100, 40), material_button, BUTTONEXITCOURSE, "nexus_button");
+
 	if (Game::instance->course != TUTORIAL) {
 		background->addChild(exitCourseButton);
 	}
 	
-	material_button.diffuse = Texture::Get("data/textures/quit_button.tga");
+	if (Input::gamepads->connected) {
+		material_button.diffuse = Texture::Get("data/textures/quit_button_controller.tga");
+	}
+	else {
+		material_button.diffuse = Texture::Get("data/textures/quit_button.tga");
+	}
 
 	quitButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 5),
 		Vector2(100, 40), material_button, BUTTONQUIT, "quit_button");
@@ -672,6 +736,17 @@ void PauseStage::render()
 void PauseStage::update(double seconds_elapsed)
 {
 	background->update(seconds_elapsed);
+
+	if (Input::gamepads->wasButtonPressed(A_BUTTON)) {
+		Game::instance->goToStage(PLAY);
+	}
+	else if (Input::gamepads->wasButtonPressed(B_BUTTON)) {
+		Game::instance->must_exit = true;
+	}
+	else if (Input::gamepads->wasButtonPressed(X_BUTTON) && Game::instance->course != TUTORIAL) {
+		Game::instance->course = NEXUS;
+		Game::instance->goToStage(LOADING);
+	}
 }
 
 void TutorialStage::onEnter()
@@ -739,7 +814,7 @@ void TutorialStage::update(double seconds_elapsed)
 {
 	background->update(seconds_elapsed);
 
-	if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
+	if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) || Input::gamepads->wasButtonPressed(A_BUTTON)) {
 		if (Controller_background < 3) {
 			Controller_background += 1;
 		}

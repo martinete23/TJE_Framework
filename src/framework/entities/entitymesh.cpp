@@ -267,7 +267,7 @@ void EntityPlayer::update(float elapsed_time)
 
 	if (is_grounded)
 	{
-		if (state == IDLE && Input::wasKeyPressed(SDL_SCANCODE_T))
+		if (state == IDLE && (Input::wasKeyPressed(SDL_SCANCODE_T) || Input::wasButtonPressed(Y_BUTTON)))
 		{
 			animator.playAnimation("data/animations/twerk.skanim");
 		}
