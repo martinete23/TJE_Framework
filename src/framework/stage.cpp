@@ -5,6 +5,9 @@
 
 void IntroStage::onEnter()
 {
+	SDL_ShowCursor(true);
+	SDL_SetRelativeMouseMode((SDL_bool)(false));
+
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
@@ -93,6 +96,9 @@ void IntroStage::update(double seconds_elapsed)
 
 void PlayStage::onEnter()
 {
+	SDL_ShowCursor(false);
+	SDL_SetRelativeMouseMode((SDL_bool)(true));
+
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
@@ -321,12 +327,13 @@ void PlayStage::render()
 
 void PlayStage::update(double seconds_elapsed)
 {
-	World::instance->update(seconds_elapsed);
-
 	if (Input::wasKeyPressed(SDL_SCANCODE_ESCAPE))
 	{
 		Game::instance->goToStage(PAUSE);
 	}
+
+	World::instance->update(seconds_elapsed);
+
 	if (World::instance->crystalsCollected == 1) {
 		icon_RedCrystals = new EntityUI(Vector2(-90, 40),
 			Vector2(240, 48), icon_redCrystal_material);
@@ -399,6 +406,10 @@ void PlayStage::update(double seconds_elapsed)
 
 void WinStage::onEnter()
 {
+
+	SDL_ShowCursor(true);
+	SDL_SetRelativeMouseMode((SDL_bool)(false));
+
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
@@ -488,6 +499,10 @@ void WinStage::update(double seconds_elapsed)
 
 void LoseStage::onEnter()
 {
+
+	SDL_ShowCursor(true);
+	SDL_SetRelativeMouseMode((SDL_bool)(false));
+
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
@@ -592,6 +607,10 @@ void LoadingStage::update(double seconds_elapsed)
 
 void PauseStage::onEnter()
 {
+
+	SDL_ShowCursor(true);
+	SDL_SetRelativeMouseMode((SDL_bool)(false));
+
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
@@ -619,9 +638,10 @@ void PauseStage::onEnter()
 
 	exitCourseButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 10),
 		Vector2(100, 40), material_button, BUTTONEXITCOURSE, "nexus_button");
-
-	background->addChild(exitCourseButton);
-
+	if (Game::instance->course != TUTORIAL) {
+		background->addChild(exitCourseButton);
+	}
+	
 	material_button.diffuse = Texture::Get("data/textures/quit_button.tga");
 
 	quitButton = new EntityUI(Vector2(Game::instance->window_width / 2, Game::instance->window_height / 2 + Game::instance->window_height / 5),
@@ -655,6 +675,10 @@ void PauseStage::update(double seconds_elapsed)
 
 void TutorialStage::onEnter()
 {
+
+	SDL_ShowCursor(false);
+	SDL_SetRelativeMouseMode((SDL_bool)(true));
+
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);
@@ -727,6 +751,10 @@ void TutorialStage::update(double seconds_elapsed)
 
 void CoursesSelectStage::onEnter()
 {
+
+	SDL_ShowCursor(true);
+	SDL_SetRelativeMouseMode((SDL_bool)(false));
+
 	camera2D = new Camera();
 	camera2D->view_matrix.setIdentity();
 	camera2D->setOrthographic(0, Game::instance->window_width, Game::instance->window_height, 0, -1.0f, 1.0f);

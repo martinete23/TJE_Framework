@@ -157,6 +157,7 @@ void Game::onMouseButtonDown( SDL_MouseButtonEvent event )
 		SDL_ShowCursor(!mouse_locked);
 		SDL_SetRelativeMouseMode((SDL_bool)(mouse_locked));
 	}
+
 }
 
 void Game::onMouseButtonUp(SDL_MouseButtonEvent event)
